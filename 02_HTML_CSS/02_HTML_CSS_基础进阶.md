@@ -387,12 +387,166 @@
 
 - 语法
   - ```transform: scale(X轴缩放倍数, Y轴缩放倍数)```
+- 提示
+  - 如果只有一个，就是x和y
 
 
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .box {
+            width: 300px;
+            height: 210px;
+            margin: 100px auto;
+            background-color: pink;
+        }
+        .box img {
+            width: 100%;
+            transition: all 0.5s;
+        }
+        .box:hover img {
+            transform: scale(1.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <img src="./images/product.jpg" alt="">
+    </div>
+</body>
+</html>
+```
 
+### 4.2 案例：和平精英
 
+> 绝对定位的盒子如何居中？
+>
+> 如何处理```transform```层叠的bug
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        li {
+            list-style: none;
+        }
+        img {
+            width: 100%;
+        }
+        .box {
+            width: 249px;
+            height: 210px;
+            margin: 50px auto;
+            /* .box 外的看不见 */
+            overflow: hidden;
+        }
+        .box p {
+            color: #3b3bb3;
+            padding: 10px 10px 0 10px;
+        }
+        .box .pic {
+            position: relative;
+        }
+        .box ul li .pic::after {
+            position: absolute;
+            content: "";
+            left: 50%;
+            top: 50%;
+
+            /* 定位的居中：移回去 */
+            margin-left: -29px;
+            margin-top: -29px;
+            /* 如果 transform: translate(-50%, -50%) 不会生效 因为会被下面的层叠 只能这样 */
+            /* transform: translate(-50%, -50%) scale(5); */
+            
+            width: 58px;
+            height: 58px;
+            background-image: url(./images/play.png);
+
+            /* 特别大 */
+            transform: scale(5);
+            opacity: 0;
+            transition: all 0.2s;
+        }
+        .box ul li:hover .pic::after {
+            transform: scale(1);
+            /* 解决上面那个 bug  */
+            /* transform: translate(-50%, -50%) scale(1); */
+            opacity: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <ul>
+            <li>
+                <div class="pic">
+                    <img src="./images/party.jpeg" alt="">
+                    <!-- 伪元素 -->
+                </div>
+                <p>【和平精英】“初火”音乐概念片：四圣觉醒</p>
+            </li>
+        </ul>
+    </div>
+</body>
+</html>
+```
 
 # 三、渐变
+
+## 1 简介
+
+- 多个颜色逐渐变化的视觉效果
+- 一般是盒子的背景
+
+```html
+<style>
+    .box {
+        width: 300px;
+        height: 200px;
+        background-image: linear-gradient(pink, green, blue);
+
+        /* 工作中更这么用 */
+        background-color: pink;
+        background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.6));
+    }
+</style>
+```
+
+## 2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
