@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+    <script>
+        var age = prompt('请输入您的年龄：')
+        // 1. paesrInt(变量) 转化为数字型 取整
+        console.log(parseInt(age))
+        console.log(parseInt(3.14))  // 3
+        console.log(parseInt('3.14'))  // 3
+        console.log('120px')  // 120
+        console.log('xxxx120px')  // NaN
+
+        // 2. parseFloat(变量) 小数/浮点数
+        console.log(parseFloat('3.14'))  // 3.14
+        console.log('120.231px')  // 120.231
+
+        // 3. Number(变量) 强制转换
+        console.log(Number('3.15'))
+
+        // 4. 利用算数运算 隐式转换 - * /
+        console.log('12' - 0)  // 12
+        console.log('123' - '120')  // 3
+        console.log('123' * 1)  // 123
+    </script>
+
+</head>
+<body>
+    
+</body>
+</html>
