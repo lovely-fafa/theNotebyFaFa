@@ -528,9 +528,382 @@
 </style>
 ```
 
-## 2
+# 四、综合案例：华为新闻
+
+> 平面转换+缩放
+
+# day 02
+
+# 一、空间转换
+
+## 1 介绍
+
+![image-20221129135457044](assets/image-20221129135457044.png)
+
+## 2 位移
+
+- 语法
+
+  - ```transform: translate3d(x, y, z)```
+  - ```transform: translateX(x)```
+  - ```transform: translateY(x)```
+  - ```transform: translateZ(x)```
+- 取值
+  - 像素单位数值
+  - 百分百
+
+## 3 透视
+
+- 近大远小，近实远虚
+- 加给父级
+- 属性名：```perspective```
+- 属性值：像素单位数值，一般是800-1200
+- 透视距离也称视距，就是人的眼睛到屏幕的距离
+
+![image-20221130122749908](assets/image-20221130122749908.png)
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            perspective: 1000px;
+        }
+        .box {
+            width: 200px;
+            height: 200px;
+            margin: 100px auto;
+            background-color: coral;
+            transition: all 0.5s;
+        }
+        .box:hover {
+            transform: translateZ(200px);
+        }
+    </style>
+</head>
+<body>
+    <div class="box"></div>
+</body>
+</html>
+```
+
+## 4 空间旋转
+
+- 语法
+
+  - ```transfrom: rotateX(值)```
+  - ```transfrom: rotateY(值)```
+  - ```transfrom: rotateZ(值)```（和```rotate```效果一样）
+
+- x轴
+
+  ```python
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Document</title>
+      <style>
+          .box {
+              width: 200px;
+              margin: 100px auto;
+              perspective: 1000px;
+          }
+          img {
+              width: 300px;
+              transition: all 0.7s;
+          }
+          .box img:hover {
+              transform: rotateX(60deg);
+          }
+      </style>
+  </head>
+  <body>
+      <div class="box">
+          <img src="../images/hero.jpeg" alt="">
+      </div>
+  </body>
+  </html>
+  ```
+
+- y轴
+
+  一样的
+
+- 拓展
+
+  自定义旋转轴的位置及旋转角度
+
+  ```rotate3d(x, y, z 角度度数)```
+
+  x, y, z取值为0-1之间的数字
+
+## 5 立体呈现
+
+- 实现方法
+  - 父级添加```transform-style: preserve-3d```
+  - 子元素则处于真正的3d空间
+  - 默认是```flat```，即子元素处于2d平面呈现
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .cube {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 100px auto;
+            /* background-color: palegreen; */
+            transition: all 1s;
+            transform-style: preserve-3d;
+        }
+        .cube div {
+            width: 200px;
+            height: 200px;
+        }
+        .front {
+            position: absolute;
+            background-color: bisque;
+        }
+        .back {
+            position: absolute;
+            background-color: cadetblue;
+            transform: translateZ(-200px);
+        }
+        .cube:hover {
+            transform: rotateY(180deg);
+        }
+    </style>
+</head>
+<body>
+    <div class="cube">
+        <div class="front">前面</div>
+        <div class="back">后面</div>
+    </div>
+</body>
+</html>
+```
+
+## 6 空间缩放
+
+- ```transform: scaleX(倍数)```
+- ```transform: scaleY(倍数)```
+- ```transform: scaleZ(倍数)```
+- ```transform: scale3d(x, y, z)```
+
+# 二、动画
+
+## 1 简介
+
+- 两个状态是过渡
+- 多个状态就是动画效果了
+- 过程可控：重复播放、最终画面、是否暂停
+
+## 2 语法
+
+- 属性名
+
+  - ```animation```
+
+- 定义动画
+
+  - 方法一
+
+    ```html
+    @keyframes 动画名称 {
+      from {}
+      to {}
+    }
+    ```
+
+  - 方法二
+
+    ```html
+    @keyframes 动画名称 {
+      0% {}
+      10% {}
+      15% {}
+      100% {}
+    }
+    ```
+
+- 使用动画
+
+  ```html
+  animation: 动画名称 动画花费时长;
+  ```
+
+## 3 简单使用
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .box {
+            width: 200px;
+            height: 100px;
+            background-color: antiquewhite;
+            /* 使用动画 */
+            animation: change2 1s;
+        }
+        /* 定义动画 1 */
+        @keyframes change1 {
+            from {
+                width: 200px;
+            }
+            to {
+                width: 600px;
+            }
+        }
+        /* 定义动画 2 */
+        @keyframes change2 {
+            0% {
+                width: 200px;
+                height: 100px;
+            }
+            30% {
+                width: 500px;
+                height: 300px;
+            }
+            100% {
+                width: 800px;
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="box"></div>
+</body>
+</html>
+```
+
+## 3 动画属性
+
+- 属性名：```animation: 动画名称 动画时长 速度曲线 延迟时间 重复次数 动画方向 执行完毕时状态```
+- 属性值：
+  - 速度曲线
+    - ```lines```：匀速
+    - ```steps(num)```：类似于帧
+    
+  - 重复次数
+  
+    - ```num```：具体次数
+    - ```infinite```：无限循环
+  
+  - 动画方向
+  
+    - ```alternate```：反复
+  
+  - 执行完毕时状态
+  
+    > 删掉```infinite```和```alternate```
+  
+    - ```backward```：默认值，停留在最初的状态
+    - ```forrwards```：停留在最后的状态
+- 注意
+
+  - 动画名称和动画时长必须赋值
+  - 不分先后顺序
+  - 两个时间值，则第一个是动画时长 第二个是延迟时间
 
 
+# 三、综合案例
+
+## 1 3D导航
+
+![image-20221130214302889](assets/image-20221130214302889.png)
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        .navs {
+            width: 300px;
+            height: 40px;
+            margin: 50px auto;
+        }
+        .navs li {
+            float: left;
+            width: 100px;
+            height: 40px;
+            line-height: 40px;
+            transform-style: preserve-3d;
+            transition: all 0.5s;
+            /* 辅助 */
+            /* transform: rotateX(-20deg) rotateY(30deg); */
+            /* 3d 缩放 */
+            transform: scale3d(0.5, 1.1, 5);
+        }
+        .navs li a {
+            position: absolute;
+            display: block;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            text-decoration: none;
+            color: aliceblue;
+        }
+        .navs li a:first-child {
+            background-color: green;
+            /* 移动 */
+            transform: translateZ(20px);
+        }
+        .navs li a:last-child {
+            background-color: orange;
+            /* 放倒 移动 */
+            transform: rotateX(90deg) translateZ(20px);
+        }
+        .navs li:hover {
+            transform: rotateX(-90deg);
+        }
+    </style>
+</head>
+<body>
+    <div class="navs">
+        <ul>
+            <li>
+                <a href="#">首页</a><a href="#">index</a>
+            </li>
+            <li>
+                <a href="#">登录</a><a href="#">login</a>
+            </li>
+            <li>
+                <a href="#">注册</a><a href="#">register</a>
+            </li>
+        </ul>
+    </div>
+</body>
+</html>
+```
 
 
 
