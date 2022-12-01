@@ -796,7 +796,7 @@
 </html>
 ```
 
-## 3 动画属性
+## 4 动画属性
 
 - 属性名：```animation: 动画名称 动画时长 速度曲线 延迟时间 重复次数 动画方向 执行完毕时状态```
 - 属性值：
@@ -817,13 +817,115 @@
   
     > 删掉```infinite```和```alternate```
   
-    - ```backward```：默认值，停留在最初的状态
-    - ```forrwards```：停留在最后的状态
+    - ```backward```：默认值，第一帧状态
+    - ```forrwards```：最后一帧状态
 - 注意
 
   - 动画名称和动画时长必须赋值
   - 不分先后顺序
   - 两个时间值，则第一个是动画时长 第二个是延迟时间
+
+## 5 拆分写法*
+
+|              属性               |        作用        |                             取值                             |
+| :-----------------------------: | :----------------: | :----------------------------------------------------------: |
+|      ```animation-name```       |      动画名称      |                                                              |
+|    ```animation-duration```     |      动画时长      |                                                              |
+|      ```animation-delay```      |      延迟时间      |                                                              |
+|    ```animation-fill-mode```    | 动画执行完毕是状态 | ```backward```：默认值，第一帧状态<br> ```forrwards```：最后一帧状态 |
+| ```animation-timing-function``` |      速度曲线      |                 ```steps(数字)```：逐帧动画                  |
+| ```animation-iteration-count``` |      重复次数      |                   ```infinite```：无限循环                   |
+|    ```animation-direction```    |    动画执行方向    |                    ```alternate```：反向                     |
+|   ```animation-play-state```    |      暂停动画      |         ```paused```为暂停，通常搭配```:hover```使用         |
+
+## 6 逐帧动画
+
+- 补间动画和逐帧动画
+  - 补间动画不配合精灵图，使用更多
+  - 逐帧动画配合精灵图
+  
+- 使用
+
+  - ```animation-timing-function: steps(N)```
+
+    - 将动画过程等分为N份
+
+  - 步骤
+
+    - 准备显示区域
+
+      盒子大小是精灵图一个图的大小，背景图为当前精灵图
+
+    - 定义动画
+
+      改变背景图位置，移动距离是精灵图的宽度
+
+    - 使用动画
+
+      - 速度曲线```step(N)```，N和精灵图上小图个数相同
+      - 添加无限重复效果
+
+  - 多个动画
+
+    ```html
+    animation: 
+      动画1,
+      动画2,
+      动画N
+    ;
+    ```
+
+  - 如果动画的开始状态和盒子的默认样式相同，可以省略开始状态的代码
+
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .box {
+            width: 140px;
+            height: 140px;
+            /* border: 1px solid; */
+            background-image: url(../images/bg.png);
+            animation: 
+              move 1s steps(12) infinite, 
+              run 2s forwards
+            ;
+        }
+        @keyframes move {
+            /* 可以不加这个东西哦 */
+            /* from {
+                background-position: 0 0;
+            } */
+            to {
+                background-position: -1680px 0;
+            }
+        }
+        @keyframes run {
+            /* from {
+                transform: translateX(0);
+            } */
+            to {
+                transform: translateX(800px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="box"></div>
+</body>
+</html>
+```
+
+
+
+
+
 
 
 # 三、综合案例
@@ -904,6 +1006,130 @@
 </body>
 </html>
 ```
+
+## 2 走马灯
+
+> 逐帧动画 无缝动画
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+    * {
+        padding: 0;
+        margin: 0;
+      }
+      li {
+        list-style: none;
+      }
+      img {
+        width: 200px;
+      }
+      .box {
+        width: 600px;
+        height: 112px;
+        border: 5px solid #000;
+        margin: 100px auto;
+        overflow: hidden;
+      }
+      .box ul {
+        width: 2000px;
+        animation: move 5s infinite linear;
+      }
+      .box li {
+        float: left;
+      }
+      @keyframes move {
+        to {
+            transform: translateX(-1400px)
+        }
+      }
+      .box:hover ul {
+        animation-play-state: paused
+      }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <ul>
+          <li><img src="./images/1.jpg" alt="" /></li>
+          <li><img src="./images/2.jpg" alt="" /></li>
+          <li><img src="./images/3.jpg" alt="" /></li>
+          <li><img src="./images/4.jpg" alt="" /></li>
+          <li><img src="./images/5.jpg" alt="" /></li>
+          <li><img src="./images/6.jpg" alt="" /></li>
+          <li><img src="./images/7.jpg" alt="" /></li>
+          <!-- 第567移动的时候,显示区域不能留白 -->
+          <li><img src="./images/1.jpg" alt="" /></li>
+          <li><img src="./images/2.jpg" alt="" /></li>
+          <li><img src="./images/3.jpg" alt="" /></li>
+        </ul>
+      </div>
+</body>
+</html>
+```
+
+## 3 全民出游季
+
+> 动画综合使用
+
+# day 03
+
+# 一、移动端特点
+
+## 1 PC网页和移动端网页的区别
+
+- PC屏幕**大**，网页固定版心
+- 手机屏幕**小**，网页宽度多为100%
+
+## 2 谷歌模拟器
+
+## 3 屏幕分辨率
+
+## 4 视口
+
+> 视口标签由vosecode自动生成
+>
+> 视口标签会默认HTML的宽度和设备宽度（逻辑分辨率）相同，若没有则宽度为```980px```
+
+```html
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+```
+
+## 5 二倍图
+
+
+
+
+
+# 二、百分比布局
+
+
+
+
+
+
+
+# 三、Flex布局
+
+
+
+
+
+
+
+# 四、实战演练
+
+
+
+
+
+
 
 
 

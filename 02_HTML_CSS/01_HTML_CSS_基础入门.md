@@ -1278,6 +1278,29 @@ pass
 
 - 位置那，如果是英文，可以不管先后顺序，但是数字就要先```X```后```Y```
 
+## 5 背景图片大小
+
+- 属性名：```background-size```
+- 属性值
+  - ```contain```：图片等比例缩放，当宽或高达100%停止
+  - ```cover```：图片等比例缩放，完全铺满位置
+
+## 6 设置网页大背景
+
+```html
+<sytle>
+    html {
+        height: 100%;
+    }
+    body {
+        height: 100%;
+        background: url(../images_全民出游季/f1_1.jpg) no-repeat center;
+        /* 缩放背景图 */
+        background-size: cover;
+    }
+</sytle>
+```
+
 # 三、元素显示模式
 
 ## 1 块级元素
