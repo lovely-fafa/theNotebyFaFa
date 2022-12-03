@@ -1213,15 +1213,61 @@
 - 属性名：```flex```
 - 属性值：数值（整数）。占用父盒子剩余尺寸
 
-# 四、实战演练
+# 四、小兔鲜儿移动端
+
+支付页面
+
+# day 04
+
+# 一、Flex布局
+
+## 1 主轴方向
+
+属性名：```flex-direction```
+
+|        属性值        |        作用        |
+| :------------------: | :----------------: |
+|      ```row```       | 行，水平（默认值） |
+|   **```column```**   |    **列，垂直**    |
+|  ```row-reverse```   |    行，从右到左    |
+| ```column-reverse``` |    列，从下到上    |
+
+## 2 居中
+
+```html
+<style>
+    .box li {
+        display: flex;
+        /* 现在主轴在垂直方向 */
+        flex-direction: column;
+        /* 侧轴居中 此时侧轴横着的 即水平居中 */
+        align-items: center;
+        /* 主轴居中 此时主轴竖着的 即垂直居中 */
+        justify-content: center;
+
+        width: 80px;
+        height: 80px;
+        border: 1px solid #ccc;
+    }
+</style>
+```
+
+## 3 弹性盒子换行
+
+- 使用
+  - 属性：```flex-wrap```
+  - 属性值：
+    - ```wrap```：换行
+    - ```nowrap```：不换行，默认值
+
+- 行距
+  - 换行后有默认的行距
+  - 调整
+    - 属性名：```align-content```
+    - 属性值：和```justify-content```的属性值基本上一样
 
 
-
-
-
-
-
-
+# 三、小兔鲜儿PC
 
 
 
