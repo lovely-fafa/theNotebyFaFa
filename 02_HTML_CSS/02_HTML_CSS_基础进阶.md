@@ -1266,6 +1266,25 @@
     - 属性名：```align-content```
     - 属性值：和```justify-content```的属性值基本上一样
 
+## 4 弹性盒子溢出省略号
+
+> 在是什么东西 我看不懂 o(╥﹏╥)o
+
+```css
+.order li .goods .txt {
+    flex: 1;
+    /* 这个地方宽度为 0 为了溢出显示省略号 */
+    width: 0;
+}
+.order li .goods .txt h5 {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+```
+
+
+
 
 # 三、小兔鲜儿PC
 
