@@ -1283,10 +1283,115 @@
 }
 ```
 
+# day 05 移动适配
+
+# 一、rem
+
+## 1 媒体查询
+
+> 屏幕宽度不同，网页元素尺寸不同（等比缩放）
+
+### 1.1 rem单位
+
+- 相对单位
+- rem单位是相当于**HTML标签**（根）的字号的计算结果
+- 1rem=1HTML字号大小
+
+```html
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+    html {
+        font-size: 20px;
+    }
+    .box {
+        width: 2rem;
+        height: 3rem;
+        background-color: aqua;
+    }
+</style>
+```
+
+### 1.2 媒体查询
+
+> 媒体查询能够检测视口的宽度，然后编写差异化的CSS样式
+
+- 写法
+
+  ```css
+  @media (媒体特征) {
+      选择器 {
+          CSS属性
+      }
+  }
+  ```
+
+### 1.3 rem适配
+
+- 一般来说，HTML标签的字号为**视口宽度**的1/10
+
+## 2 flexible.js
+
+- github地址：[https://github.com/amfe/lib-flexible](https://link.jianshu.com?t=https://github.com/amfe/lib-flexible)
+
+- 官方文档地址：[https://github.com/amfe/article/issues/17](https://link.jianshu.com?t=https://github.com/amfe/article/issues/17)
+
+  ```html
+  <script src="http://g.tbcdn.cn/mtb/lib-flexible/0.3.2/??flexible_css.js,flexible.js"
+  ></script>
+  ```
+
+# 二、Less语法
+
+> 由于px单位转换到rem单位较为麻烦，所以可以使用Less语法
+
+## 2.1 简介
+
+- Less是CSS预处理器，Less文件后缀是.less
+- 扩充了CSS语言，使CSS具备一定的逻辑性、计算能力
+- vscode需要安装插件 Easy LESS
+- 浏览器不识别Less代码，目前阶段，网页要引入CSS文件
+
+```less
+.father {
+    color: aqua;
+    width: (68 / 37.5rem);
+
+    .son {
+        background-color: aquamarine;
+    }
+}
+```
+
+```css
+.father {
+  color: aqua;
+  width: 1.81333333rem;
+}
+.father .son {
+  background-color: aquamarine;
+}
+```
+
+### 2.2 Less注释
+
+- 单行注释
+  - 语法：```// 注释内容```
+  - 快捷键：```ctrl + /```
+- 块注释
+  - 语法：```/* 注释内容 */```
+  - 快捷键：```shift + alt + A```
+- 由于CSS只支持```/* 注释内容 */```这种注释，所以转换后，单行注释就会无啦
 
 
 
-# 三、小兔鲜儿PC
+
+
+# 三、项目演练：游乐园
+
+
 
 
 
