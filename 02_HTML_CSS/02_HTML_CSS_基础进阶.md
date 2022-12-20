@@ -1375,7 +1375,7 @@
 }
 ```
 
-### 2.2 Less注释
+## 2.2 Less注释
 
 - 单行注释
   - 语法：```// 注释内容```
@@ -1384,6 +1384,63 @@
   - 语法：```/* 注释内容 */```
   - 快捷键：```shift + alt + A```
 - 由于CSS只支持```/* 注释内容 */```这种注释，所以转换后，单行注释就会无啦
+
+## 2.3 Less计算
+
+- 除法要注意
+
+```less
+.box {
+    width: 10 + 10px;
+    height: 100 - 20px;
+    width: 100 * 2px;
+    
+    // 除法
+    // 更推荐前者
+    width: (68 / 37.5rem);
+    height: 29 ./ 37.5rem;
+}
+```
+
+## 2.4 Less嵌套
+
+> 快速生成后代选择器
+
+- &表示当前选择器，通常配合伪类或伪元素使用
+
+```less
+.father {
+    width: 200px;
+    &:hover {
+        font-size: 10px;
+    }
+    .son {
+        color: antiquewhite;
+        &:hover {
+            color: aquamarine;
+        }
+    }
+}
+```
+
+```css
+.father {
+  width: 200px;
+}
+.father:hover {
+  font-size: 10px;
+}
+.father .son {
+  color: antiquewhite;
+}
+.father .son:hover {
+  color: aquamarine;
+}
+```
+
+## 2.5 Less语法
+
+
 
 
 
