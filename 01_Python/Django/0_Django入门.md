@@ -360,6 +360,17 @@ url_patterns = [
   extend...
   ```
 
+# 数据库
+
+```python
+py manage.py makemigrations [appName]
+py manage.py migrate
+```
+
+
+
+
+
 # ORM
 
 ## 单表增
