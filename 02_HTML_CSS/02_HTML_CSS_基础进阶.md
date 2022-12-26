@@ -1503,6 +1503,48 @@
 
 # 三、项目演练：游乐园
 
+搞定啦
+
+# 四、vw/vh
+
+## 1 简介
+
+- 相对单位
+- 相对**视口的尺寸**计算结果
+- ```vw```: ```viewport width```
+  - ```1vw=1/100视口宽度```
+- ```vh```: ```viewport height```
+  - ```1vh=1/100视口高度```
+
+```html
+<style>
+    .box {
+        width: 50vw;
+        height: 50vh;
+        background-color: aquamarine;
+    }
+</style>
+```
+
+## 2 vw和vh适配
+
+```less
+* {
+    margin: 0;
+    padding: 0;
+}
+.box {
+    width: (68 / 3.75vw);
+    height: (29 / 3.75vw);
+    background-color: aquamarine;
+}
+.box2 {
+    width: (68 / 6.67vh);
+    height: (29 / 6.67vh);
+    background-color: beige;
+}
+```
+
 
 
 
