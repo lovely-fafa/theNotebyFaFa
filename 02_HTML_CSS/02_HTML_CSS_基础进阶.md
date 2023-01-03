@@ -1545,7 +1545,170 @@
 }
 ```
 
+# day07
 
+# 一、响应式
+
+> 一套代码，兼容不同大小的设备。设备不同，布局也不同。
+
+## 1 媒体查询
+
+- 媒体查询
+
+  ```css
+  @media (媒体特征) {
+      选择器 {
+          CSS属性
+      }
+  }
+  ```
+
+- 采用写法
+
+  - ```max-width```
+  - ```min-width```
+
+- 举个例子
+
+  ```css
+  /* 视口宽度小于等于 768px 背景颜色为粉色 */
+  @media (max-width: 768px) {
+      body {
+          background-color: pink;
+      }
+  }
+  
+  /* 视口宽度大于等于 1200px 背景颜色为蓝色 */
+  @media (min-width: 1200px) {
+      body {
+          background-color: skyblue;
+      }
+  }
+  ```
+
+## 2 书写顺序
+
+- ```min-width```：从小到大
+- ```max-width```：从大到小
+
+## 3 媒体查询完整语法
+
+```css
+@media 关键词 媒体类型 and (媒体特征) {
+    css代码
+}
+```
+
+- 媒体类型
+
+  - ```and```
+  - ```only```
+  - ```not```
+
+- 媒体类型
+
+  |  类型名称  |      值      |          描述           |
+  | :--------: | :----------: | :---------------------: |
+  |    屏幕    | ```screen``` |      带屏幕的设备       |
+  |  打印预览  | ```print```  |      打印预览模式       |
+  |   阅读器   | ```speech``` |      屏幕阅读模式       |
+  | 不区分类型 |  ```all```   | 默认值，包括以上3种情况 |
+
+- 媒体特征
+
+  |      特征名称      |               属性                |                      值                      |
+  | :----------------: | :-------------------------------: | :------------------------------------------: |
+  |    视口的宽和高    |     ```width```、```heigth```     |                     数值                     |
+  | **视口最大宽和高** | ```max-width```、```max-heigth``` |                     数值                     |
+  | **视口最小宽和高** | ```min-width```、```min-heigth``` |                     数值                     |
+  |      屏幕分享      |         ```orientation```         | ```portrait```：竖屏   ```landscape```：横屏 |
+
+## 4 外链css引入
+
+- 语法
+
+  ```css
+  <link rel="stylesheet" media="逻辑符 媒体类型 and (媒体特征)" href="xxx.css">
+  ```
+
+- 举个例子
+
+  ```css
+  <link rel="stylesheet" href="./one.css" media="(min-width: 992px)">
+  <link rel="stylesheet"href="./two.css"  media="(min-width: 1200px)">
+  ```
+
+## 5 小案例：隐藏内容
+
+> 比如说电商站：京东
+
+```css
+@media (max-width: 768px) {
+    .left {
+        display: none;
+    }
+}
+```
+
+# 二、BootStrap
+
+## 1 简介
+
+```BootStrap```框架由```Twitter```公司开发维护的前端```UI```框架，提供了大量编写好的```CSS```样式，允许开发者结合一定的```HTML```结构及```JavaScript```，快速编写功能完善的网页及常见的交互效果。
+
+- 中文官网
+
+  https://www.bootcss.com/
+
+## 2 简单使用
+
+1. 引入
+
+   ```html
+   <link rel="stylesheet" href="./bootstrap-3.4.1-dist/css/bootstrap.min.css">
+   ```
+
+2. 调用类
+
+   - ```container```：响应式布局版心类
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./bootstrap-3.4.1-dist/css/bootstrap.min.css">
+    <style>
+        div {
+            height: 50px;
+            background-color: aquamarine;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">1</div>
+</body>
+</html>
+```
+
+## 3 栅格系统
+
+- bootstrap默认把网页分成12等份
+
+![image-20230104000108402](assets/image-20230104000108402.png)
+
+
+
+|          |    超小屏幕    |     小屏幕     |    中等屏幕    |     大屏幕     |
+| :------: | :------------: | :------------: | :------------: | :------------: |
+| 响应断点 |  ```<768px```  | ```>=768px```  | ```>=992px```  | ```>=1200px``` |
+|   别名   |    ```xs```    |    ```sm```    |    ```md```    |    ```lg```    |
+|  类前缀  | ```col-xs-*``` | ```col-sm-*``` | ```col-md-*``` | ```col-lg-*``` |
+|   列数   |    ```12```    |    ```12```    |    ```12```    |    ```12```    |
+|  列间隙  |   ```30px```   |   ```30px```   |   ```30px```   |   ```30px```   |
 
 
 
