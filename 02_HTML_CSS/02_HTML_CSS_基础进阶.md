@@ -1696,11 +1696,11 @@
 
 ## 3 栅格系统
 
+### 3.1 体验
+
 - bootstrap默认把网页分成12等份
 
 ![image-20230104000108402](assets/image-20230104000108402.png)
-
-
 
 |          |    超小屏幕    |     小屏幕     |    中等屏幕    |     大屏幕     |
 | :------: | :------------: | :------------: | :------------: | :------------: |
@@ -1709,6 +1709,143 @@
 |  类前缀  | ```col-xs-*``` | ```col-sm-*``` | ```col-md-*``` | ```col-lg-*``` |
 |   列数   |    ```12```    |    ```12```    |    ```12```    |    ```12```    |
 |  列间隙  |   ```30px```   |   ```30px```   |   ```30px```   |   ```30px```   |
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./bootstrap-3.4.1-dist/css/bootstrap.css">
+    <title>Document</title>
+    <style>
+        .container div {
+            height: 50px;
+            background-color: aqua;
+        }
+    </style>
+</head>
+<body>
+    <!-- 大屏4个 小屏2个 -->
+    <div class="container">
+        <div class="col-lg-3 col-md-6">1</div>
+        <div class="col-lg-3 col-md-6">2</div>
+        <div class="col-lg-3 col-md-6">3</div>
+        <div class="col-lg-3 col-md-6">4</div>
+    </div>
+</body>
+</html>
+```
+
+### 3.2 左右内间距
+
+> bootstrap框架默认有内边距，一般间距都是```15px```
+>
+> 比如说```container```类自带间距```15px```
+
+- 解决办法一
+
+  自己写css样式，把默认的层叠掉
+
+- 解决办法二
+
+  使用```row```类。```row```类自带间距```-15px```。
+
+  ```html
+  <div class="container">1</div>
+  <div class="container">
+      <div class="row">2</div>
+  </div>
+  ```
+
+  看看css
+
+  ```css
+  .container {
+      padding-right: 15px;
+      padding-left: 15px;
+      margin-right: auto;
+      margin-left: auto;
+  }
+  .row {
+      margin-right: -15px;
+      margin-left: -15px;
+  }
+  ```
+
+### 3.3 通栏
+
+```html
+<div class="container-fluid"></div>
+```
+
+```css
+.container-fluid {
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+```
+
+## 4 全局样式
+
+### 4.1 表格
+
+```html
+<div class="container">
+    <table class="table table-striped table-bordered table-hover table-condensed">
+        <tr>
+            <th>数之一</th>
+            <th>数之二</th>
+            <th>数之三</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>2</td>
+            <td>3</td>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>2</td>
+            <td>3</td>
+        </tr>
+    </table>
+</div>
+```
+
+### 4.2 按钮
+
+```html
+<button class="btn btn-success btn-lg">成功</button>
+<button class="btn btn-danger btn-xs">警告</button>
+```
+
+## 5 组件
+
+### 5.1 下拉菜单
+
+有手就行
+
+### 5.2 字体图标
+
+```html
+<i class="glyphicon glyphicon-asterisk"></i>
+```
+
+## 6 插件
+
+- 引入```jQuery```与```bootstrap```
+
+  ```html
+  <script src="./jq/jQuery.js"></script>
+  <script src="./bootstrap-3.4.1-dist/js/bootstrap.min.js"></script>
+  ```
+
+# 三、AlloyTeam项目
+
+
 
 
 
