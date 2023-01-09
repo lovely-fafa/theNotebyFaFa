@@ -465,3 +465,190 @@ a += 12.5;  // a = (int)(10 + 12.5)
 
 ### 5 三元运算符
 
+- 使用场景
+  - 根据条件，从二者选其一
+- 格式
+  - ```判断条件 ? 值1 : 值2```
+- 执行流程
+  - 判断条件值为```true```，```值1```就是运算结果
+  - 判断条件值为```flase```，```值2```就是运算结果
+
+```java
+import java.util.Scanner;
+public class OperatorTest1 {
+    /*
+    三个数找最大值
+     */
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("请输入三个整数");
+
+        int num1 = sc.nextInt();
+        int num2 = sc.nextInt();
+        int num3 = sc.nextInt();
+
+        int temMax = num1 > num2 ? num1 : num2;
+        int max = temMax > num3 ? temMax : num3;
+
+        System.out.println("最大值为" + max);
+    }
+}
+```
+
+### 6 运算符优先级
+
+![image-20230109172947066](assets/image-20230109172947066.png)
+
+## 三、方法（函数）
+
+### 1 介绍
+
+方法```(method)```一段具有独立功能的代码块，不调用就不执行
+
+### 2 定义与调用
+
+- 定义
+
+  ```java
+  public static void 方法名() {
+      // 方法体
+  }
+  ```
+
+- 调用
+
+  ```java
+  方法名();
+  ```
+
+```java
+public class MethodDemo1 {
+    public static void main(String[] args) {
+        eat();
+    }
+    public static void eat() {
+        System.out.println("饿饿...");
+    }
+}
+```
+
+### 4 方法调用内存
+
+- 方法**没有被调用**的时候，在**方法区**中的字节码文件中存放
+- 方法**被调用**的时候，需要进入到**栈内存**中运行
+
+### 5 带参数方法的定义与调用
+
+```java
+public class MethodTest {
+    public static void main(String[] args) {
+        getMax(10, 20);
+    }
+    public static void getMax(int num1, int num2) {
+        int max = num1 > num2 ? num1 : num2;
+        System.out.println(max);
+    }
+}
+```
+
+### 6 带返回值方法的定义与调用
+
+```java
+public class MethodTest {
+    public static void main(String[] args) {
+        int result = getMax(10, 20);
+        System.out.println(result);
+    }
+    
+    // void 当前方法 没有返回值
+    public static int getMax(int num1, int num2) {
+        int max = num1 > num2 ? num1 : num2;
+        System.out.println(max);
+        return max;
+    }
+}
+```
+
+### 7 方法通用定义格式
+
+```java
+public static 返回值类型 方法名(参数) {
+    方法体;
+    return 返回值;
+}
+```
+
+### 3 常见问题
+
+- 不调用不执行
+- 方法与方法是平级关系，不允许嵌套定义
+- 方法的定义与执行顺序无关
+- 返回值类型为```void```，表示没有返回值，可以不写```return```。如果非要写```return```，可以不写返回值。
+- ```return```下面不能写代码，不会被执行。
+
+### 4 方法重载（Overload）
+
+- 同一个类中，定义了多个**同名的方法**，但每个方法具有**不同的参数类型**或**参数格式**，这些同名的方法，就构成了重载关系。（注意只看方法名和参数，不看返回值。）
+
+```java
+public class OverLoadDemo {
+    public static void main(String[] args) {
+    }
+    
+    public static void add(int a, int b) {
+    }
+    
+    public static void add(int a, int b, int c) {
+    }
+}
+```
+
+- 好处
+
+  不需要记忆过多繁琐的方法名
+
+# day 04
+
+## 一、流程控制语句
+
+### 1 if  语句
+
+```java
+if () {
+    
+} else if () {
+    
+} else if () {
+    
+}
+...
+else {
+    
+}
+```
+
+- ```if```语句中，如果大括号控制的是一条语句，大括号可以省略不写。
+- ```if```语句中的```( )```和```{ }```之间不要写```;```。
+
+### 2 switch 语句
+
+
+
+## 二、分支语句
+
+
+
+## 三、循环语句
+
+
+
+
+
+
+
+
+
+
+
+
+
