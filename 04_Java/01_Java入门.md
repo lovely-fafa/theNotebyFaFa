@@ -1,3 +1,13 @@
+# day 00
+
+## 1 说明文件
+
+鄙人不才，学过```python```，所以这个笔记比较飞，极其基础的就没有记录了...
+
+## 2 idea的快捷键
+
+- ```ctrl+alt+a```：在方法上使用，会自动补全接收方法返回值的变量。
+
 # day 01
 
 ## 一、Java入门
@@ -396,7 +406,7 @@ double b = a;
 
 ### 3 常量优化进制
 
-> 在编译的时候（Javac）会进行运算
+> 在编译的时候（```Javac```）会进行运算
 
 比如说：
 
@@ -611,6 +621,20 @@ public class OverLoadDemo {
 
 ## 一、流程控制语句
 
+- 顺序结构
+
+  程序默认
+
+- 分支结构
+
+  ```if```、```switch```
+
+- 循环结构
+
+  ```for```、```while```、```do...while```
+
+## 二、分支语句
+
 ### 1 if  语句
 
 ```java
@@ -632,13 +656,164 @@ else {
 
 ### 2 switch 语句
 
+#### 2.1 基本的格式
 
+```java
+public static void mySwitch(int age) {
+    switch (age) {
+        case 1:
+            System.out.println("1岁");
+            break;
+        case 2:
+            System.out.println("2岁");
+            break;
+        default:
+            System.out.println("其他");
+            break;
+    }
+}
+```
 
-## 二、分支语句
+#### 2.2 注意事项
 
+- ```case```后面的值不能重复
+- ```case```后面的值，只能是字面量，不能是变量
+- ```switch()```中科院接受的数据类型
+  - 基本数据类型：byte、short、char、int
+  - 引用数据类型：jdk5开始可以是枚举，jdk7开始可以是String字符串
 
+#### 2.3 switch穿透
+
+如果没有```break```，程序会继续向下执行```case```里面的东西，直到遇到```break```
+
+```java
+public static void mySwitch1() {
+    int week = 1;
+    switch (week) {
+        case 1:
+            System.out.println("星期一");  // 执行
+        case 2:
+            System.out.println("星期二");  // 执行
+            break;  // 执行
+        case 3:
+            System.out.println("星期三");
+            break;
+        default:
+            System.out.println("您的输入有误");
+            break;
+    }
+}
+```
+
+#### 2.4 switch穿透优化代码
+
+多个```case```有相同的代码 可以用```Switch```穿透优化
+
+```java
+public static void mySwitch3() {
+    Scanner sc = new Scanner(System.in);
+    System.out.println("00");
+    int week = sc.nextInt();
+    switch (week) {
+        case 1, 2, 3, 5, 4:  // 这样是jdk14之后的
+            System.out.println("工作日");
+            break;
+        case 6, 7:
+            System.out.println("休息日");
+            break;
+        default:
+            System.out.println("您的输入有误");
+            break;
+    }
+}
+```
+
+#### 2.5 简化形式
+
+> 如果是2.3中的那种形式，似乎不能这样简化
+
+```java
+public static void mySwitch4() {
+    int week = 4;
+    switch (week) {
+        case 1, 2, 3, 5, 4 -> System.out.println("工作日");
+        case 6, 7 -> System.out.println("休息日");
+        default -> System.out.println("您的输入有误");
+    }
+}
+```
+
+#### 2.6 和if的关系
+
+- ```if```语句：适用于范围性的判断
+- ```switch```语句：适用于固定值的匹配
 
 ## 三、循环语句
+
+### 1 for语句
+
+#### 1.1 基本格式
+
+``` java
+x for (初始化语句; 条件判断语句; 条件控制语句) {
+    循环体语句;
+}
+
+for (int i=1; i<=5; i++) {
+    循环体语句;
+}
+```
+
+#### 1.2 执行流程
+
+1. 执行初始化语句，整个循环过程中，只执行一次
+
+2. 执行判断条件
+
+   ```true```：执行第三步
+
+   ```false```：循环结束
+
+3. 执行循环体语句
+
+4. 执行条件控制语句
+
+5. 回到2
+
+#### 1.3 水仙花数
+
+```java
+public static void daffodilNumber() {
+    // 准备计数
+    int count = 0;
+    for (int i = 100; i <= 999; i++) {
+        // 提取位
+        int ge = i % 10;
+        int shi = i / 10 % 10;
+        int bai = i / 100;
+        // 判断
+        if (ge * ge * ge + shi * shi * shi + bai *bai * bai == i) {
+            System.out.println(i);
+            count++;
+        }
+    }
+    System.out.println("水仙花数的个数是：" + count);
+}
+```
+
+#### 1.5 注意事项
+
+- ```for```循环```{}```中定义的变量，在**每一轮**循环结束后，都会从内存中释放。
+- ```for```循环```()```中定义的变量，在**整个**循环结束后，都会从内存中释放。
+- ```for```循环```()```和```{}```之间不要写分号。
+
+### 2 循环嵌套
+
+心情不好，不想学了
+
+
+
+
 
 
 
