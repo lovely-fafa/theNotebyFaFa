@@ -809,21 +809,251 @@ public static void daffodilNumber() {
 
 ### 2 循环嵌套
 
-心情不好，不想学了
+心情不好，不想学了 —— 20230110
+
+- 经典打印小星星
+    ```java
+    public static void printRectangle() {
+        for (int i = 1; i <= 5; i++) {
+            for (int j = 1; j <=i; j++) {
+                System.out.print("*");
+            }
+            System.out.println();
+        }
+    }
+    
+    /*
+    *
+    **
+    ***
+    ****
+    *****
+    */
+    ```
+
+- 经典99乘法表
+
+  ```java
+  public static void print99() {
+      for (int i = 1; i<=9; i++) {
+          for (int j = 1; j<=i; j++) {
+              System.out.print(j + "*" + i + "=" + i*j + "\t");
+          }
+          System.out.println();
+      }
+  }
+
+### 3 while循环
+
+```java
+public static void main(String[] args) {
+    int i = 1;
+    while (i <= 5) {
+        System.out.println("好好学习");
+        i++;
+    }
+}
+```
+
+### 4 do...while循环
+
+> 用的很少
+
+```java
+public static void main(String[] args) {
+    int i = 1;
+    do {
+        System.out.println("好好学习");  // 无论条件是否满足，都会至少执行一次这个循环体
+        i++;
+    } while (i <= 5);
+}
+```
+
+### 5 三个循环的区别
+
+1. 先判断还是先执行
+
+2. ```for```和```while```的区别
+
+   - ```for```循环：用于控制循环的那个变量，在循环结束后，会从内存中消失，循环结束，不能继续使用。
+   - ```while```循环：用于控制循环的那个变量，在循环结束后，不会从内存中消失，循环结束，能继续使用。
+
+   其实这个也影响不大，因为```for```循环的用于控制循环的那个变量，可以定义到括号外面
+
+   ```java
+   int i = 1;  // 这样，在循环结束后，i 不会从内存中消失，循环结束，i 能继续使用。
+   for (; i<=5; i++) {
+       循环体语句;
+   }
+   ```
+
+   进一步变化，会发现，两者几乎一模一样了
+
+   - ```for```循环
+
+     ```java
+     int i = 1;
+     for (; i<=5; ) {
+         i++;
+         循环体语句;
+     }
+     ```
+
+   - ```while```循环
+
+     ```java
+     int i = 1;
+     while (i <= 5) {
+         i++;
+         循环体语句;
+     }
+     ```
+
+   所以两者其实并没有什么区别，但有一个选择的习惯
+
+   - 明确循环次数的，一般用```for```循环
+   - 不明确循环次数的，一般用```while```循环
+
+### 6 跳转控制语句
+
+#### 6.1 关键字
+
+- ```break```
+- ```continue```
+
+#### 6.2 注意事项
+
+她们下面不能写代码，因为不会被执行
+
+#### 6.3 死循环
+
+```java
+for (;;) {}
+
+while (true) {}
+
+do {} while (true)
+```
+
+#### 6.4 标号
+
+给循环起一个名字，在使用```break```时，可以指定退出哪一层的循环
+
+```java
+lo:  // 标号：给循环取一个名字
+while (true) {
+    ...
+    switch (choice) {
+        case 1:
+            ...;
+            break;
+        case 2:
+            ...;
+            break lo;  // 跳出死循环
+    }
+}
+```
+
+###  7 猜数字大小
+
+经典...
+
+```java
+public static void guessNumber() {
+    Random r = new Random();
+    Scanner sc = new Scanner(System.in);
+
+    int num = r.nextInt(1, 101);
+
+    while (true) {
+        System.out.println("\n请输入：");
+        int guess = sc.nextInt();
+
+        if (guess < num) {
+            System.out.println("猜小了...");
+        } else if (guess > num) {
+            System.out.println("猜大了...");
+        } else {
+            System.out.println("猜对了...");
+            System.out.println("恭喜！");
+            break;
+        }
+    }
+}
+```
+
+# day 06
+
+## 一、数组
+
+### 1 数组介绍
+
+数组指的是一种**容器**，可以用来存储同种数据类型的**多个值**。
+
+### 2 数组静态初始化
+
+#### 2.1 初始化
+
+就是在内存中，为数组容器开辟空间，并将数据存入容器中的过程。
+
+#### 2.2 定义数组
+
+- ```数据类型[] 数组名;```
+- ```数据类型 数组名[];```
+
+```java
+public static void arrayTest2() {
+    // 完整格式
+    int[] arr1 = new int[]{1, 2, 3};
+    // 简化格式
+    int[] arr2 = {11, 22, 33};
+    double[] arr3 = {1.1, 1.2, 1.3};
+
+    System.out.println(arr1);  // [I@254989ff
+    System.out.println(arr2);  // [I@5d099f62
+    System.out.println(arr3);  // [I@5d099f62
+
+    /*
+        [I@5d099f62
+
+        @：分隔符
+        [：当前空间是数组类型的
+        I：当前数组类型，是 int 类型
+        5d099f62：数组的十六进制地址
+         */
+}
+```
+
+### 3 数组元素访问
+
+- 格式：```数组名[索引值];```
+
+```java
+public static void arrayTest() {
+    int[] arr = {11, 22, 33, 55};
+    // 取值
+    System.out.println(arr[0]);
+    // 改值
+    arr[2] = 66;
+    System.out.println(arr[2]);
+}
+```
+
+### 4 数组遍历操作
 
 
 
 
 
+### 5 数组动态初始化
 
 
 
+### 6 数组内存图
+
+### 7 数组常见问题
 
 
 
-
-
-
-
-
+## 二、二维数组
 
