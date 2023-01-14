@@ -7,6 +7,8 @@
 ## 2 idea的快捷键
 
 - ```ctrl+alt+a```：在方法上使用，会自动补全接收方法返回值的变量。
+- ```shift+f6```：批量选中变量名以修改。
+- ```ctrl+alt+m```：把选中的代码抽取到一个新的方法中，并提供友好的方法命名方式。
 
 # day 01
 
@@ -34,15 +36,15 @@ public class A {  // public 暂时理解为：类名和文件名一直
 
 ### 3 java三大分类
 
-- JavaSE
-- ~~JavaME~~
-- JavaEE
+- ```JavaSE```
+- ~~```JavaME```~~
+- ```JavaEE```
 
-### 4 JDK的组成
+### 4``` JDK```的组成
 
-- JDK（Java Development Kit）：Java开发工具包
-- JRE（Java Runtime Environment）：Java的运行环境
-- JVM（Java Virtual Machine）：Java虚拟机 真正运行Java的地方
+- ```JDK```（Java Development Kit）：Java开发工具包
+- ```JRE```（Java Runtime Environment）：Java的运行环境
+- ```JVM```（Java Virtual Machine）：Java虚拟机 真正运行Java的地方
 - 核心类库：Java自己写好的程序
 
 ```mermaid
@@ -291,7 +293,15 @@ public class ScannerTest1 {
 
 ### 1 简介
 
-整数相除，结果只能得到整数想要得到带有小数的结果，需要小数参与运算。
+整数相除，结果只能得到整数想要得到带有小数的结果，需要小数参与运算。举个例子：
+
+```java
+int res = 5 / 2;  // 2.0
+// 解决办法
+int res = (5 * 1.0) / 2;  // 2.5
+```
+
+小例子：
 
 ```java
 import java.util.Scanner;
@@ -1041,19 +1051,195 @@ public static void arrayTest() {
 
 ### 4 数组遍历操作
 
+> 20230114 00:30 心情不好 学习一会 好想回学校啊
 
-
-
+```java
+public static void printArray() {
+    int[] arr = {11, 22, 3, 44, 55, 66};
+    for(int i = 0; i < arr.length; i++) {
+        System.out.println(arr[i]);
+    }
+    // 快捷操作 数组名.fori
+    for (int j = 0; j < arr.length; j++) {
+        System.out.println(arr[j]);
+    }
+    // idea 提示可以
+    for (int i : arr) {
+        System.out.println(i);
+    }
+}
+```
 
 ### 5 数组动态初始化
 
+#### 5.1 定义
 
+动态初始化：初始化是指指定数组长度，由系统为数组分配初始值（默认值）。
+
+- 格式
+
+  - ```数据类型[] 数组名 = new 数据类型[长度];```
+
+- 默认值分类
+
+  - 整数：```0```
+
+  - 小数：```0.0```
+
+  - 布尔：```false```
+
+  - 字符：```'\u0000'```
+
+  - 引用数据类型：```null```
+
+    比如说字符串```String```是引用数据类型，所以字符串也是```null```
+
+    比如说数组```arr```是引用数据类型，所以**二维数组**也是```null```
+
+```java
+public static void arrayTest() {
+    int[] arr = new int[3];  // 动态初始化
+    for (int i: arr) {
+        System.out.println(i);  // 默认值 0
+    }
+}
+```
+
+#### 5.2 使用场景
+
+- 静态初始化
+  - 需求已经明确给出了数据
+- 动态参数化
+  - 只明确元素个数，不明确具体的数值
+
+#### 5.3 填充值
+
+```java
+public static void arrayTest() {
+    int[] arr = new int[5];
+    Scanner sc = new Scanner(System.in);
+    for (int i=0; i < arr.length; i++) {
+        System.out.println("请输入第" + (i + 1) + "个数：");
+        arr[i] = sc.nextInt();
+    }
+}
+```
 
 ### 6 数组内存图
 
+#### 6.1 内存分配介绍
+
+- **方法区**
+
+  字节码文件加载时进入的内存
+
+- **栈**
+
+  方法运行时所进入的内存
+
+- **堆**
+
+  ```new```出来的东西会在这块内存中开辟空间并产生地址
+
+- 本地方法栈
+
+- 寄存器
+
+![image-20230114193052260](assets/image-20230114193052260.png)
+
+![image-20230114200154031](assets/image-20230114200154031.png)
+
+#### 6.2 方法的参数传递问题
+
+1. 基本数据类型：传递的是数据值；
+2. 引用数据类型：传递的是地址值。
+
 ### 7 数组常见问题
 
+#### 7.1 索引越界异常（exception）
 
+```ArrayIndex0ut0fBoundsException```：当访问了数组中不存在的索引，就会引发索引越界异常。
+
+ #### 7.2 空指针异常
+
+```NullPointException```：当引用数据类型的变量，被赋值为```null``之后，就代表跟堆内存的连接被切断了。这时候还想去访问堆内存的数据，就会出现空指针异常。
 
 ## 二、二维数组
+
+### 1 简介
+
+二维数组是一种**容器**，用于存储一维数组。
+
+### 2 二维数组静态初始化
+
+#### 2.1 完整格式
+
+```数据类型[][] 数组名 = new 数据类型[][] {{元素1, 元素2}, {元素1, 元素2}}```
+
+#### 2.2 简化格式
+
+```数据类型[][] 数组名 = {{元素1, 元素2}, {元素1, 元素2}}```
+
+### 3 二维数组的创建与元素访问
+
+```java
+public static void main(String[] args) {
+    int [][] arr = {
+        {11, 22, 33},
+        {44, 55, 66}
+    };
+    System.out.println(arr);  // [[I@254989ff
+
+    //  二维数组存储一维数组时，是一维数组的地址值
+    System.out.println(arr[0]);  // [I@5d099f62
+    System.out.println(arr[1]);  // [I@37f8bb67
+
+    System.out.println(arr[0][0]);  // 11
+}
+```
+
+### 4 二维数组的遍历
+
+```java
+public class ArrayTest1 {
+    public static void main(String[] args) {
+        int [][] arr = {
+                {11, 22, 33},
+                {44, 55, 66}
+        };
+        printArray(arr);
+    }
+    public static void printArray(int [][] arr) {
+        for (int[] i: arr) {
+            for (int j: i) {
+                System.out.println(j);
+            }
+        }
+    }
+}
+```
+
+### 5 二维数组动态初始化
+
+#### 5.1 格式
+
+```数据类型[][] 数组名 = new 数据类型[m][n]```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
