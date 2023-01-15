@@ -470,13 +470,56 @@ a += 12.5;  // a = (int)(10 + 12.5)
 
 所谓的```>```、```<=```、```==```、...
 
+- ```==```：
+  - 基本数据类型：比较数据值
+  - 引用数据类型：比较地址值
+
 ### 3 逻辑运算符
 
 - ```&```：逻辑与
+
 - ```|```：逻辑或
+
 - ```!```：逻辑非
+
 - ```^```：逻辑异或
   - 相同为```flase```，不同为```true```
+  
+  - 异或操作数值运算的过程
+  
+    1. 把需要运算的转换为而二进制
+  
+       ```10```：```0000 1010```
+  
+       ```2```：```0000 0010```
+  
+    2. 二进制数据，```0```当```false```，```1```当```true```，运算
+  
+       ```
+         	0000 1010
+       ^	0000 0010
+       --------------
+           0000 1000
+       ```
+  
+    3. 运算后的转化为十进制
+  
+       8
+  
+  - 异或的特点
+  
+    - 一个数被另一个数异或两次，该数本身不变
+
+#### 面试题：交换两个数不用中间变量
+
+```java
+int a = 10;
+int b = 20;
+
+a = a ^ b;  // a = 10 ^ 20
+b = a ^ b;  // b = 10 ^ 20 ^ 20 = 10
+a = a ^ b;  // a = 10 ^ 20 ^ 10 = 20
+```
 
 ### 4 短路的逻辑运算符
 
@@ -992,7 +1035,7 @@ public static void guessNumber() {
 }
 ```
 
-# day 06
+# day 05
 
 ## 一、数组
 
@@ -1224,6 +1267,144 @@ public class ArrayTest1 {
 #### 5.1 格式
 
 ```数据类型[][] 数组名 = new 数据类型[m][n]```
+
+# day 06
+
+## 一、逢七过
+
+```java
+package com.itheima.test;
+
+public class Test1 {
+    public static void main(String[] args) {
+        knockSeven();
+    }
+    public static void knockSeven() {
+        for (int i = 1; i <= 100; i++){
+            int ge = i % 10;
+            int shi = i / 10 % 10;
+
+            if (ge == 7 || shi == 7 || i % 7 == 0) {
+                System.out.println("过");
+            } else {
+                System.out.println(i);
+            }
+        }
+    }
+}
+```
+
+## 二、数组元素求和
+
+```java
+public static void getEventNumberSum () {
+    int[] arr = {68, 27, 95, 88, 171, 996, 51, 210};
+    int sum = 0;
+    for (int i : arr) {
+        int ge = i % 10;
+        int shi = i / 10 % 10;
+        if (ge != 7 && shi != 7 && i % 2 == 0) {
+            sum += i;
+        }
+    }
+    System.out.println(sum);
+}
+```
+
+## 三、数组比较
+
+```java
+public static boolean checkArrayContent(int[] arr1, int[] arr2) {
+    /*
+        比较两个数组内容是否相同
+        长度，内容，顺序完全相同
+    */
+    if (arr1.length != arr2.length) {
+        return false;
+    }
+    for (int i = 0; i < arr1.length; i++) {
+        if (arr1[i] != arr2[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+```
+
+## 四、查找元素在数组中的索引
+
+```java
+public static int getIndex(int num, int[] arr) {
+    int index = -1;
+    for (int i = 0; i < arr.length; i++) {
+        if (arr[i] == num) {
+            index = i;
+            break;
+        }
+    }
+    return index;
+}
+```
+
+## 五、数组元素反转
+
+### 5.1 方法一：一个指针
+
+```java
+private static void reverseArray1() {
+    /*
+    数组元素逆序
+
+        第一个和倒数第一个  arr[0] arr[arr.length - 1 - 0]
+        第二个和倒数第二个  arr[1] arr[arr.length - 1 - 1]
+        第三个和倒数第三个  arr[2] arr[arr.length - 1 - 2]
+        ...
+        arr[i] arr[arr.length - 1 - i]
+     */
+    int[] arr = {1, 2, 3, 4, 5};
+    for (int i = 0; i < arr.length / 2; i++) {
+        int tem = arr[i];
+        arr[i] = arr[arr.length - 1 - i];
+        arr[arr.length - 1 - i] = tem;
+    }
+    for (int i : arr) {
+        System.out.println(i);
+    }
+}
+```
+
+### 5.2 方法二：两个指针
+
+```java
+public static void reverseArray2() {
+    /*
+        准备两个指针 从两边往中间走 每走一步交换一下
+        两者相遇 结束
+     */
+    int[] arr = {1, 2, 3, 4, 5, 6};
+    int star = 0;
+    int end = arr.length - 1;
+    while (true) {
+        int tem = arr[star];
+        arr[star] = arr[end];
+        arr[end] = tem;
+        star ++;
+        end --;
+        if (end - star <= 1) {
+            break;
+        }
+    }
+    for (int i :arr) {
+        System.out.println(i);
+    }
+}
+```
+
+## 六、评委打分
+
+
+
+## 七、随机产生验证码
 
 
 
