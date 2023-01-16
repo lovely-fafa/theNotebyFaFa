@@ -1077,6 +1077,8 @@ public static void arrayTest2() {
 }
 ```
 
+注意事项：打印字符型数组，看到的不是地址值，而是数值。
+
 ### 3 数组元素访问
 
 - 格式：```数组名[索引值];```
@@ -1402,9 +1404,173 @@ public static void reverseArray2() {
 
 ## 六、评委打分
 
+```java
+public class Test6 {
+    public static void main(String[] args) {
+        /*
+            在编程竞赛中，有6个评委为参赛的选手打分，分数为 0-100 的整数分
+            选手的最后得分为:去掉一个最高分和一个最低分后 的4个评委平均值
+         */
+        int[] arr = initArray();
 
+        double avg = getAvg(arr);
+        System.out.println("平均分是" + avg);
+    }
+
+    private static double getAvg(int[] arr) {
+        int max = arr[0];
+        int min = arr[0];
+        int sum = 0;
+        for (int i: arr) {
+            if (i > max) {
+                max = i;
+            }
+            if (i < min) {
+                min = i;
+            }
+            sum += i;
+        }
+        return (sum - max - min) / ((arr.length - 2) * 1.0);
+    }
+
+    private static int[] initArray() {
+        /**
+         * 用于初始化数组
+         */
+        Scanner sc = new Scanner(System.in);
+        System.out.println("请输入 6 个评委的分数...");
+        int[] arr = new int[6];
+        for (int i = 0; i < arr.length; i++) {
+            while (true) {
+                System.out.println("请输入第" + i + "个评委的打分：");
+                int score = sc.nextInt();
+                if (score > 0 && score < 100){
+                    arr[i] = score;
+                    break;
+                } else {
+                    System.out.println("请输入分数为 0-100 的整数分！");
+                }
+            }
+        }
+        return arr;
+    }
+}
+```
 
 ## 七、随机产生验证码
+
+```java
+public class Test7 {
+    public static void main(String[] args) {
+
+        char[] chs = initArray();
+        System.out.println(chs);
+        String s = getCheckCode(chs);
+        System.out.println(s);
+    }
+
+    private static String getCheckCode(char[] chs) {
+        Random r = new Random();
+        String s = "";
+        for (int i = 1; i <= 5; i++) {
+            s += chs[r.nextInt(chs.length)];
+        }
+        return s;
+    }
+
+    private static char[] initArray() {
+        char[] chs = new char[26 +26 +10];
+
+        int index = 0;
+        for (char i = 'A'; i <= 'Z'; i++) {
+            chs[index] = i;
+            index ++;
+        }
+        for (char i = 'a'; i <= 'z'; i++) {
+            chs[index] = i;
+            index ++;
+        }
+        for (char i = '0'; i <= '9'; i++) {
+            chs[index] = i;
+            index ++;
+        }
+        return chs;
+    }
+}
+```
+
+# day 07 面向对象
+
+## 1 类和对象
+
+### 1.1 类
+
+- 类指的是一组相关属性和行为的集合
+- 一个类，可以创建多个对象
+
+定义类
+
+```java
+package com.itheima.oop;
+
+public class Student {
+    String name = "发发";
+    int age = 21;
+
+    public void eat() {
+        System.out.println("吃饭");
+    }
+    public void drink() {
+        System.out.println("喝水");
+    }
+}
+```
+
+实例化
+
+```java
+package com.itheima.oop;
+
+public class StudentTest {
+    public static void main(String[] args) {
+        // 1.创建类
+        Student stu1 = new Student();
+        System.out.println(stu1);  // com.itheima.oop.Student@5d099f62
+
+        // 2.使用对象成员变量
+        System.out.println(stu1.name);
+        System.out.println(stu1.age);
+
+        // 3.使用对象成员方法
+        stu1.eat();
+        stu1.drink();
+    }
+}
+```
+
+## 2 对象内存图
+
+
+
+
+
+## 3 成员变量和局部变量
+
+
+
+
+
+## 4 this关键字
+
+
+
+## 5 构造方法
+
+
+
+
+
+## 6 封装
 
 
 
