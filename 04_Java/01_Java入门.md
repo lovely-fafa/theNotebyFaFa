@@ -9,6 +9,7 @@
 - ```ctrl+alt+a```：在方法上使用，会自动补全接收方法返回值的变量。
 - ```shift+f6```：批量选中变量名以修改。
 - ```ctrl+alt+m```：把选中的代码抽取到一个新的方法中，并提供友好的方法命名方式。
+- ```ctrl+alt+t```：可供选择使用什么函数快速包裹选中的代码。
 
 # day 01
 
@@ -1548,30 +1549,352 @@ public class StudentTest {
 }
 ```
 
+### 1.2 细节
+
+- 打印的类
+
+  ```com.itheima.oop.Student@5d099f62```
+
+  这个是全类名：包名+类名
+
+- 成员变量就算没有赋值，也可以用，但是是默认值，没有用
+
 ## 2 对象内存图
 
-
-
-
+![image-20230118161526531](assets/image-20230118161526531.png)
 
 ## 3 成员变量和局部变量
 
+### 3.1 成员变量和局部变量的区别
 
-
-
+|     区别     |                  成员变量                  |                    局部变量                    |
+| :----------: | :----------------------------------------: | :--------------------------------------------: |
+|  类中的位置  |                   方法外                   |                     方法内                     |
+| 初始化值不同 |               有默认初始化值               |           没有，使用之前需要完成赋值           |
+| 内存位置不同 |                   堆内存                   |                     栈内存                     |
+| 生命周期不同 | 随着对象的创建而存在，随着对象的消失而消失 | 随着方法的调用而存在，随着方法的运行结束而消失 |
+|    作用域    |           在自己所归属的大括号中           |             在自己所归属的大括号中             |
 
 ## 4 this关键字
 
+### 4.1 this介绍
 
+- ```this```是当前类 对象的引用（地址）
+- 谁来调用我，我就代表谁
+
+### 4.2 this使用
+
+不就是```py```的```self```嘛
+
+```java
+package com.itheima.myThis;
+
+public class Student {
+    String name;
+
+    public void sayHello(String name) {
+        System.out.println(name);  // 西域狂鸭
+        System.out.println(this.name);  // 肛门吹雪
+        this.method();  // this 可以调本类的方法
+    }
+    public void method() {
+        System.out.println("method...");
+    }
+}
+```
+
+```java
+package com.itheima.myThis;
+
+public class ThisDemo {
+    public static void main(String[] args) {
+        Student stu = new Student();
+        stu.name = "肛门吹雪";
+        stu.sayHello("西域狂鸭");
+    }
+}
+```
+
+### 4.3 this关键字的省略原则
+
+- 本类成员方法：没有限制条件，可以直接省略
+
+- 本类成员变量：方法中没有重名的变量，```this```才可以省略
+
+  ```java
+  public class Student {
+      String name;
+  
+      public void sayHello(String name) {
+          System.out.println(name);  // 这个地方重名了 根据就近原则 name 就是局部变量 而不是成员变量
+          System.out.println(this.name);  // 所以这个地方使用了 this 才是成员变量
+      }
+  ```
+
+### 4.4 this内存图
+
+![image-20230118170546237](assets/image-20230118170546237.png)
 
 ## 5 构造方法
 
+### 5.1 构造器
 
+> 感觉和```py```的```__init__```差不多诶
 
+初始化一个新建对象 构建、创造对象的时候，所调用的方法。
 
+### 5.2 格式
+
+1. 方法名与类名相同，大小写也要一致
+2. 没有返回值类型，连```void```都没有
+3. 没有具体的返回值（不能由```return```带回结果数据）
+
+类
+
+```java
+public class Student {
+    public Student() {
+        System.out.println("我是 Student 类的构造方法...");
+    }
+}
+```
+
+实例化
+
+```java
+public class Student {
+    public Student() {
+        System.out.println("我是 Student 类的构造方法...");
+    }
+}
+```
+
+控制台
+
+```
+我是 Student 类的构造方法...
+```
+
+### 5.3 执行时机
+
+- 在创建对象的时候， 被调用执行
+- 每创建一次对象，就会执行一次构适方法
+
+### 5.4 构造方法的作用
+
+- 本质的作用：创建对象
+- 综合执行时机的作用：可以创建对象的时候，给对象中的数据初始化
+
+类
+
+```java
+public class Student {
+    String name;
+    int age;
+    public Student(String name, int age) {
+        // System.out.println("我是 Student 类的构造方法...");
+        this.name = name;
+        this.age = age;
+    }
+}
+```
+
+实例化
+
+```java
+public class StudentTest {
+    public static void main(String[] args) {
+        Student stu1 = new Student("张三", 14);
+        System.out.println(stu1.name + stu1.age);
+
+        Student stu2 = new Student("发发", 22);
+        System.out.println(stu2.name + stu2.age);
+    }
+}
+```
+
+### 5.5 注意事项
+
+- 一个类中，没有编写构造方法，系统会提供一个**默认**的**无参数**的构造方法
+
+  ```java
+  public class Phone {
+      public Phone() {
+          
+      }
+  }
+  ```
+
+- 一个类中，如果手动编写了构造方法，系统将不会再提供那个默认的无参构造
+
+- 构造方法不允许手动调用
+
+  比如说，不能```Phone.Phone()```
+
+- 推荐**无参构造**与**有参构造**都手动添加
+
+### 5.6 内存图
+
+![image-20230118172840000](assets/image-20230118172840000.png)
+
+创建对象时，```new```是负责创建堆内存地址，```new```后面的，其实是在调用构造方法。
 
 ## 6 封装
 
+### 6.1 定义
+
+使用类设计对象时，将需要处理的**数据**，以及处理这些数据的**方法**，设计到对象中。
+
+### 6.2 好处
+
+- 更好维护数据
+- 使用者无需关心内部实现，只要知道怎么使用就可以了
+
+### 6.3 设计规范
+
+合理隐藏，合理暴露
+
+- 权限修饰符
+
+  > 可以修饰**成员变量**和**成员方法**
+
+  - private
+
+    同一个类 中可以访问
+
+  - (default)
+
+    同一个类，同一个包 中可以访问
+
+  - protected
+
+    同一个类，同一个包，不同包的子类 中可以访问
+
+  - public
+
+    任意位置 中可以访问
+
+- 举个例子
+
+  ```java
+  package com.itheima.permission;
+  
+  public class Student {
+      /*
+          1.私有成员变量的目的 保证安全性
+  
+          2.针对私有的成员变量，提供对应的 setXxx 和 getXxx 方法
+  
+              set：设置
+              get：获取
+       */
+      private int age;
+      public void setAge(int age) {
+          if (age > 1 && age <= 120){
+              this.age = age;
+          } else {
+              System.out.println("年龄有误...");
+          }
+      }
+      public int getAge() {
+          return age;
+      }
+  }
+  ```
+
+  ```java
+  package com.itheima.permission;
+  
+  public class StudentTest {
+      public static void main(String[] args) {
+          Student stu = new Student();
+          // stu.age = -23;
+          stu.setAge(-23);
+  
+          System.out.println(stu.getAge());
+      }
+  }
+  ```
+
+## 7 Java Bean
+
+### 7.1 规范
+
+1. 所有成员变量都要私有化，并且提供对应的```setXxx```和```getXxx```方法
+2. 类中提供无参、带参的构造方法
+
+### 7.2 生成方法
+
+- 右键```Generate```
+- ```ptg```插件
+
+```java
+package com.itheima.domain;
+
+public class Student {
+    // 1.成员变量私有化
+    private String name;
+    private int age;
+
+    public Student() {
+    }
+
+    public Student(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    /**
+     * 获取
+     * @return name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * 设置
+     * @param name
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * 获取
+     * @return age
+     */
+    public int getAge() {
+        return age;
+    }
+
+    /**
+     * 设置
+     * @param age
+     */
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String toString() {
+        return "Student{name = " + name + ", age = " + age + "}";
+    }
+}
+```
+
+### 7.3 实体类应用场景
+
+实体类只负责数据存取，而对数据的处理交给其他类来完成，以实现数据和数据业务处理相分离。
+
+## 8 小案例：电影管理系统
+
+哇咔咔 好有意思 这不就是```py```的那个学生管理系统嘛
+
+
+
+  
+
+  
 
 
 
@@ -1585,6 +1908,7 @@ public class StudentTest {
 
 
 
+ 
 
 
 

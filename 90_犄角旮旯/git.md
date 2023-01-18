@@ -9,8 +9,8 @@
 ## 1.1 设置用户信息
 
 ```git
-git config --global user.username ""
-git config --global user.email ""
+git config --global user.username "fafa"
+git config --global user.email "fafa@163.com"
 ```
 
 ## 1.2 查看用户信息
@@ -62,11 +62,6 @@ git config --global user.email
   LC_ALL=zh_CN.UTF-8
   ```
   
-  
-  
-  
-
-![image-20221103202957595](C:\Users\lenovo\AppData\Roaming\Typora\typora-user-images\image-20221103202957595.png)
 
 # 2 基础指令
 
