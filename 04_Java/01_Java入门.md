@@ -10,6 +10,7 @@
 - ```shift+f6```：批量选中变量名以修改。
 - ```ctrl+alt+m```：把选中的代码抽取到一个新的方法中，并提供友好的方法命名方式。
 - ```ctrl+alt+t```：可供选择使用什么函数快速包裹选中的代码。
+- ```ctrl+alt+←```：回到光标上一处。
 
 # day 01
 
@@ -1889,6 +1890,197 @@ public class Student {
 ## 8 小案例：电影管理系统
 
 哇咔咔 好有意思 这不就是```py```的那个学生管理系统嘛
+
+# day 08 常用API
+
+API (Application Programming Interface) : 应用程序编程接口
+
+## 1 scanner 补充
+
+- ```sc.next()```：遇到了空格，或者```tab```键就不再录入了
+- ```sc.nextLine()```：以回车作为录入结束的标记
+
+...不想学了 留个坑吧...
+
+## 2 String
+
+### 2.1 String 对象的特点
+
+- Java程序中的所有双引号字符串，都是String这个类的对象
+
+- 字符串一旦被创建，就不可更改，字符串内容不可更改。如果要更改，只能用新的东西做替换。
+
+- String字符串虽然不可更改，但是可以被共享。
+
+  - 字符串常量池：当我们使用双引号创建字符串对象时，会检查常量池中是否存在改数据
+
+    ```jdk7```版本之前，```StringTable```在方法区中
+
+    ```jdk7```版本开始，```StringTable```被挪到了堆内存
+
+    - 不存在：创建
+    - 存在：复用
+
+    ```java
+    String s1 = "abc";
+    String s2 = "abc";
+    
+    s1 == s2;  // 字符串是引用数据类型 == 会比较地址值 因为字符串常量池的存在 所以这个地方是 true
+    ```
+
+  ![image-20230119002139453](assets/image-20230119002139453.png)
+
+### 2.2 字符串常见构造方法
+
+```java
+public class StringDemo1 {
+    public static void main(String[] args) {
+        // public String()：创建一个空白字符串 里面不含任何内容
+        String s1 = new String();
+        System.out.println(s1);
+
+        // public String(char[] chs)：根据传入的字符组 创建字符串对象
+        char[] chs = {'a', 'a', 'c'};
+        String s2 = new String(chs);
+        System.out.println(s2);  // aac
+
+        // public String(String original)
+        String s3 = new String("abc");
+        System.out.println(s3);
+    }
+}
+```
+
+### 2.3 面试题
+
+> ![image-20230119003749101](assets/image-20230119003749101.png)
+
+1. 考察字符串常量池
+
+2. 考察构造方法
+
+   下面这两个字符串
+
+   一个在字符串常量池```StringTable```，一个在堆内存中
+
+   ![image-20230119002804057](assets/image-20230119002804057.png)
+
+   注：字符串在底层 是记录这个字符串字节值的数组
+
+3. 考察字符串拼接的原理
+
+   ![image-20230119003528046](assets/image-20230119003528046.png)
+
+4. 考察常量优化机制
+
+   由于Java有常量优化机制，所以在编译为字节码文件时，会把```"a" + "b" + "c"```编译为```"abc"```。
+
+   ![image-20230119003739625](assets/image-20230119003739625.png)
+
+### 2.4 字符串比较内容
+
+- ```public boolean equals(要比较的字符串)```
+
+- ```public boolean equalsIgnoreCase(要比较的字符串)```
+
+  ```java
+  String s1 = "abc";
+  String s2 = new String("abc");
+  System.out.println(s1 == s2);  // false
+  System.out.println(s1.equals(s2));  // true
+  
+  String ss1 = "abc";
+  String ss2 = "Abc";
+  System.out.println(ss1.equals(ss2));  // false
+  System.out.println(ss1.equalsIgnoreCase(ss2));  // true
+  ```
+
+### 2.5 字符串的遍历
+
+- 方法一
+
+  ```public char[] toCharArray()```：将字符串转换为字符数组
+
+  这个方法效率更高
+
+- 方法二
+
+  ```public char charAt(int index)```：根据索引找字符
+
+- 这个不是方法
+
+  ```public int length()```：返回字符串长度
+
+```java
+public class StringMethodDemo2 {
+    public static void main(String[] args) {
+        print1();
+        print2();
+    }
+
+    private static void print2() {
+        String s = "fafafafa";
+        for (int i = 0; i < s.length(); i++) {
+            System.out.println(s.charAt(i));
+        }
+    }
+
+    private static void print1() {
+        String s = "fafafafa";
+        char[] chars = s.toCharArray();
+        for (int i = 0; i < chars.length; i++) {
+            System.out.println(chars[i]);
+        }
+    }
+}
+```
+
+### 2.6 小案例：统计字符次数
+
+```java
+public class StringTest1 {
+    /*
+        需求:键盘录入一个字符串，统计该字符串中大写字母字符，小写字母字符，数字字符出现的次数(不考虑其他字符)
+
+        例如:aAb3&c2B4CD1
+
+        小写字母:3个
+        大写字母:4个
+        数字字母:4个
+     */
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("请输入一个字符串：");
+        String input = sc.nextLine();
+
+        int small = 0;
+        int big = 0;
+        int number = 0;
+
+        for (char i : input.toCharArray()) {
+            if (i > 'a' && i < 'z') {
+                small ++;
+            } else if (i > 'A' && i < 'Z') {
+                big ++;
+            } else if (i > '0' && i < '9') {
+                number ++;
+            }
+        }
+        
+        System.out.println("小写字符：" + small + "个");
+        System.out.println("大写字符：" + big + "个");
+        System.out.println("数字字符：" + number + "个");
+    }
+}
+```
+
+### 2.7 字符串的截取
+
+
+
+
+
+
 
 
 
