@@ -2076,6 +2076,137 @@ public class StringTest1 {
 
 ### 2.7 字符串的截取
 
+- ```public String substring(int beginIndex)```
+- ```public String substring(int beginIndex, int endIndex)```
+
+```java
+String s = "itheima";
+String result1 = s.substring(2);
+System.out.println(result1);
+
+String result2 = s.substring(2, 5);
+System.out.println(result2);
+```
+
+### 2.8 字符串替换
+
+- ```public String replace(CharSequence target, CharSequence replacement)```
+
+```java
+String s = "itheima";
+String result = s.replace("hei", "bai");
+System.out.println(result);
+```
+
+### 2.9 字符串分割
+
+- ```public String split(String regex)```
+
+```java
+String s = "192.168.2.2";
+String[] sArr = s.split("\\.");
+for (int i = 0; i < sArr.length; i++) {
+    System.out.println(sArr[i]);
+}
+```
+
+## 3 StringBuilder
+
+### 3.1 引入
+
+- 一个可变的字符串序列
+- ```StringBuilder```是字符串的缓冲区，将其理解为容器，可以储存任意数据类型。只要进入到这个容器，全部都变成字符串。
+
+可以提高字符串的处理速度？
+
+```java
+StringBuilder sb = new StringBuilder();
+
+sb.append("fafa");
+sb.append(true);
+sb.append(123);
+
+System.out.println(sb);  // fafatrue123
+```
+
+### 3.2 构造方法
+
+- ```public StringBuilder()```：构造一个不带任何字符的字符申生成器，其初始容量为16个字符。
+- ```public StringBuilder(String str)```：创建一个字符串缓冲区，并初始化好指定的参数内容。
+
+### 3.3 常用成员方法
+
+- ```public StringBuilder append(任意类型)```：添加数据，并返回对象自己。
+
+  所以说，这个地方，可以**链式编程**：调用的方法，返回的结果是对象， 就可以继续向下调用方法。
+
+- ```public StringBuilder reverse()```：将缓冲区的内容，进行反转。
+
+- ```public StringBuilder toString()```：将缓冲区的内容，以```String```字符串类型返回。
+
+# day 09 集合基础
+
+## 1 ArrayList
+
+### 1.1 ArrayList 程度可变原理
+
+1. 当创建```ArrayList```集合容器的时候，底层会存在一个长度为10个大小的空数组
+2. 扩容原数组 1.5倍大小的新数组
+3. 将原数组数据，拷贝到新数组中
+4. 将新元素添加到新数组
+
+### 1.2 集合和数组的使用选择
+
+- 数组：存储的元素个数固定不变
+- 集合：存储的元素个数经常发生改变
+
+### 1.3 构造方法
+
+- ```public ArrayList()```：创建一个空的集合器
+
+  ```java
+  ArrayList list = new ArrayList();
+  ```
+
+  可以添加任意类型的数据 但是非常不严谨
+
+- 所以应该类型限制
+
+  ```java
+  // jdk 前
+  ArrayList<String> list = new ArrayList<String>();
+  
+  // jdk 7开始
+  ArrayList<String> list = new ArrayList<>();
+  
+  // 这个地方的 <> 是泛型 泛型不能写基本数据类型 只能写引用数据类型
+  // 但是基本数据类型怎么办呢 写对应的包装类
+  ```
+
+```java
+ArrayList<String> list = new ArrayList<>();
+list.add("张三");
+list.add("张三");
+list.add("李四");
+System.out.println(list);  // [张三, 张三, 李四]
+
+ArrayList<Double> list1 = new ArrayList<>();
+list1.add(1.1);
+list1.add(2.3);
+System.out.println(list1);  // [1.1, 2.3]
+```
+
+### 1.4 常用成员方法
+
+|                   方法名                   |                  说明                  |
+| :----------------------------------------: | :------------------------------------: |
+|       ```public boolean add(E e)```        |     将指定的元素添加到此集合的末尾     |
+| ```public void add(int index,E element)``` |   在此集合中的指定位置插入指定的元素   |
+|       ```public E get(int index)```        |          返回指定索引处的元素          |
+|          ```public int size()```           |         返回集合中的元素的个数         |
+|      ```public E remove(int index)```      | 删除指定索引处的元素，返回被删除的元素 |
+|   ```public boolean remove(Object o)```    |    删除指定的元素，返回删除是否成功    |
+|  ```public E set(int index,E element)```   | 修改指定索引处的元素，返回被修改的元素 |
 
 
 
@@ -2083,6 +2214,17 @@ public class StringTest1 {
 
 
 
+
+
+
+
+
+
+
+
+
+
+ 
 
   
 

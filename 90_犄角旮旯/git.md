@@ -271,6 +271,8 @@ git config --global user.email
 
 ```ssh -T git@github.com```
 
+```Hi lovely-fafa! You've successfully authenticated, but GitHub does not provide shell access.```
+
 ## 4.1 添加远程仓库
 
 - 命令：```git remote add <远端名称> <仓库路径>```
