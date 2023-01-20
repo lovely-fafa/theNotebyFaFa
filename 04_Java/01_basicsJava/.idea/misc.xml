@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/day01-code/day02-code/pom.xml" />
+        <option value="$PROJECT_DIR$/day01-code/pom.xml" />
+        <option value="$PROJECT_DIR$/day03-code/pom.xml" />
+        <option value="$PROJECT_DIR$/day04-code/pom.xml" />
+        <option value="$PROJECT_DIR$/day05-code/pom.xml" />
+        <option value="$PROJECT_DIR$/day06-code/pom.xml" />
+        <option value="$PROJECT_DIR$/demo1/pom.xml" />
+        <option value="$PROJECT_DIR$/day07-code/pom.xml" />
+        <option value="$PROJECT_DIR$/day08-code/pom.xml" />
+        <option value="$PROJECT_DIR$/day09-code/pom.xml" />
+        <option value="$PROJECT_DIR$/StudentManager/pom.xml" />
+        <option value="$PROJECT_DIR$/demo/pom.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="17" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/out" />
+  </component>
+</project>
