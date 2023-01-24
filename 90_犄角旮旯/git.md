@@ -11,6 +11,9 @@
 ```git
 git config --global user.username "fafa"
 git config --global user.email "fafa@163.com"
+
+git config --global user.username "fafa-Linux"
+git config --global user.email "fafa@163.com"
 ```
 
 ## 1.2 查看用户信息
@@ -371,6 +374,38 @@ git config --global user.email
 ![image-20221107195412651](C:\Users\lenovo\AppData\Roaming\Typora\typora-user-images\image-20221107195412651.png)
 
 ![image-20221107195528129](C:\Users\lenovo\AppData\Roaming\Typora\typora-user-images\image-20221107195528129.png)
+
+# 5 在Linux使用Git
+
+## 1 安装git和ssh
+
+### 1.1 安装ssh
+
+```
+apt-get install ssh
+```
+
+### 1.2 查看 SSH 服务状态
+
+```
+ps -e | grep sshd
+```
+
+### 1.3 生成ssh key
+
+- 先查看
+
+  ```
+  ls -al ~/.ssh
+  ```
+
+- 生成 SSH KEY
+
+  ```
+  ssh-keygen -t rsa -C "fafa@163.com"
+  ```
+
+  ![image-20230122183718816](assets/image-20230122183718816.png)
 
 # 6 铁令
 

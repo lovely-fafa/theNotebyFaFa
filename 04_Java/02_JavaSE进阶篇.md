@@ -192,5 +192,196 @@ class Manager extends Employee {
 
 ### 2.3 成员变量
 
+- 子父类，如果出现了重名的成员变量，使用的时候会优先使用？
+
+  - 根据就近原则，必定是使用子类的
+
+  - 但是非要使用父类的，可以用```super```关键字
+
+    ```java
+    public class ExtendsDemo2 {
+        public static void main(String[] args) {
+            Zi z = new Zi();
+            z.method();
+        }
+    }
+    
+    class Fu {
+        int num = 10;
+    }
+    
+    class Zi extends Fu {
+        int num = 20;
+        public void method() {
+            System.out.println(num);  // 20
+            System.out.println(super.num);  // 10
+        }
+    }
+    ```
+
+### 2.4 成员方法
+
+- 子父类中，出现了方法声明一模一样的方法（方法名，参数，返回值）。在创建子类对象，调用方法的时候，会优先使用子类的方法。逻辑上这虽然是就近原则的现象，但其实是子类的方法，对父类的方法，进行了重写操作。
+  - 区别
+    - 方法重载（Overload）：在同一个类中，方法名相同，参数不同，与返回值无关。参数不同: 类型不同，个数不同，顺序不同。
+    - 方法重写（Override）： 在子父类当中，出现了方法声明一模一样的方法（方法名，参数，返回值）。
+- 注意事项
+  - 父类中私有方法不能被重写
+  - 子类重写父类方法时，访问权限必须大于等于父类
+
+### 2.5 protected修饰符
+
+用的很少...
+
+![image-20230124165414808](assets/image-20230124165414808.png)
+
+### 2.6 Java继承的特点
+
+- Java只支持**单继承**，不支持**多继承**，但支持**多层继承**
+
+```java
+public class ExtendsDemo4 {
+    public static void main(String[] args) {
+        C c = new C();
+        c.methodA();
+        c.methodB();
+        c.methodC();
+    }
+}
+
+class A {
+    public void methodA() {
+        System.out.println("A...");
+    }
+}
+
+class B extends A{
+    public void methodB() {
+        System.out.println("B...");
+    }
+}
+
+class C extends B{
+    public void methodC() {
+        System.out.println("C...");
+    }
+}
+```
+
+### 2.7 构造方法
+
+- 父类的构造方法 子类无法继承
+
+- 子类在初始化前 需要先完成父类的初始化 因为子类的构造方法中可能会使用父类的数据
+
+  所以，除了```object```类，在所有构造方法中，都默认隐藏一句```super()```。通过这行代码，访问父类的**空参**构造方法。
+
+  细节：Java当中所有的类，都直接或者问接的继承到了```object```类。
+
+```java
+public class Test {
+    public static void main(String[] args) {
+        Zi z1 = new Zi();
+        Zi z2 = new Zi(3);
+    }
+}
+
+class Fu {
+    public Fu() {
+        System.out.println("Fu类的空参构造");
+    }
+    public Fu(int num) {
+        System.out.println("Fu类的带参构造");
+    }
+}
+
+class Zi extends Fu {
+    public Zi () {
+        // super();  // 默认隐藏的
+        System.out.println("Zi类的空参构造");
+    }
+    public Zi (int num) {
+        // super();  // 默认隐藏的
+        System.out.println("Zi类的带参构造");
+    }
+}
+```
+
+### 2.8 继承中的构造方法内存图
+
+- 子类中会专门开辟一块内存空间，继承父类的成员变量。就算是私有的，也是会继承的，只是说因为权限问题不能直接访问，但是可以通过```get()```进行访问。
+
+![image-20230124194132391](assets/image-20230124194132391.png)
+
+### 2.9 this和supper
+
+- 概念
+
+  - ```this```：代表**本类**对象的引用
+  - ```supper```：代表**父类**存储空间的标识
+
+- 调用格式
+
+  |    关键字    |         访问成员变量         |        访问成员方法        |             访问构造方法             |
+  | :----------: | :--------------------------: | :------------------------: | :----------------------------------: |
+  |  ```this```  |  ```this.本类的成员变量;```  | ```this.本类的成员方法;``` | ```this(); this(...);```本类构造方法 |
+  | ```supper``` | ```supper.父类的成员变量;``` | ```this.父类的成员方法;``` | ```this(); this(...);```父类构造方法 |
+
+- ```supper```的省略
+
+  从本质上来说，子类是继承了父类的成员变量和成员方法。所以```supper```的省略，其实是```this```的省略：子类没有重名的成员变量和成员方法，就可以省略。
+
+- ```this()```调用本类构造方法的场景——版本升级
+
+  ```java
+  package com.itheima.myExtend;
+  
+  public class ExtendsDemos {
+      public static void main(String[] args) {
+          AA a1 = new AA(1, 2, 3);
+          AA a2 = new AA(1, 2, 3);
+          // 新需求
+          AA a3 = new AA(1, 2, 6, 7);
+      }
+  }
+  
+  class AA {
+      int a;
+      int b;
+      int c;
+      // 需求多了一个 d
+      int d;
+  
+      public AA(int a, int b, int c) {
+          this.a = a;
+          this.b = b;
+          this.c = c;
+          // 如果在这个地方给 d 赋值 会改其他使用这个构造方法的代码
+          // this.d = d
+      }
+      
+      // 解决办法 方法重载
+      public AA(int a, int b, int c, int d) {
+          // this.a = a;
+          // this.b = b;
+          // this.c = c;
+          
+          // 简写了...
+          this(a, b, c);
+          this.d = d;
+      }   
+  }
+  ```
+
+- 注意：```this()```和```super()```都在争夺构造方法第一行的位置，所以二者不能共存
+
+## 3 final关键字
+
+
+
+
+
+
+
 
 
