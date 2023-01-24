@@ -377,6 +377,126 @@ class Zi extends Fu {
 
 ## 3 final关键字
 
+### 3.1 使用
+
+- ```final```关键字是最终的意思，可以修饰（方法，类，变量）
+- 修饰方法：表明该方法是最终方法，不能被重写
+- 修饰类：表明该类是最终类，不能被继承
+- 修饰变量：表明该变量是常量，不能再次被赋值
+
+```java
+public class FinalDemo {
+    public static void main(String[] args) {
+        final int num = 10;
+        // num = 20;  // 不能修改
+        System.out.println(num);
+
+        final int[] arr = {1, 2, 3};
+        // arr = new int[3];  // 不能改地址值
+        arr[0] = 0;  // 可以改内容
+        System.out.println(arr[0]);  // 0
+    }
+}
+
+final class Fu extends Object {
+    public final void method() {
+        System.out.println("父类中的重要方法，不希望子类进行修改...");
+    }
+}
+
+class Student {
+    //final int num;  // final 修饰成员变量 不能修饰默认值 但是 可以在构造方法中赋值 则该句不报错
+    final int num = 0;
+}
+```
+
+### 3.2 细节补充
+
+- 变量是基本类型：```final```修饰指的是基本类型的数据，值不能发生改变。
+- 变量是引用类型：```final```修饰指的是引用类型，地址值不能发生改变，但是地址里面的内容是可以发生改变的。
+- 成员变量如果被```final```修饰，需要在构造方法结束之前，完成赋值。
+
+### 3.3```final```修饰变量名的规范
+
+- 如果变量名是一个单词，所有字母大写：```MAX```
+- 如果变量名是多个单词， 所有字母大写， 中间使用下划线分割```MAX_VALUE```
+
+# day 02 面向对象高级
+
+## 1 包
+
+### 1.1 定义
+
+- 包本质来说就是文件夹，用来管理类文件的
+
+### 1.2 导包
+
+- 相同包下的类可以直接访问，不同包下的类必须导包，才可以使用！导包格式：```import 包名.类名```
+- 假如一个类中需要用到不同类，而这个两个类的名称是一样的，那么默认只能导入一个类，另一个类要带包名访问。
+
+```java
+public class Test {
+    public static void main(String[] args) {
+        Student stu1 = new Student();
+        stu1.eat();
+
+        // 使用全类名创建对象
+        com.itheima.b.Student stu2 = new com.itheima.b.Student();
+        stu2.sleep();
+    }
+}
+```
+
+```java
+public class Scanner {
+    public static void main(String[] args) {
+        java.util.Scanner sc = new java.util.Scanner(System.in);
+    }
+}
+```
+
+## 2 抽象类
+
+- 抽象类是一种特殊的父类，内部可以编写抽象代码。
+- 抽象方法：将共性的行为（方法）抽取到父类之后，发现该方法的**实现逻辑**无法在**父类中给出具体明确**，该方法就可以定义为抽象方法。
+
+```java
+public class AbstractDemo1 {
+    public static void main(String[] args) {
+        Cat c = new Cat();
+        c.eat();
+
+        Dog d = new Dog();
+        d.eat();
+    }
+}
+
+abstract class Animal {
+    public abstract void eat();  // 每个动物吃什么 都不一样 干脆就抽象类吧
+}
+
+class Cat extends Animal{
+    // 重写
+    public void eat() {
+        System.out.println("猫吃鱼");
+    }
+}
+
+class Dog extends Animal {
+    public void eat() {
+        System.out.println("狗吃屎");
+    }
+}
+```
+
+
+
+## 3 接口
+
+
+
+## 4 多态
+
 
 
 
