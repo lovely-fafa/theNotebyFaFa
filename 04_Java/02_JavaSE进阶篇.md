@@ -457,6 +457,8 @@ public class Scanner {
 
 ## 2 抽象类
 
+### 2.1 定义抽象类
+
 - 抽象类是一种特殊的父类，内部可以编写抽象代码。
 - 抽象方法：将共性的行为（方法）抽取到父类之后，发现该方法的**实现逻辑**无法在**父类中给出具体明确**，该方法就可以定义为抽象方法。
 
@@ -489,13 +491,217 @@ class Dog extends Animal {
 }
 ```
 
+### 2.2 注意事项
 
+- 抽象类不能实例化
+  - 因为如果抽象类允许创建刘象， 就司以调用内部没有方法体的，抽象方法了
+- 抽象类有构造方法
+  - 交给子类，通过```super()```进行访问
+- 抽象类可以编写普通方法
+  - 让子类继承使用
+- 抽象类的子类
+  - 要么重写抽象类的抽象方法
+  - 要么是抽象类
+
+### 2.3 abstract关键字的冲突
+
+- ```final```：被```abstract```修饰的方法，强制要求子类重写，被```final```修饰的方法子类不能重写
+- ```private```：被```abstract```修饰的方法，强制要求子类重写，被```private```修饰的方法子类不能重写
+- ```static```：被```static```修饰的方法可以类名调用，类名调用抽象方法没有意义
 
 ## 3 接口
+
+### 3.1 定义接口
+
+接口：体现的思想是对规则的声明。Java中的接口更多体现的是对行为的抽象。
+
+思路: 如果发现一个类，所有的组成，都是抽象方法，即没有成员变量，没有普通方法。这种类，我们通常会设计为Java中的接口，因为现在这个类存在的唯一价值，就只是声明规则了。
+
+- 接口用关键字```interface```来定义
+
+  ```public interface 接口名 {}```
+
+- 接口不能实例化
+
+- 接口和类之间是实现关系，通过```implements```关键字表示
+
+  ```public class 类名 implements 接口名 {}```
+
+- 接口的子类（实现类）
+
+  - 要么重写接口中的所有抽象方法
+  - 要么是抽象类（很少使用）
+
+```java
+public class InterfaceDemo1 {
+    public static void main(String[] args) {
+        // 创建实现类对象
+        InterImp1 ii = new InterImp1();
+        ii.method();
+        ii.show();
+    }
+}
+
+// 定义接口
+interface Inter {
+    public abstract void show();  // 因为是定义接口 所以这个地方只能是 abstract
+    public abstract void method();
+}
+
+// 实现类
+// 方法一：重写所有抽象对象
+class InterImp1 implements Inter {
+
+    @Override
+    public void show() {
+
+    }
+
+    @Override
+    public void method() {
+
+    }
+}
+
+// 实现类
+// 方法二：将实现类变为抽象类（很少使用）
+abstract class InterImp2 implements Inter {
+}
+```
+
+### 3.2 接口成员的特点
+
+```java
+public class InterfaceTest1 {
+    /*
+        接口成员的特点
+            1. 成员变量：只能定义常量
+                系统会默认加上 public static final 所以要大写
+            2. 成员方法：只能是抽象方法
+                系统会默认加上 public abstract
+            4. 构造方法：没有
+                接口没有构造方法 接口的实现类（可以理解为接口的干爹）有 super
+                这个 super 是 object
+     */
+    public static void main(String[] args) {
+        System.out.println(MyInter.num);  // 说明带了 static
+        // MyInter.num = 20; // 报错 说明有 final
+    }
+}
+
+interface MyInter {
+    // 接口没有构造方法 接口的实现类（可以理解为接口的干爹）有 super
+    // 这个 super 是 object
+    int num = 10;  // num 所以要大写
+}
+```
+
+### 3.3 类和接口之间的各种关系
+
+- 类和类之间：继承关系，只支持单承，不支持多继承，但是可以多层继承
+- 类和接口之间：实观关系，可以单实现，也可以多实现，甚至可以在继承一个类的同时，实现多个接口
+- 接口和接口之问：继承关系，可以单继承，也可以多继承
+
+```java
+public class InterfaceTest3 {
+    public static void main(String[] args) {
+
+    }
+}
+
+interface A {
+    void showA();
+    void showAll();
+}
+
+interface B {
+    void showB();
+    void showAll();
+}
+
+// 可以单实现，也可以多实现
+class ABIml implements A, B {
+
+    @Override
+    public void showA() {
+
+    }
+
+    @Override
+    public void showAll() {
+
+    }
+
+    @Override
+    public void showB() {
+
+    }
+}
+
+class Fu {
+    public void showAll() {
+        System.out.println("showAll...");
+    }
+}
+
+//甚至可以在继承一个类的同时，实现多个接口
+class Zi extends Fu implements A, B {
+    // 这个时候 showAll() 已经被继承的父类重写了
+    @Override
+    public void showA() {
+
+    }
+
+    @Override
+    public void showB() {
+
+    }
+}
+
+// 3.接口和接口之问：维承关系，可以单继承，也可以多继承
+interface InterC extends A, B {
+    // 比如说还有一个 抽象方法
+    void showC();
+}
+// 实现时
+class InterCImpl implements InterC {
+
+    @Override
+    public void showA() {
+
+    }
+
+    @Override
+    public void showB() {
+
+    }
+
+    // 这个地方就没有逻辑冲突
+    @Override
+    public void showAll() {
+
+    }
+
+    @Override
+    public void showC() {
+
+    }
+}
+```
 
 
 
 ## 4 多态
+
+
+
+
+
+
+
+
+
+
 
 
 
