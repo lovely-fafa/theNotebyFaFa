@@ -689,9 +689,440 @@ class InterCImpl implements InterC {
 }
 ```
 
+### 3.4 抽象类和接口的区别
 
+- 成员变量:
+  - 抽象类：可以定义变量，也可以定义常量
+  - 接口：只能定义常量
+- 成员方法
+  - 抽象类：可以是定义具体方法，也可以定义抽象方法
+  - 接口：只能定义抽象方法
+- 构造方法
+  - 抽象类：有
+  - 接口：没有
+
+### 3.5 抽象类的应用场景
+
+### 3.6 接口的应用场景
+
+接口可以为程序制定规则，代码更加规范。
+
+### 3.7 抽象类和接口的对比
+
+- 抽象类：对事物做抽象（描述事物）
+- 接口：对行为抽象（制定规则）
 
 ## 4 多态
+
+同一个行为具有多个不同表现形式或形态的能力。
+
+### 4.1 多态前提
+
+- 有继承 / 实现关系
+- 有方法重写
+- 有父类引用指向子类对象
+
+### 4.2 对象多态
+
+```java
+Animal a1 = new Dog();
+Animal a2 = new Cat();
+```
+
+好处：方法的形参定义为父类类型，这个方法可以接收到该父类的任意子类对象了。
+
+### 4.3 行为多态
+
+好处：同一个方法，具有多种不同表现形式，或形态的能力
+
+### 4.4 多态的成员访问特点
+
+- 成员变量：编译看左边（父类），运行看左边（父类）
+
+- 成员方法：编译看左边（父类），运行看右边（子类）
+
+  - 在编译的时候，会检查父类是否有这个方法
+
+    - 没有：编译出错
+
+    - 有：编译通过，但是运行一定是执行子类的方法逻辑
+
+      为什么呢？担心父类是一个抽象方法
+
+- 多态创建对象，调用静态成员
+
+  结果是父类的
+
+  为什么呢？
+
+  我们虽然可以使用对象名进行调用，但是这是一个假象。在生成```.class```字节码文件后，会自动把对象名调用改成类名调用。
+
+```java
+public class PolymorphismTest2 {
+    public static void main(String[] args) {
+        // 继承的例子
+        Fu f = new Zi();
+        System.out.println(f.num);  // 编译看左边（父类），运行看左边（父类）
+        f.show();  // 编译看左边（父类），运行看右边（子类）
+        f.print();  // 调用静态成员 是父类的 因为编译是时会变成 Fu.print()
+
+        System.out.println("----------------");
+
+        // 实现的例子
+        Inter i = new InterImpl();
+        i.method();  // 编译看左边（父类），运行看右边（子类）
+    }
+}
+
+interface Inter {
+    void method();
+}
+
+class InterImpl implements Inter {
+
+    @Override
+    public void method() {
+        System.out.println("show...");
+    }
+}
+
+class Fu {
+    int num = 10;
+    public void show() {
+        System.out.println("Fu...show");
+    }
+    // 这是一个静态的成员
+    public static void print() {
+        System.out.println("Fu...print");
+    }
+}
+
+class Zi extends Fu {
+    int num = 20;
+    public void show() {
+        System.out.println("Zi...show");
+    }
+    // 这是一个静态的成员
+    public static void print() {
+        System.out.println("Zi...print");
+    }
+}
+```
+
+### 4.5 多态的好处和弊端
+
+- 多态的好处：提高了程序的扩展性
+  - 对象多态：将方法的形参定义为父类类型，这个方法可以接收该父类的任意子类对象
+  - 行为多态：同一个行为，具有多个不同表现形式或形态的能力
+- 多态的弊端：不能使用子类特有的方法（非要使用就见下一节）
+
+### 4.6 多态的转型
+
+![image-20230126172356598](assets/image-20230126172356598.png)
+
+好难啊 不想写代码了...
+
+概述：如果被转的引用类型变量，对应的实际类型和目标类型不是同一种类型，那么在转换的时候就会出现```ClassCastException```。
+
+关键字：```instanceof```
+使用格式：
+```对象名 instanceof 类型```
+判断一个对象是否是一个类的实例。通俗的理解: 判断关键字左边的对象，是否是右边的类型，返回```boolean```类型结果
+
+# day 03 面向对象高级
+
+## 1 接口新特性
+
+### 1.1 JDK8 接口特性
+
+- 允许在接口中定义非抽象方法，但是需要使用关键字```default```修饰，这些方法就是默认方法
+- 作用：解决接口升级的问题
+- 接口中默认方法的定义格式
+  - 格式：```public default 返回值类型 方法名(参数列表)```
+  - 范例：```public default void show()```
+
+- 允许定义非抽象方法，需要加入```default```关键字
+
+  - 作用：解决接口的升级问题
+  - 注意事项
+    - ```public```可以省略，但是```default```不能省略
+    - 默认方法，实现类是允许重写的，但是需要去掉```default```关键字
+    - 如果实现了多个接口，多个接口中存在相同的默认方法，实现类必须重写默认方法
+
+- 允许定义静态方法
+
+  - 理解：既然接口已经允许方法带有方法体了，干脆也放开静态方法，可以类名调用
+
+  - 注意事项
+
+    - ```public```可以省略，但是```static```不能省略
+
+    - 接口中的静态方法，只允许接口名进行调用，不允许实现类通过对象调用
+
+### 1.2 JDK9 接口特性
+
+- 接口中允许定义private 私有方法
+- 定义格式
+  - 格式1：```private 返回值类型 方法名(参数列表){}```
+  - 范例1：```private void show() [}```
+  - 格式2：```private static 返回值类型 方法名(参数列表)```
+  - 范例2：```private static void method() {}```
+
+## 2 代码块
+
+使用```{}```括起来的代码被称为代码块
+
+### 2.1 分类
+
+- 局部代码块
+- 构造代码块
+- 静态代码块
+- ~~同步带模块~~（多线程讲）
+
+### 2.2 局部代码块（用的很少）
+
+- 位置：方法中的一对大括号
+- 作用：限定变量的生命周期，提早释放内存
+
+```java
+public static void main(String[] args) {
+    {
+        // 局部代码块
+        int num = 10;
+        System.out.println(num);
+    }
+    // System.out.println(num);
+}
+```
+
+### 2.3 构造代码块（用的很少）
+
+- 位置：类中方法外的一对大括号
+- 特点：在创建对象，执行构造方法的时候，就会执行构造代码块（优先于构造方法执行）
+- 在编译后，会把构造代码块的代码分散都每一个构造方法里，在构造方法的最开始
+- 作用：将多个构造方法中， 重复的代码， 抽取到构造代码块中， 从而提升代码的复用性
+
+代码在下面哦...
+
+### 2.4 静态代码块
+
+- 位置：类中方法外的一对大括号，需要加入```static```代码块
+- 特点：随着类的加载而执行，因为类只加载一次，所以也就只执行一次
+- 作用：对数据进行初始化，加载配置文件
+
+```java
+class Student {
+    
+    static String school;
+    
+    // 静态代码块
+    static {
+        school = "黑马程序员";
+        System.out.println("Student 类的静态代码块");
+    }
+
+    // 构造代码块
+    {
+        System.out.println("Student 类的构造代码块");
+        System.out.println("好好学习，天天向上");
+    }
+
+    public Student() {
+        System.out.println("空参构造...");
+    }
+
+    public Student(int num) {
+        System.out.println("带参构造...");
+    }
+}
+```
+
+## 3 内部类
+
+> 内部类就是定义在一个类里面的类
+
+### 3.1 创建内部类
+
+- 格式：```外部类名.内部类名 对象名 = new 外部类对象().new 内部类对象();```
+- 范例：```Outer.Inner in = new Outer().new Inner();```
+
+### 3.2 成员内部类（用的很少）
+
+- 内部类中，访问外部类成员：直接访问，包括私有
+- 外部类中，访问内部类成员：需要创建对象访问
+- 注意：在成员内部类中访问所在外部类对象，格式：```外部类名.this```
+
+```java
+public class InnerTest {
+    public static void main(String[] args) {
+        Outer.Inner oi = new Outer().new Inner();
+        System.out.println(oi.num);
+        oi.show();
+
+        System.out.println("----------------");
+
+        MyOut.MyInner mm = new MyOut().new MyInner();
+        mm.show();
+    }
+}
+
+class Outer {
+    private void method() {
+        System.out.println("method");
+        Inner i = new Inner();  // 外部类中，访问内部类成员：需要创建对象访问
+        System.out.println(i.num);
+    }
+
+    class Inner {
+        int num = 10;
+        public void show() {
+            System.out.println("show");
+            method();  // 内部内访问外部类的方法
+        }
+    }
+}
+
+// 面试题
+class MyOut {
+    int num = 10;
+
+    class MyInner {
+        int num = 20;
+
+        public void show() {
+            int num = 30;
+            System.out.println(num);  // 30
+            System.out.println(this.num);  // 20
+            System.out.println(MyOut.this.num);  // 10
+        }
+    }
+}
+```
+
+### 3.3 静态内部类（用的很少）
+
+> 有```static```修饰成员内部类
+
+```java
+public class StaticInnerTest {
+    public static void main(String[] args) {
+        // 非静态 要实例化才能调
+        OuterClass.InnerClass oi = new OuterClass.InnerClass();
+        oi.show();
+
+        OuterClass.InnerClass.showStatic();  // 静态直接调
+    }
+}
+
+class OuterClass {
+    
+    int num1 = 10;
+    static int num2 = 10;
+    
+    static class InnerClass {
+        // 成员内部类
+        public void show() {
+            System.out.println("show...");
+        }
+		
+        // 静态内部类
+        public static void showStatic() {
+            System.out.println("show...");
+
+            // 静态只能调静态
+            System.out.println(num2);
+
+            // 非静态 需要 new
+            OuterClass o = new OuterClass();
+            System.out.println(o.num1);
+        }
+    }
+}
+```
+
+### 3.4 局部内部类（用的很少）
+
+> 放在方法、代码块、构造器等执行体中
+
+```java
+public class LocalClassTest {
+    public static void main(String[] args) {
+        A a = new A();
+        a.show();
+    }
+}
+
+class A {
+    public void show() {
+        class B {
+            public void method() {
+                System.out.println("method...");
+            }
+        }
+        // method() 只有 B 被实例化了才能用 而实例化 B 必须要 调用了 show()
+        B b = new B();
+        b.method();
+    }
+}
+```
+
+
+
+
+
+### 3.5 匿名内部类
+
+
+
+
+
+
+
+## 4 Lambda 表达式
+
+
+
+## 5 窗体、组件、事件
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
