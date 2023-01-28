@@ -1066,33 +1066,445 @@ class A {
 }
 ```
 
-
-
-
-
 ### 3.5 匿名内部类
 
+- 概述：匿名内部类本质上是一个特殊的局部内部类（定义在方法内部）
 
+- 前提：需要存在一个接口或类
 
+- 格式
 
+  ```java
+  new 类名 / 接口 {
+      
+  }
+  ```
 
+- 应用场景
 
+  - 当实现一个接口 或 继承一个类时，需要传入的参数是一个 接口 或 类
+
+    - 解决办法一：
+
+      实现或继承后，传进去
+
+    - 解决办法二：
+
+      匿名内部类（抽象方法不多时，使用这个方法）
+
+```java
+public class AnonClassTest1 {
+    public static void main(String[] args) {
+        // 方法的形参是接口类型 我们应该传入接口的实现类对象 可以看到 这很麻烦
+        userInter(new InterImpl());
+
+        // 使用匿名内部类 在定义这个类的同时就进行了实例化
+        userInter(new Inter() {
+            @Override
+            public void show() {
+                System.out.println("匿名内部类...show...");
+            }
+        });
+    }
+
+    public static void userInter(Inter i) {
+        i.show();
+    }
+}
+
+// 这是一个接口
+interface Inter {
+    void show();
+}
+
+// 实现这个接口
+class InterImpl implements Inter {
+    // 重写方法
+    @Override
+    public void show() {
+        System.out.println("Inter..show...");
+    }
+}
+```
 
 ## 4 Lambda 表达式
 
+### 4.1 使用
 
+- ```Lambda```表达式是```JDK8```开始后的一种新语法形式。
+
+- 作用：简化匿名内部类的代码写法。
+
+- 简化格式
+
+  ``` () -> {} ```
+
+  ```java
+  (匿名内部类被重写方法的形参列表) -> {
+      被重写方法的方法体代码。
+  }
+  注：-> 是语法形式，无实际含义
+  ```
+
+```java
+public class LambdaDemo1 {
+    public static void main(String[] args) {
+        // 匿名内部类
+        userInterA(new InterA() {
+            @Override
+            public void show() {
+                System.out.println("匿名内部类，重写后的 show 方法...");
+            }
+        });
+        
+        // Lambda 表达式
+        userInterA( () -> {
+            System.out.println("Lambda，重写后的 show 方法...");
+        });
+    }
+
+    public static void userInterA(InterA a) {
+        a.show();
+    }
+}
+
+interface InterA {
+    void show();
+}
+```
+
+### 4.2 注意事项
+
+注意：```Lambda```表达式只能简化函数式接口的匿名内部类的写法形式
+
+函数式接口
+
+- 首先必须是接口、其次接口中有且仅有一个抽象方法的形式
+- 通常我们会在接口上加上一个```@FunctionalInterface```注解，标记该接口必须是满足函数式接口。
+
+```java
+public class LambdaDemo2 {
+    public static void main(String[] args) {
+        userInterB(new InterB() {
+            @Override
+            public void show1() {
+                System.out.println("匿名内部类...show1...");
+            }
+
+            @Override
+            public void show2() {
+                System.out.println("匿名内部类...show2...");
+            }
+        });
+
+        System.out.println("--------------------");
+
+        // userInterB( () -> {});
+        // Lambda 表达式只允许操作函数式接口
+    }
+
+    public static void userInterB(InterB b) {
+        b.show1();
+        b.show2();
+    }
+
+}
+
+// @FunctionalInterface  // 校验是否是函数式接口
+interface InterB {
+    void show1();
+    void show2();
+}
+```
+
+### 4.3 Lambda 表达式的省略写法
+
+- 参数类型可以省略不写。
+
+- 如果只有一个参数，参数类型可以省略，同时```()```也可以省略
+
+- 如果Lambda表达式的方法体代码只有一行代码
+
+  可以省略大括号不写，同时要省略分号
+
+  此时，如果这行代码是```return```语句，必须省略```return```不写，同时也必须省略```;```不写
+
+### 4.4 匿名内部类和Lambda的区别
+
+- 使用限制不同
+  - 匿名内部类：可以操作类，接口
+  - ```Lambda```表达式：只能操作函数式接口
+- 实现原理不同
+  - 匿名内部类：编译之后，产生一个单独的```.class```字节码文件
+  - ```Lambda```表达式：编译之后，没有一个单独的```.class```字节码文件
 
 ## 5 窗体、组件、事件
 
+### 5.1 窗体对象 JFrame
 
+```java
+package com.itheima.frame;
 
+import javax.swing.*;
 
+public class JFrameTest {
+    public static void main(String[] args) {
+        // 创建窗体对象
+        JFrame frame = new JFrame();
 
+        // 设置窗体大小
+        frame.setSize(500, 300);
 
+        // 修改窗口关闭模式
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
+        // 设置窗体标题
+        frame.setTitle("这是我的第一个窗体...");
 
+        // 设置窗体可见 这句放最后
+        frame.setVisible(true);
+    }
+}
+```
 
+### 5.2 组件
 
+创建组件 给面板对象
+
+- 按钮对象```JButtom()```
+
+  - ```JButton()```
+
+    创建一个没有设置文本或图标的按钮。
+
+  - ```JButton(String text)```
+
+    创建一个带文本的按钮。
+
+```java
+import javax.swing.*;
+
+public class JButtonTest {
+    public static void main(String[] args) {
+        JFrame frame = new JFrame();
+
+        frame.setSize(500, 500);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+        // 取消默认窗体布局
+        // 随后需要指定布局
+        frame.setLayout(null);
+
+        // 1. 创建按钮对象
+        JButton btn = new JButton("点我呀~~~");
+        // 设置摆放位置
+        btn.setBounds(50, 50, 100, 100);
+
+        // 2. 将按钮对象添加给窗体的 面板对象
+        frame.getContentPane().add(btn);
+
+        frame.setVisible(true);
+    }
+}
+```
+
+- ```JLabel```组件
+
+  - ```JLabel(String text)```
+
+    使用指定的文本创建一个```JLabel```对象
+
+  - ```JLabel(Icon image)```
+
+    创建一个具有指定图像的```JLabel```对象
+
+  - 注意：如果多个组件摆放在同一个位置，后添加的组件，会被压在底部
+
+```java
+import javax.swing.*;
+
+public class JLabelTest {
+    public static void main(String[] args) {
+        JFrame frame = new JFrame();
+
+        frame.setSize(500, 500);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.setLayout(null);
+
+        JLabel jL1 = new JLabel("听君一席话");
+        jL1.setBounds(50, 50, 100, 100);
+        frame.getContentPane().add(jL1);
+
+        JLabel jL2 = new JLabel("胜读十年书");
+        jL2.setBounds(150, 50, 100, 100);
+        frame.getContentPane().add(jL2);
+
+        ImageIcon icon = new ImageIcon("E:\\程序员\\发发的笔记\\advancedJava\\day03-code\\src\\com\\itheima\\frame\\label\\pink.jpg");
+        JLabel imgLabel = new JLabel(icon);
+        imgLabel.setBounds(250, 50, 100, 100);
+
+        frame.getContentPane().add(imgLabel);
+
+        frame.setVisible(true);
+    }
+}
+```
+
+### 5.3 事件
+
+事件是可以被组件识别的操作。当你对组件干了某件操作之后，就会执行对应的代码。
+
+- 事件源
+  - 按钮 图片 窗体...
+- 事件操作
+  - 鼠标单击
+  - 键盘按下
+- 绑定监听
+  - 当事件源上发生了事件操作，处罚执行某段代码
+
+- 点击事件
+
+  可以监听鼠标点击和空格键
+
+  ```java
+  import javax.swing.*;
+  import java.awt.event.ActionEvent;
+  import java.awt.event.ActionListener;
+  
+  public class ActionListenerTest {
+      public static void main(String[] args) {
+          JFrame frame = new JFrame();
+          frame.setSize(1200, 800);
+          frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+          frame.setLayout(null);
+  
+          JButton btn = new JButton("按钮");
+          btn.setBounds(0, 0, 50, 50);
+          frame.getContentPane().add(btn);
+  
+          // 匿名内部类
+          btn.addActionListener(new ActionListener() {
+              @Override
+              public void actionPerformed(ActionEvent e) {
+                  System.out.println("我被点了...");
+              }
+          });
+  
+          frame.setVisible(true);
+      }
+  }
+  ```
+
+- 键盘事件
+
+  可以监听键盘的 按下 松开 敲击
+
+  ```java
+  import javax.swing.*;
+  import java.awt.event.KeyEvent;
+  import java.awt.event.KeyListener;
+  
+  public class KeyListenerTest {
+      public static void main(String[] args) {
+          JFrame frame = new JFrame();
+  
+          frame.setSize(1200, 800);
+          frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+          frame.setLayout(null);
+  
+          frame.addKeyListener(new KeyListener() {
+              @Override
+              public void keyTyped(KeyEvent e) {
+  
+              }
+  
+              @Override
+              public void keyPressed(KeyEvent e) {
+                  System.out.println("键盘按下了...");
+                  int keyCode = e.getKeyCode();
+                  if (keyCode == 37) {
+                      System.out.println("左");
+                  } else if (keyCode == 38) {
+                      System.out.println("上");
+                  } else if (keyCode == 39) {
+                      System.out.println("右");
+                  } else if (keyCode == 40) {
+                      System.out.println("下");
+                  }
+              }
+  
+              @Override
+              public void keyReleased(KeyEvent e) {
+  
+              }
+          });
+  
+          frame.setVisible(true);
+      }
+  }
+  ```
+
+### 5.4 事件冲突
+
+焦点：程序的注意力集中在了某一个组件上
+
+注意: 按组件比较特殊，在创建好之后，程序的焦点，默认就停留在按组件上面。但按钮组件，其实不需要占用程序的焦点
+可以通过下面这个取消掉按钮的焦点
+
+```java
+btn.setFocusable(false)
+```
+
+### 5.5 适配器设计模式
+设计模式（Design pattern）是一套被反复使用、多数人知晓的、经过分类编目的、代码设计经验的总结。使用设计模式是为了可重用代码、让代码更容易被他人理解、保证代码可靠性、程序的重用性。
+
+适配器设计模式：解决接口与接口实现类之间的矛盾问题。
+
+实现步骤
+
+1. 编写一个```xxxAdapter```类
+2. 重写内部所有抽象方法， 但方法都是空实现
+3. 让自己的类去继承适配器类，重写自己需要的方法即可
+4. 为了避免其他类创建适配器类的对象， 使用```abstract```进行修饰
+
+### 5.6 模板设计模式
+
+> 把抽象类整体就可以看做成一个模板，模板中不能决定的东西定义成抽象方法。让使用模板的类（继承抽象类的类）去重写抽象方法，实现需求。
+
+```java
+public abstract class CompositionTemplate {
+    // 加 final 是为了防止重写 write()
+    public final void write() {
+        System.out.println("开头");
+
+        body();
+
+        System.out.println("结尾");
+    }
+
+    public abstract void body();
+}
+```
+
+```java
+public class Tom extends CompositionTemplate {
+    @Override
+    public void body() {
+        System.out.println("这是 Tom 的正文");
+    }
+}
+```
+
+```java
+public class Test {
+    public static void main(String[] args) {
+        Tom t = new Tom();
+        t.write();
+    }
+}
+```
+
+# day 04 石头迷阵
 
 
 
