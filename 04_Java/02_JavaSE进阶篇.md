@@ -1506,6 +1506,202 @@ public class Test {
 
 # day 04 石头迷阵
 
+哦哟 搞定啦
+
+# day 05 常用 API
+
+> API(Application Programming interface) 应用程序编程接口。
+
+## 1 Object 类
+
+### 1.1 toString 方法
+
+|             方法名             |                             说明                             |
+| :----------------------------: | :----------------------------------------------------------: |
+| ```public String toString()``` | 默认是返回当前对象在堆内存中的地址信息：```类的全类名@十六进制哈希值``` |
+
+- 开发中直接输出对象，默认输出对象的地址其实是毫无意义的。
+
+- 开发中输出对象变量，更多的时候是希望看到对象的内容数据而不是对象的地址信息
+
+- ```toString```存在的意义
+
+  父类```toString()```方法存在的意义就是为了被子类重写，以便返回对象的内容信息，而不是地址信息!!
+
+```java
+package com.itheima.object.tostring;
+
+import java.util.ArrayList;
+
+public class ToStringDemo {
+    /*
+        Object.toString()
+
+            public String toString() {
+                return getClass().getName() + "@" + Integer.toHexString(hashCode());
+            }
+
+        getCLass().getName(): 类名称，全类名(包名 + 类名)
+        Integer.toHexString(hashCode()): 转十六进制
+        hashCode(): 返回对象的内存地址 + 哈希算法，算出来的整数（哈希值）
+
+        ------------------------------------------
+
+        细节：使用打印语句，打印对象名的时候，println 方法，源码层面，会自动调用该对象的 toString 方祛
+            public static string valueDf(Object obj) {
+                return (obj == null] ? "nul" : obj.toString();
+            }
+
+     */
+    public static void main(String[] args) {
+        A a = new A();
+
+        System.out.println(a);  // com.itheima.object.tostring.A@3b07d329
+        System.out.println(a.toString());  // com.itheima.object.tostring.A@3b07d329
+
+        Student stu = new Student("张三", 23);
+        System.out.println(stu);
+
+        // 所以 arrayList 重写了 toString
+        ArrayList<String> arr = new ArrayList<>();
+        arr.add("123");
+        arr.add("123");
+        arr.add("123");
+        System.out.println(arr);
+    }
+}
+
+class A {
+    @Override
+    public String toString() {
+        return "大哥重写了 toString 方法";
+    }
+}
+```
+
+### 1.2 equals 方法
+
+|                方法名                 |                             说明                             |
+| :-----------------------------------: | :----------------------------------------------------------: |
+| ```public boolean equals(Object o)``` | 默认是比较当前对象与另一个对象的地址是否相同。相同返回```true```，不同返回```false``` |
+
+- ```equals```存在的意义
+
+  父类```equals```方法存在的意义就是为了被子类重写，以便子类自己来定制比较规则。
+
+```java
+public class EqualsDemo {
+    /*
+        Object 的 equals 方法
+            public boolean equals(Object obj) {
+                // this: stu1
+                // obj: stu2
+                return (this == obj);
+            }
+
+        结论：默认比较的是内存地址，通常会重写这个方法
+     */
+    public static void main(String[] args) {
+        Student stu1 = new Student("张三", 23);
+        Student stu2 = new Student("张三", 23);
+
+        System.out.println(stu1 == stu2); // false
+        System.out.println(stu1.equals(stu2));  // false / true
+    }
+}
+```
+
+- 手写```euqals```
+
+  ```java
+  @Override
+  public boolean equals(Object obj) {
+      // this：谁调用 this 谁就是 this
+      // obj：stu2
+  
+      // 判断类型
+      if (obj instanceof Student) {
+          // 向下转型
+          Student stu = (Student) obj;
+          return this.age == stu.age && this.name.equals(stu.name);
+      } else {
+          return false;
+      }
+  }
+  ```
+
+- 快捷键生成```equals```
+
+  ```java
+  // 快捷键
+  @Override
+  public boolean equals(Object o) {
+      // 地址值相同就直接 true
+      if (this == o) {
+          return true;
+      }
+      // 代码能走到这 调用者不是 null 如果是会空指针异常
+      // o 是 null 就可以 false 了
+      if (o == null ||
+          // getClass() 是 Object 的
+          // 这个地方在比较字节码是否相同 字节码不同则 false
+          getClass() != o.getClass()) {
+          return false;
+      }
+      // 代码能到这 相当于字节码相同 即类型相同 所以开始向下转型
+      Student student = (Student) o;
+      // 属性比较
+      return age == student.age && name.equals(student.name);
+  }
+  ```
+
+### 1.3 Objects 类的常见方法
+
+| 方法名                                                 | 说明                                                         |
+| ------------------------------------------------------ | ------------------------------------------------------------ |
+| ```public static boolean equals(Object a，Object b)``` | 比较两个对象的，底层会先进行非空判断，从而可以避免空指针异常。<br>再进行```equals```比较 |
+| ```public static boolean isNull(Object obj)```         | 判断变量是否为```null```                                     |
+
+```java
+// equals 还是依赖我们自己编写的 equals方法 但是好处是内部会判断是否为 null
+/*
+                public static boolean equals(Object a, Object b) {
+                    // a == b : 地址相同 返回 true 这里是 短路的 或 左边为 true 右边不执行
+                                地址不相同 为 false 短路或还要执行右边
+                -------------------------------------------------------
+                    // a != null : 我们假设 a 为 null 那么 null != null 为 false
+                    // 这个地方是双与 就不执行右边了 所以这个地方 null 是调用不了 equals 就不会空指针异常了
+                -------------------------------------------------------
+                    // a != null : 我们假设 a 不为 null 那么 不是null != null 为 true
+                    // 这个地方是双与 执行右边了 但是现在不是 null 的调用了 equals 就不会空指针异常了
+
+                    return (a == b) || (a != null && a.equals(b));
+                }
+         */
+System.out.println(Objects.equals(stu1, stu2));
+```
+
+
+## 2 Math 类
+
+
+
+
+
+## 3 System 类
+
+
+
+
+
+## 4 BigDecimal 类
+
+
+
+
+
+## 5 包装类
+
 
 
 
