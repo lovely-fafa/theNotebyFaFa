@@ -1684,43 +1684,535 @@ System.out.println(Objects.equals(stu1, stu2));
 
 ## 2 Math 类
 
+```java
+System.out.println(Math.abs(-123.452));
+System.out.println("-----------------------");
+// 向上取整
+System.out.println(Math.ceil(12.0));  // 12.0
+System.out.println(Math.ceil(12.2));  // 13.0
+System.out.println(Math.ceil(12.5));  // 13.0
+System.out.println(Math.ceil(12.9));  // 13.0
+System.out.println("-----------------------");
+// 向下取整
+System.out.println(Math.floor(12.0));  // 12.0
+System.out.println(Math.floor(12.2));  // 12.0
+System.out.println(Math.floor(12.5));  // 12.0
+System.out.println(Math.floor(12.9));  // 12.0
+System.out.println("-----------------------");
+// 四舍五入
+System.out.println(Math.round(12.3));
 
+System.out.println(Math.max(12, 0.85));
+System.out.println(Math.min(12, 0.85));
 
+System.out.println(Math.pow(2, 3));  // 2 的 3 次幂
 
+System.out.println(Math.random());  // [0.0, 1.0) 随机数
+```
 
 ## 3 System 类
 
+|                            方法名                            |                    说明                    |
+| :----------------------------------------------------------: | :----------------------------------------: |
+|          ```public static void exit(int status)```           | 终止当前运行的Java虚拟机，非零表示异常终止 |
+|         ```public static long currentTimeMillis()```         |        返回当前系统的时间毫秒值形式        |
+| ```public static void arraycopy(Object src, int srcPos, Object dest, int destPos， int length)``` |                  数组拷贝                  |
 
+```public static void arraycopy(Object src, int srcPos, Object dest, int destPos， int length)```
 
+- ```src```：数据源数组
+- ```srcPos```：起始索引
+- ```dest```：目的地数组
+- ```destPos```：起始索引
+- ```length```：拷贝个数
 
+```java
+public class SystemDemo {
+    public static void main(String[] args) {
+        int[] arr = {11, 22, 33, 44, 55};
+        int [] destArr = new int[3];
+        System.arraycopy(arr, 2, destArr, 0, 3);
+
+        for (int i : destArr) {
+            System.out.println(i);
+        }
+    }
+}
+```
 
 ## 4 BigDecimal 类
 
+> 用于解决小数运算中，出现的不精确问题。
 
+### 4.1 创建对象
 
+- ```public BigDecimal(double val)```
+- ```public BigDecimal(String val)```
+- ```public static BigDecimal valueOf(double val)```
 
+```java
+// 方法一：不推荐
+BigDecimal bd11 = new BigDecimal(0.1);
+BigDecimal bd12 = new BigDecimal(0.2);
+
+System.out.println(bd11.add(bd12));  // 0.3000000000000000166533453693773481063544750213623046875
+
+// 方法二
+BigDecimal bd21 = new BigDecimal("0.1");
+BigDecimal bd22 = new BigDecimal("0.2");
+
+System.out.println(bd21.add(bd22));  // 0.3
+
+// 方法三
+BigDecimal bd31 = BigDecimal.valueOf(0.1);
+BigDecimal bd32 = BigDecimal.valueOf(0.2);
+
+System.out.println(bd31.add(bd32));  // 0.3
+```
+
+### 4.2 加减乘除
+
+```java
+System.out.println(bd31.add(bd32));  // 加
+System.out.println(bd31.subtract(bd32));  // 减
+System.out.println(bd31.multiply(bd32));  // 乘
+System.out.println(bd31.divide(bd32));  // 除
+```
+
+### 4.3 除法细节
+
+```BigDecimal divide = bd1.divide(参与运算的对象，小数点后精确到多少位，舍入模式);```
+
+- 参数1，表示参与运算的BigDecimal 对象。
+- 参数2，表示小数点后面精确到多少位
+- 参数3，舍入模式
+  - RoundingMode.UP 进一法
+  - RoundingMode.DOWN 去尾法
+  - RoundingMode.HALF_UP 四舍五入
+
+```java
+BigDecimal bd41 = BigDecimal.valueOf(10.0);
+BigDecimal bd42 = BigDecimal.valueOf(3.0);
+// 下面这个是除不尽 要报错
+// System.out.println(bd41.divide(bd42));
+// 如果除不尽 提供了 方法重载的
+System.out.println(bd41.divide(bd42, 2, RoundingMode.HALF_UP));  // 3.33
+System.out.println(bd41.divide(bd42, 2, RoundingMode.UP));  // 3.34
+System.out.println(bd41.divide(bd42, 2, RoundingMode.DOWN));  // 3.33
+```
+
+### 4.3 返回类型
+
+```java
+// 默认是 BigDecimal 类型
+BigDecimal res = bd41.divide(bd42, 2, RoundingMode.UP);
+// 转换
+double res_double = res.doubleValue();
+System.out.println(Math.abs(res_double));  // 这样就不会报错了
+```
 
 ## 5 包装类
 
+> 将基本数据类型，包装成类（变成引用数据类型）
+
+| 基本数据类型  |  引用数据类型   |
+| :-----------: | :-------------: |
+|  ```byte```   |   ```Byte```    |
+|  ```short```  |   ```Short```   |
+|   ```int```   |  ```Integer```  |
+|  ```long```   |   ```Long```    |
+|  ```char```   | ```Character``` |
+|  ```float```  |   ```Float```   |
+| ```double```  |  ```Double```   |
+| ```boolean``` |  ```Boolean```  |
+
+### 5.1 Integer 类
+
+- ```public Integer(int value)```
+
+  不推荐
+
+- ```public static Integer valueOf(int i)```
+
+### 5.2 拆装箱
+
+- 手动装箱：调用方法，手动将基本微据类型，包装成类
+  - ```public Integer(int value)```：通过构造方法（不推荐）
+  - ```public static Integer valueOf(int i)``` ：通过静态方法
+- 手动拆箱：调用方法，手动将包装类，拆成（转换）基本数据类型
+  - ```public int intValue()```：以```int```类型返回该```Integer```的值
+
+```java
+int num = 10;
+Integer i1 = Integer.valueOf(num);
+System.out.println(i1);
+
+int i = i1.intValue();
+System.out.println(i);
+```
+
+```JDK5```版本开始，出现了自动拆装箱：
+
+- 自动装箱：可以将基本数据类型，直接赋值给包装类的变量
+- 自动拆箱：可以将包装类的数据， 直接赋值给基本数据类型
+
+```java
+int num = 10;
+Integer i1 = num;
+System.out.println(i1);
+
+int i = i1;
+System.out.println(i);
+```
+
+### 5.3 Integer 成员方法
+
+|                      方法名                      |                   说明                    |
+| :----------------------------------------------: | :---------------------------------------: |
+| ```public static String toBinaryString(int i)``` |                得到二进制                 |
+| ```public static String toOctalString(int i)```  |                得到八进制                 |
+|  ```public static String toHexString(int i)```   |               得到十六进制                |
+|    ```public static int parselnt(String s)```    | 将字符串类型的整数转成```int```类型的整数 |
+
+```java
+int num = 100;
+System.out.println(Integer.toBinaryString(num));
+System.out.println(Integer.toOctalString(num));
+System.out.println(Integer.toHexString(num));
+
+String s = "100";
+System.out.println(s + 100);  // "100100"
+System.out.println(Integer.parseInt(s) + 100);  // 200
+```
+
+### 5.4 小案例
+
+```java
+public class IntegerTest {
+    /*
+        已知字符串 String s = "10,50,30,20,40"
+        请将该字符串转换为整数并存入数组
+        随后求出最大值打印在控制台
+     */
+    public static void main(String[] args) {
+        String s = "10,50,30,20,40";
+
+        String[] sArr = s.split(",");
+        int[] nums = new int[sArr.length];
+
+        for (int i = 0; i < sArr.length; i++) {
+            nums[i] = Integer.parseInt(sArr[i]);
+        }
+
+        int max = nums[0];
+        for (int i = 1; i < nums.length; i++) {
+            if (max < nums[i]) {
+                max = nums[i];
+            }
+        }
+
+        System.out.println(max);  // 50
+    }
+}
+```
+
+### 5.5 面试题
+
+自动装箱的时候，如果装箱的数据范围，是```-128~127```，```==```号比较的结果就是```true```，反之都是```false```
+
+```java
+public class InterView {
+    /*
+        public static Integer valueOf(int i) {
+            if (i >= IntegerCache.low && i <= IntegerCache.high) {
+                // 从底层的一个数组中取出一个提前创建好的 Integer 对象
+                return IntegerCache.cache[i + (-IntegerCache.low)];
+            }
+            // 如果装箱的数据，不在 -128 ~ 127 之间，会重新创建新的对象
+            return new Integer(i);
+        }
+
+        Integer类中，底层存在一个长度为 256 个大小的数组，Integer[] cache 在数组中，存储了 256 个 Integer 对象，分别是 -128 ~ 127
+     */
+    public static void main(String[] args) {
+        Integer i1 = 127;
+        Integer i2 = 127;
+        System.out.println(i1 == i2);  // true
+
+        Integer i3 = 129;
+        Integer i4 = 129;
+        System.out.println(i3 == i4);  // false
+
+        Long i11 = 129L;
+        Long i22 = 129L;
+        System.out.println(i11 == i22);  // false
+        System.out.println(i11.equals(i22));  // true 说明重写了 equals 比较的是内容而不是地址
+    }
+}
+```
+
+# day 06 常用 API
+
+## 1 Arrays 工具类
+
+> 数组操作工具类，专门用于操作数组元素
+
+
+
+| 方法名                                               | 说明                                 |
+| ---------------------------------------------------- | ------------------------------------ |
+| ```public static String toString(类型] a)```         | 将数组元素拼接为带有格式的字符串     |
+| ```public static boolean equals(类型门a,类型b)```    | 比较两个数组内容是否相同             |
+| ```public static int binarySearch(int/ a int key)``` | 查找元素在数组中的索引（二分查找法） |
+| ```public static void sort(类型a)```                 | 对数组进行默认升序排序               |
+
+```java
+public static void main(String[] args) {
+    int[] arr1 = {11, 22, 33, 44, 55};
+    int[] arr2 = {11, 22, 33, 44, 550};
+
+    System.out.println(Arrays.toString(arr1));  // [11, 22, 3, 44, 55]
+    System.out.println(Arrays.equals(arr1, arr2));  // false
+    System.out.println(Arrays.binarySearch(arr1, 44));  // 3
+
+    int[] arr3 = {22, 11, 55, 44, 33};
+    System.out.println(Arrays.binarySearch(arr3, 11));  // -1 未排序会报错
+
+    Arrays.sort(arr3);
+    // todo: 学了红黑树再补充
+    System.out.println(Arrays.toString(arr3));  // [11, 22, 33, 44, 55]
+}
+```
+
+## 2 冒泡排序
+
+> 相邻的两个数进行比较，如果第一个比第二个大，就交换他们两个
+
+![image-20230203225240080](assets/image-20230203225240080.png)
+
+```java
+public class BubbleSort {
+    public static void main(String[] args) {
+        int[] arr = {11, 520, 55, 152, 54};
+
+        for (int i = 0; i < arr.length - 1; i++) {
+            for (int j = 0; j < arr.length - 1 - i; j++) {
+                if (arr[j] > arr[j + 1]) {
+                    int tem = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = tem;
+                }
+            }
+        }
+
+        System.out.println(Arrays.toString(arr));
+    }
+}
+```
+
+## 3 选择排序
+
+> 从```0```索引开始，拿着每一个索引上的元素跟后面的元素依次比较
+
+```java
+public class SelectSort {
+    public static void main(String[] args) {
+        int[] arr = {11, 520, 55, 152, 54};
+
+        for (int i = 0; i < arr.length - 1; i++) {
+            for (int j = i + 1; j < arr.length; j++) {
+                if (arr[i] > arr[j]) {
+                    int tem = arr[i];
+                    arr[i] = arr[j];
+                    arr[j] = tem;
+                }
+            }
+        }
+        System.out.println(Arrays.toString(arr));  // [11, 54, 55, 152, 520]
+    }
+}
+```
+
+## 4 二分查找
+
+```java
+public class BinarySearch {
+    public static void main(String[] args) {
+
+        int[] arr = {11, 22, 33, 44, 55, 66, 77, 88, 99};
+
+        int index = binarySearch(arr, 33);
+        System.out.println(index);
+    }
+
+    private static int binarySearch(int[] arr, int num) {
+        int min = 0;
+        int max = arr.length;
+        int mid;
+
+        while (min <= max) {
+            mid = (min + max) / 2;
+            if (num > arr[mid]) {
+                min = mid + 1;
+            } else if (num < arr[mid]) {
+                max = mid - 1;
+            } else {
+                return mid;
+            }
+        }
+
+        return -1;
+
+    }
+}
+```
+
+## 5 正则表达式
+
+> 学了爬虫有手就行 回头啃《正则指引》
+
+```java
+String qqRegex = "[1-9]\\d{4,11}";
+System.out.println("123456".matches(qqRegex));
+
+String telRegex = "1[3-9]\\d{9}";
+System.out.println("13619088888".matches(telRegex));
+
+String emailRegex = "\\w+@[\\w&&[^_]]+(\\.[a-z]{2,3})+";
+System.out.println("13619088888@163.com".matches(emailRegex));
+```
+
+| 方法名                                                     | 说明                                                       |
+| ---------------------------------------------------------- | ---------------------------------------------------------- |
+| ```public String replaceAll(String regex,String newStr)``` | 按照正则表达式匹配的内容进行替换                           |
+| ```public String split(String regex)```                    | 按照正则表达式匹配的内容进行分割字符串，返回一个字符串数组 |
+
+
+
+```java
+public class PatternTest {
+    public static void main(String[] args) {
+        String data = "我的电话是：13619088888 + 我的电话是：13619088888 + 我的电话是：13619088888 + 我的电话是：13619088882";
+        // 定义正则表达式
+        String regex = "1[3-9]\\d{9}";
+        // 将正则表达式封装为一个 Pattern 对象
+        Pattern pattern = Pattern.compile(regex);
+        // 获取匹配器对象
+        Matcher matcher = pattern.matcher(data);
+        // 通过匹配器，从内容中爬取信息
+        while (matcher.find()) {
+            System.out.println(matcher.group());
+        }
+    }
+}
+```
+
+# day 07 集合进阶
+
+## 1 集合体系结构
+
+![image-20230204210211714](assets/image-20230204210211714.png)
+
+### 1.1 List 系列集合
+
+添加的元素是有序（存和取的顺序相同）、可重复、有索引。
+
+### 1.2 set 系列集合
+
+添加的元素是无序（存和取的顺序可能会不相同）、不可重复、无索引。
+
+## 2 Collection集合
+
+> Collection是单列集合的祖宗接口，它的功能是全部单列集合都可以继承使用的。
+
+### 2.1 成员方法
+
+| 方法名称                            | 说明                             |
+| ----------------------------------- | -------------------------------- |
+| public boolean add(E e)             | 把给定的对象添加到当前集合中     |
+| public void clear()                 | 清空集合中所有的元素             |
+| public boolean remove(E e)          | 把给定的对象在当前集合中删除     |
+| public boolean contains(Object obj) | 判断当前集合中是否包含给定的对象 |
+| public boolean isEmpty()            | 判断当前集合是否为空             |
+| public int size()                   | 返回集合中元素的个数/集合的长度  |
+
+```java
+public class A01_CollectionDemo1 {
+    public static void main(String[] args) {
+        Collection<String> coll = new ArrayList<>();
+        // 1. 添加元素
+        // 细节1：如果我们要往 List 系列集合中添加数据，那么方法永远返回 true，因为 List 系列的是允许元素重复的。
+        // 细节2：如果我们要往 Set 系列集合中添加数帮，如果当前要添加元素不存在，方法返回 true，表示添加成功。
+        //       如果当前要添加的元素已经存在，方法返回 false，表示添加失败 因为 Set 系列的集合不允许重复。
+        coll.add("aa0");
+        coll.add("aa1");
+        coll.add("aa2");
+        coll.add("aa3");
+        System.out.println(coll);
+
+        // 2. 清空
+        coll.clear();
+        System.out.println();
+
+        // 3. 删除
+        // 细节1: 因为 Collection 里面定义的是共性的方法 set 没有索引 所以这个地方不能通过索引进行删除 只能通过元素的对象进行删除
+        // 细节2: 方法会有一个布尔类型的返回值，删除成功返回 true，刚除失败返回 false
+        //       如果要删除的元素不存在，就会删除失败。
+        coll.add("aa0");
+        coll.add("aa1");
+        coll.add("aa2");
+        coll.add("aa3");
+        coll.remove("aa3");
+        System.out.println(coll);
+
+        // 4. 判断元素是否存在
+        // 底层依赖 equals 方法进行判断是否存在的
+        // 所以自定义对象 默认继承 object 的 equals 的方法 比较地址值 所以就会错 所以自定义对象需要重写 equals 方法
+        boolean result = coll.contains("aa3");
+        System.out.println(result);
+
+        // 5. 判断集合是否为空
+        /*
+            public boolean isEmpty() {
+                return size == 0;
+            }
+         */
+        boolean result2 = coll.isEmpty();
+        System.out.println(result2);
+
+        // 6. 获取集合的长度
+        System.out.println(coll.size());
+    }
+}
+```
+
+注意：因为```contains```方法在底层依赖```equals```方法判断对象是否一致的。如果在的是自定义对象，没有重写```equals```方法，那么默认他用```object```类中的```equals```方法进行判断，而```object```类中```equals```方法，依赖地址值进行判断。所以需要重写```equals```方法。
+
+### 2.2 Collection 的遍历方式之迭代器遍历
+
+>  迭代器在Java中的类是```lterator```，迭代器是集合专用的遍历方式
+
+```Collection```集合获取迭代器
+
+| 方法名称                     | 说明                                          |
+| ---------------------------- | --------------------------------------------- |
+| ```Iterator<E> iterator()``` | 返回迭代器对象，默认指向当前集合的```0```索引 |
+
+```lterator```中的常用方法
+
+| 方法名称                | 说明                                                         |
+| ----------------------- | ------------------------------------------------------------ |
+| ```boolean hasNext()``` | 判断当前位置是否有元素<br/>有元素返回```true```,没有元素返回```false``` |
+| E next()                | 获取当前位置的元素，并将迭代器对象移向下一个位置。           |
 
 
 
 
 
+## 3 List集合
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+## 4 ArrayList 集合
+## 5 LinkedList 集合
 
 
 
