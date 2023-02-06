@@ -2107,7 +2107,7 @@ public class PatternTest {
 }
 ```
 
-# day 07 集合进阶
+# day 07 集合进阶（上）
 
 ## 1 集合体系结构
 
@@ -2188,35 +2188,774 @@ public class A01_CollectionDemo1 {
 
 注意：因为```contains```方法在底层依赖```equals```方法判断对象是否一致的。如果在的是自定义对象，没有重写```equals```方法，那么默认他用```object```类中的```equals```方法进行判断，而```object```类中```equals```方法，依赖地址值进行判断。所以需要重写```equals```方法。
 
-### 2.2 Collection 的遍历方式之迭代器遍历
+### 2.2 Collection 的遍历方式——迭代器遍历
 
->  迭代器在Java中的类是```lterator```，迭代器是集合专用的遍历方式
+>  迭代器在Java中的类是```lterator```，迭代器是集合专用的遍历方式。
+>
+> 虽然之前学过```for```遍历，但是```Collection```的```set```集合是没有索引的，就不能```for```了，所以这个地方学习一个通用的，不依赖索引的迭代器...
 
 ```Collection```集合获取迭代器
 
-| 方法名称                     | 说明                                          |
-| ---------------------------- | --------------------------------------------- |
-| ```Iterator<E> iterator()``` | 返回迭代器对象，默认指向当前集合的```0```索引 |
+|           方法名称           |                      说明                       |
+| :--------------------------: | :---------------------------------------------: |
+| ```Iterator<E> iterator()``` | 返回迭代器对象，默认指向当前集合的```0```索引。 |
 
 ```lterator```中的常用方法
 
-| 方法名称                | 说明                                                         |
-| ----------------------- | ------------------------------------------------------------ |
-| ```boolean hasNext()``` | 判断当前位置是否有元素<br/>有元素返回```true```,没有元素返回```false``` |
-| E next()                | 获取当前位置的元素，并将迭代器对象移向下一个位置。           |
+|        方法名称         |                             说明                             |
+| :---------------------: | :----------------------------------------------------------: |
+| ```boolean hasNext()``` | 判断当前位置是否有元素<br/>有元素返回```true```，没有元素返回```false```。 |
+|     ```E next()```      |      获取当前位置的元素，并将迭代器对象移向下一个位置。      |
 
+```java
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 
+public class A03_CollectionDemo3 {
+    public static void main(String[] args) {
+        Collection<String> coll = new ArrayList<>();
+        coll.add("aaa");
+        coll.add("bbb");
+        coll.add("ccc");
+        coll.add("ddd");
 
+        // 获取迭代器对象
+        // 迭代器就好比是一个箭头，默认指向集合的 0 索引处
+        Iterator<String> it = coll.iterator();
+        // 利用循环不断的去获取集合中的每一个元系
+        while (it.hasNext()) {
+            // next 方法的两件事情：获取元素并移动指针
+            String str = it.next();
+            System.out.println(str);
+        }
+    }
+}
+```
 
+- 细节注意点
+
+  - 如果```hasNext```为```false```，仍要去用```next```获取，则报错```NoSuchElementException```（迭代器遍历，不依赖索引，所以不报索引越界）
+
+  - 迭代器遍历完毕，指针不会复位。如果想要再遍历一次，就重新获取一个新的迭代器对象。
+
+  - 循环中只能用一次```next```方法。因为每用一次，就会获取元素，并移动指针。非要多次使用，就用一个变量接收叭。
+
+  - 迭代器遍历时，不能用集合的方法进行增加（```add```）或者删除（```remove```）。
+
+    如果非要删除，可以用迭代器提供的```remove```方法：```迭代器.remove()```。
+
+### 2.3 Collection 的遍历方式——增强 for
+
+> 增强```for```的底层就是迭代器，为了简化迭代器的代码书写的。<br>它是```JDK5```之后出现的，其内部原理就是一个```iterator```迭代器。<br>所有的单列集合和数组才能用增强```for```进行遍历。
+
+```java
+Collection<String> coll = new ArrayList<>();
+coll.add("aaa");
+coll.add("bbb");
+coll.add("ccc");
+coll.add("ddd");
+
+for (String s : coll) {
+    System.out.println(s);
+}
+```
+
+注意：修改增强```for```中的变量，不会改变集合中原本的数据。
+
+### 2.4 Collection 的遍历方式——Lambda 表达式
+
+> 得益于```JDK 8```开始的新技术```Lambda```表达式，提供了一种更简单、更直接的遍历集合的方式。
+
+|                        方法名称                        |           说明           |
+| :----------------------------------------------------: | :----------------------: |
+| ```default void forEach(Consumer<? super T> action)``` | 结合```lambda```遍历集合 |
+
+```java
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.function.Consumer;
+
+public class A05_CollectionDemo5 {
+    public static void main(String[] args) {
+        Collection<String> coll = new ArrayList<>();
+        coll.add("aaa");
+        coll.add("bbb");
+        coll.add("ccc");
+        coll.add("ddd");
+        
+        // 匿名内部类实现
+        /*
+            for (int i = 0; modCount == expectedModCount && i < size; i++){
+                action.accept(elementAt(es, i));
+            }
+            方法的底层是遍历这个集合 把每一次的遍历传给 accept
+         */
+        coll.forEach(new Consumer<String>() {
+            @Override
+            // s 就是依次表示集合的每个数据
+            public void accept(String s) {
+                System.out.println(s);
+            }
+        });
+        
+        // lambda 表达式
+        coll.forEach(s -> System.out.println(s));
+    }
+}
+```
 
 ## 3 List集合
 
+> 有序：存和取的元素顺序一致<br>有索引：可以通过索引操作元素<br>可重复：存储的元素可以重复
+
+### 3.1 List 集合的特有方法
+
+- ```Collection```的方法```List```都继承了
+- ```List```集合因为有索引，所以多了很多索引操作的方法
+
+| 方法名称                             | 说明                                   |
+| ------------------------------------ | -------------------------------------- |
+| ```void add(int index, E element)``` | 在此集合中的指定位置插入指定的元素     |
+| ```E remove(int index)```            | 删除指定索引处的元素，返回被删除的元素 |
+| ```E set(int index,E element)```     | 修改指定索引处的元素，返回被修改的元素 |
+| ```E get(int index)```               | 返回指定索引处的元素                   |
+
+```java
+import java.util.ArrayList;
+import java.util.List;
+
+public class A01_ListDemo1 {
+    public static void main(String[] args) {
+        List<String> list = new ArrayList<>();
+
+        // 1. 添加
+        list.add("aaa");
+        list.add("bbb");
+        list.add("ccc");
+        System.out.println(list);  // [aaa, bbb, ccc]
+
+        // 2. 删除
+        String remove = list.remove(0);
+        System.out.println(remove);  // aaa
+
+        // 3. 改值
+        String result = list.set(0, "qqq");
+        System.out.println(result);  // bbb
+
+        // 4. 取值
+        String s = list.get(0);
+        System.out.println(s);  // qqq
+    }
+}
+```
+
+细节：
+
+```java
+import java.util.ArrayList;
+import java.util.List;
+
+public class A02_ListDemo2 {
+    public static void main(String[] args) {
+        List<Integer> list = new ArrayList<>();
+
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        list.add(4);
+
+        // 因为在调用方法的时候，如果方法出现了重载现象
+        // 优先调用，实参跟形参类型一致的那个方法。(所以 remove 不会自动装箱)
+        list.remove(1);  // 删的是索引
+        System.out.println(list);
+
+        // 手动装箱
+        Integer i = Integer.valueOf(1);  // [1, 3, 4]
+        list.remove(i);
+
+        System.out.println(list);  // [3, 4]
+    }
+}
+```
+
+### 3.3 List 集合的遍历方式
+
+- 选代器
+- 列表选代器
+- 增强```for```
+- ```Lambda```表达式 / 匿名内部类
+- 普通```for```循环
+
+```java
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.function.Consumer;
+
+public class A03_ListDemo3 {
+    public static void main(String[] args) {
+        List<String> list = new ArrayList<>();
+        list.add("aaa");
+        list.add("bbb");
+        list.add("ccc");
+        list.add("ddd");
+
+        // 1. 迭代器
+        Iterator<String> it = list.iterator();
+        while (it.hasNext()) {
+            System.out.println(it.next());
+        }
+
+        // 2. 增强 for
+        for (String s : list) {
+            System.out.println(s);
+        }
+
+        // 3. lambda
+        list.forEach(new Consumer<String>() {
+            @Override
+            public void accept(String s) {
+                System.out.println(s);
+            }
+        });
+
+        list.forEach(s -> System.out.println(s));
+
+        // 4. 普通 for
+        for (int i = 0; i < list.size(); i++) {
+            System.out.println(list.get(i));
+        }
+
+        // 5. 列表迭代器
+        // 获取列表迭代器对象
+        ListIterator<String> it1 = list.listIterator();
+        while (it1.hasNext()) {
+            String str = it1.next();
+            System.out.println(str);
+
+            // 提供了添加的方法
+            if ("aaa".equals(str)) {
+                it1.add("qqq");
+            }
+
+        }
+        System.out.println(list);  // [aaa, qqq, bbb, ccc, ddd]
+    }
+}
+```
+
+- 五种遍历方法的比较
+  - 在遍历的过程中需要删除元素，请使用迭代器。
+  - 在遍历的过程中需要添加元素，请使用列表迭代器
+  - 仅仅想遍历，那么使用增强```for```或```Lambda```表达式 / 匿名内部类。
+  - 如果遍历的时候想操作索引，可以用普通```for```。
+
+### 3.4 数据结构
+
+> 数据结构是计算机底层存储、组织数据的方式是指数据相互之间是以什么方式排列在一起的。<br>数据结构是为了更加方便的管理和使用数据，需要结合具体的业务场景来进行选择。<br>一般情况下，精心选择的数据结构可以带来更高的运行或者存储效率。
+>
+> 不同的业务场景下，要使用不同的数据结构。而Java的不同的集合，他们的数据结构是不一样的，所以为了更好的选择集合，所以我们先要学习数据结构...
+
+> - 栈：后进先出，先进后出。
+> - 队列：先进先出，后进后出。
+> - 数组：内存连续区域，查询快，增删慢。
+> - 链表：元素是游离的查询慢，首尾操作极快。
+
+#### 3.4.1 栈
+
+- 栈的特点：后进先出，先进后出
+- 数据进入栈模型的过程称为：压 / 进栈
+- 数据离开栈模型的过程称为：弹 / 出栈
+
+![image-20230205151908527](assets/image-20230205151908527.png)
+
+![image-20230205152017300](assets/image-20230205152017300.png)
+
+#### 3.4.2 队列
+
+- 队列的特点：先进先出，后进后出
+- 数据从后端进入队列模型的过程称为：入队列
+- 数据从前端离开队列模型的过程称为：出队列
+
+![image-20230205152222946](assets/image-20230205152222946.png)
+
+#### 3.4.3 数组
+
+> 数组是一种查询快，增删慢的模型
+
+- 查询速度快：查询数据通过地址值和索引定位，查询任意数据耗时相同。（元素在内存中是连续存储的）
+- 删除效率低：要将原始数据删除，同时后面每个数据前移
+- 添加效率极低：添加位置后的每个数据后移，再添加元素。
+
+#### 3.4.4 链表
+
+> 链表中的结点是独立的对象，在内存中是不连续的。每个结点包含数据值和下一个结点的地址。
+
+- 链表查询慢，无论查询哪个数据都要从头开始找
+- 链表增删相对快
+
+![image-20230205173704877](assets/image-20230205173704877.png)
+
 ## 4 ArrayList 集合
+
+### 4.1 ArrayList 集合底层原理
+
+1. 利用空参创建的集合，在底层创建一个默认长度为```0```的数组，叫做```elementData```。同时有一个成员变量```size```，记录个数。
+
+2. 添加第一个元素时，底层会创建一个新的长度为```10```的数组。
+
+   ```java
+   elementData = {"a", null, null, null, null, null, null, null, null, null}
+   size = 1
+   ```
+
+   - ```size```的意义
+
+     - 元素个数
+     - 下次存入的位置
+
+     ![image-20230205175235568](assets/image-20230205175235568.png)
+
+3. 存满时，会扩容```1.5```倍。
+
+4. 如果一次添加多个元素，```1.5```倍还放不下，则新创建数组的长度以实际为准。
+
+他喵的这就是八股文要背的？
+
+![image-20230205180429447](assets/image-20230205180429447.png)
+
+![image-20230205181647216](assets/image-20230205181647216.png)
+
 ## 5 LinkedList 集合
 
+> 底层数据结构是双链表，查询慢，增删快，但是如果操作的是首尾元素，速度也是极快的，所以多了很多首尾操作的特有API。
+
+![image-20230205214135695](assets/image-20230205214135695.png)
+
+### 5.1 特有方法
+
+|            特有方法             |               说明               |
+| :-----------------------------: | :------------------------------: |
+| ```public void addFirst(E e)``` |    在该列表开头插入指定的元素    |
+| ```public void addLast(E e)```  |  将指定的元素追加到此列表的末尾  |
+|    ```public E getFirst()```    |     返回此列表中的第一个元素     |
+|    ```public E getLast()```     |    返回此列表中的最后一个元素    |
+|  ```public E removeFirst()```   |  从此列表中删除并返回第一个元素  |
+|   ```public E removeLast()```   | 从此列表中删除并返回最后一个元素 |
+
+### 5.2 源码
+
+![image-20230205220929661](assets/image-20230205220929661.png)
+
+
+## 6 迭代器源码
+
+![image-20230205223710583](assets/image-20230205223710583.png)
+
+# day 08 集合进阶（下）
+
+## 1 泛型深入
+
+> 是```JDK5```中引入的特性，可以在编译阶段约束操作的数据类型，并进行检查。
+
+- 泛型的格式：```<数据类型>```
+- 注意：泛型只能支持引用数据类型
+
+### 1.1 泛型的好处
+
+```java
+import java.util.ArrayList;
+import java.util.Iterator;
+
+public class GenericsDemo1 {
+    public static void main(String[] args) {
+        // 没有泛型时 怎么存储数据
+        ArrayList list = new ArrayList<>();
+        // 如果我们没有给集合指定类型，默认认为所有的数据类型都是 object 类型
+        // 此时可以往集合添加任意的数据类型。
+        // 带来一个坏处：我们在获取数据的时候，无法使用他的特有行为。
+        list.add(123);
+        list.add("aaa");
+        list.add(new Student("张三", 123));
+        // 遍历集合
+        Iterator it = list.iterator();
+        while (it.hasNext()) {
+            Object obj = it.next();
+            // 多态的弊端是不能范围子类特有功能 这个地方如果要强转 但是不知道强转成什么类型
+            System.out.println(obj);
+        }
+        // 为了解决上面这个问题 便引入了泛型这个概念
+    }
+}
+```
+
+- 统一数据类型
+- 把运行时期的问题提前到了编译期间，避免了强制类型转换可能出现的异常，因为在编译阶段类型就能确定下来.
+
+### 1.2 扩展
+
+- Java中的泛型是伪泛型
+- 泛型的擦除：Java文件中，使用泛型在编译阶段约束操作的数据类型。在编译为```.class```文件后，泛型部分会被删掉。
+
+### 1.3 泛型的细节
+
+- 泛型中不能写基本数据类型
+- 指定泛型的具体类型后，传递数据时，可以传入该类类型或者其子类类型
+- 如果不写泛型，类型默认是```Object```
+
+### 1.4 泛型类
+
+> 当一个类中，某个变量的数据类型不确定时，就可以定义带有泛型的类。
+
+- 格式
+
+  ```java
+  修饰符 class 类名<类型>{
+      
+  }
+  ```
+
+- 举个例子
+
+  ```java
+  public class ArryList<E> {
+      
+  }
+  ```
+
+- 此处```E```可以理解为变量，但是不是用来记录数据的，而是记录数据的类型，可以写成：```T```、```E```、```K```、```V```等。
+
+- 比如说我们自己写一个泛型类
+
+  ```java
+  import java.util.Arrays;
+  
+  /*
+  *  当我在编写个类的叫候，如果不确定类型，耶么这个类就可以定义为泛型类
+   */
+  public class MyArrayList<E> {
+  
+      Object[] obj = new Object[10];
+      int size;
+      /*
+      E：不确定的类型 在类名后面已经定义了
+      e：形参名，变量名
+       */
+      public boolean add(E e){
+          obj[size] = e;
+          size ++;
+          return true;
+      }
+  
+      public E get(int index) {
+          return (E) obj[index];
+      }
+  
+      @Override
+      public String toString() {
+          return Arrays.toString(obj);
+      }
+  }
+  ```
+
+  ```java
+  public class GenericsDemo2 {
+      public static void main(String[] args) {
+          MyArrayList<String> list = new MyArrayList<>();
+          list.add("aaa");
+          list.add("bbb");
+          list.add("ccc");
+  
+          System.out.println(list);  // [aaa, bbb, ccc, null, null, null, null, null, null, null]
+  
+          MyArrayList<Integer> list1 = new MyArrayList<>();
+          list1.add(123);
+          list1.add(1007);
+          list1.add(456);
+  
+          int i = list1.get(1);
+          System.out.println(i);  // 1007
+      }
+  }
+  ```
+
+### 1.5 泛型方法
+
+> 方法中形参类型不确定时
+
+- 格式
+
+  ```java
+  修饰符<类型> 返回值类型 方法名(类型 变量名) {
+      
+  }
+  ```
+
+- 举个例子
+
+  ```java
+  public <T> void show (T t) {
+      
+  }
+  ```
+
+- 比如说我们有一个```ListUtil```这个工具类
+
+  ```java
+  import java.util.ArrayList;
+  
+  public class ListUtil {
+      private ListUtil(){}
+  
+      /*
+      *  参数一：集合
+      *  参数二：要添加的元素
+      * */
+      public static<E> void addAll(ArrayList<E> list, E e1, E e2,E e3,E e4){
+          list.add(e1);
+          list.add(e2);
+          list.add(e3);
+          list.add(e4);
+      }
+  
+      public void show() {
+          System.out.println("阿伟...");
+      }
+  }
+  ```
+
+  ```java
+  import java.util.ArrayList;
+  
+  public class GenericsDemo3 {
+      public static void main(String[] args) {
+  
+          ArrayList<String> list1 = new ArrayList<>();
+          ListUtil.addAll(list1, "aaa", "bbb", "ccc", "ddd");
+          System.out.println(list1);  // [aaa, bbb, ccc, ddd]
+  
+          ArrayList<Integer> list2 = new ArrayList<>();
+          ListUtil.addAll(list2, 123, 456, 789, 101);
+          System.out.println(list2);  // [123, 456, 789, 101]
+      }
+  }
+  ```
+
+### 1.6 泛型接口
+
+- 格式
+
+  ```java
+  修饰符 interface 接口名<类型>{
+      
+  }
+  ```
+
+- 举例
+
+  ```java
+  public interface Liste<E> {
+      
+  }
+  ```
+
+- 使用
+
+  - 方式1：实现类给出具体类型
+
+    我们在实现```List```接口时给出了类型
+
+    ```java
+    public class MyArrayList2 implements List<String> {
+        @Override
+        public int size() {
+            return 0;
+        }
+        ...
+    }
+    ```
+
+    使用
+
+    ```java
+    MyArrayList2 list = new MyArrayList2();
+    list.add("aaa");
+    System.out.println(list);
+    ```
+
+  - 方式2：实现类延续泛型，创建对象时再有定
+
+    我们在实现```List```接口时，延续了泛型
+
+    ```java
+    public class MyArrayList3<E> implements List<E> {
+        @Override
+        public int size() {
+            return 0;
+        }
+    	...
+    }
+    ```
+
+    创建对象时，给了```String```类型
+
+    ```java
+    MyArrayList3<String> list3 = new MyArrayList3();
+    list3.add("aaa");
+    list3.add("bbb");
+    System.out.println(list3);
+    ```
+
+### 1.7 泛型的教程和通配符
+
+> 泛型不具备继承性，但是数据具备继承性
+
+- 比如说场景
+
+  想接收```Ye```，```Fu```，```Zi```三个类型，由于泛型不具备继承性，所以比如说泛型为```<Ye>```，则只能接收```Ye```，不能接收```Fu```，```Zi```。
+
+  如果我们写成```<E>```，那么虽然可以接收```Ye```，```Fu```，```Zi```三个类型，但是其他类型也可以传入 ...
+
+- 此时我们就可以使用泛型的通配符
+
+  - ```?```也表示不确定的类型，他可以进行类型的限定
+  - ```? extends E```：表示可以传递```E```或者```E```所有的子类类型
+  - ```? super E```：表示可以传递```E```或者```E```所有的父类类型
+
+- 应用场景
+
+  - 如果我们在定义类、方法、接口的时候，如果类型不确定，就可以定义泛型类、泛型方法、泛型接
+  - 如果类型不确定，但是能知道以后只能传递某个继承体系中的，就可以泛型的通配符
+
+- 关键点：可以限定类型的范围。
+
+### 1.8 总结
+
+1. 什么是泛型?
+
+   ```JDK5```引入的特性，可以在编译阶段约束操作的数据类型，并进行检查
+
+2. 泛型的好处?
+
+   统一数据类型
+
+   把运行时期的问题提前到了编译期间，避免了强制类型转换可能出现的异常，因为在编译阶段类型就能确定下来
+
+3. 泛型的细节?
+
+   泛型中不能写基本数据类型
+
+   指定泛型的具体类型后，传递数据时，可以传入该类型和他的子类类型
+
+   如果不写泛型，类型默认是```object```
+
+4. 哪里定义泛型?
+
+   泛型类：在类名后面定义泛型，创建该类对象的时候，确定类型
+
+   泛型方法：在修饰符后面定义方法，调用该方法的时候，确定类型
+
+   泛型接口：在接口名后面定义泛型，实现类确定类型，实现类延续泛型
+5. 泛型的继承和通配符
+
+   泛型不具备继承性，但是数据具备继承性
+
+   泛型的通配符：```?```
+
+   - ```? extend E```
+   - ```? super E```
+
+6. 使用场景
+
+   定义类、方法、接口的时候，如果类型不确定，就可以定义泛型
+
+   如果类型不确定，但是能知道是哪个继承体系中的，可以使用泛型的通配符
+
+## 2 数据结构——树
+
+### 2.1 相关概念
+
+- 度：每一个节点的子节点数量
+
+  二叉树：任意节点的度```≤2```
+
+- 树高：树的总层数
+
+- 根节点：最顶层的节点
+
+- 左子节点：左下方的节点
+
+- 右子节点：右下方的节点
+
+- 根节点的左子树：蓝色虚线
+
+- 根节点的右子树：绿色虚线
+
+![image-20230206225700398](assets/image-20230206225700398.png)
+
+![image-20230206225724856](assets/image-20230206225724856.png)
+
+### 2.2 二叉查找树
+
+> 二叉查找树，又称二叉排序树或者二叉搜索树
+
+- 特点
+  - 每一个节点上最多有两个子节点
+  - 任意节点左子树上的值都小于当前节点
+  - 任意节点右子树上的值都大于当前节点
+- 添加节点
+  - 小的存左边
+  - 大的存右边
+  - 一样的不存
 
 
 
+![image-20230206230349393](assets/image-20230206230349393.png)
+
+### 2.3 二叉树遍历方式
+
+- 前序遍历
+
+  从根结点开始，然后按照**当前结点**，左子结点，右子结点的顺序遍历
+
+- **中序遍历**（遍历结果是从小到大）
+
+  从最左边的子节点开始，然后按照左子结点，**当前结点**，右子结点的顺序遍历
+
+- 后序遍历
+
+  从最左边的子节点开始，然后按照左子结点，右子结点，当前结点的顺序遍历
+
+- 层序遍历
+
+  从根节点开始一层一层的遍历
+
+### 2.4 二叉查找树的弊端
+
+有可能，会，嗯，就是，成一个链表...
+
+### 2.5 平衡二叉树
+
+> 任意节点左右子树高度差不超过```1```
+
+
+
+
+
+
+
+## 3 Set系列集合
+
+## 4 HashSet
+
+## 5 LinkedHashSet
+
+## 6 TreeSet
+
+综合案例、使用场景
+源码分析
 
 
 
