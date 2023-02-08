@@ -2940,44 +2940,442 @@ public class GenericsDemo1 {
 
 > 任意节点左右子树高度差不超过```1```
 
+### 2.6 平衡二叉树的旋转机制
 
+> 当添加一个节点之后，该树不再是一颗平衡二叉树，便触发
+>
+> - 规则1：左旋
+> - 规则2：右旋
 
+- 左旋
 
+  1. 从添加的节点开始，不断的往父节点找不平衡的节点
+  2. 以不平衡的点作为支点
+  3. 把支点左旋降级，变成左子节点
+  4. 晋升原来的右子节点
 
+  ![image-20230207160518038](assets/image-20230207160518038.png)
 
+![image-20230207160528483](assets/image-20230207160528483.png)
+
+- 举个例子
+
+  ![image-20230207160802925](assets/image-20230207160802925.png)
+
+  1. 以不平衡的点作为支点
+  2. 将根节点的右侧往左拉
+  3. 原先的右子节点变成新的父节点，并把多余的左子节点出让，给已经降级的根节点当右子节点
+
+  ![image-20230207160959040](assets/image-20230207160959040.png)
+
+- 右旋
+
+  同理可得
+
+- 四种情况
+
+  - 左左：一次右旋
+  - 左右：先局部左旋，再整体右旋
+  - 右右：一次左旋
+  - 右左：先局部右旋，再整体左旋
+
+### 2.7 红黑树
+
+- 红黑树是一种自平衡的二叉查找树，是计算机科学中用到的一种数据结构。
+- 1972年出现，当时被称之为平衡二叉B树。后来，1978年被修改为如今的“红黑树”。
+- 它是一种特殊的二叉查找树，红黑树的每一个节点上都有存储位表示节点的颜色。
+- 每一个节点可以是红或者黑，红黑树**不是高度平衡的**，它的平衡是通过“**红黑规则**”进行实现的
+
+对比
+
+- 平衡二叉树
+  - 高度平衡
+  - 当左右子树高度差超过```1```时，通过旋转保持平衡
+- 红黑树
+  - 是一个二叉查找树
+  - 但是不是高度平衡的
+  - 条件：**特有的红黑规则**
+
+![image-20230207170407376](assets/image-20230207170407376.png)
+
+![image-20230207174229732](assets/image-20230207174229732.png)
 
 ## 3 Set系列集合
 
+> - 无序：存取顺序不一致
+> - 不重复：可以去除重复
+> - 无索引：没有带索引的方法，所以不能使用普通```for```循环遍历，也不能通过索引来获取元素
+
+### 3.0 Set 集合的实现类
+
+- ````HashSet```：无序、不重复、无索引
+- ```LinkedHashSet```：**有序**、不重复、无索引
+- ```TreeSet```：**可排序**、不重复、无索引
+
+```Set```接口中的方法上基本上与```Collection```的```API```一致
+
+### 3.1 set 集合遍历方式
+
+```java
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.function.Consumer;
+
+public class A01_SetDemo1 {
+    public static void main(String[] args) {
+        Set<String> s = new HashSet<>();
+
+        // 1. 添加元素
+        // 如果当前元素是第一次添加，那么可以添加成功，返回 true
+        // 如果当前元素是第二次添加，那么添加失败，返回 false
+        boolean r1 = s.add("aaa");  // true
+        boolean r2 = s.add("aaa");  // false
+        boolean r3 = s.add("bbb");  // true
+        boolean r4 = s.add("ccc");  // true
+
+        // 迭代器遍历
+        Iterator<String> it = s.iterator();
+        while (it.hasNext()) {
+            String res = it.next();
+            System.out.println(res);
+        }
+
+        // 增强 for
+        for (String s1 : s) {
+            System.out.println(s1);
+        }
+
+        // Lambda 表达式
+        s.forEach(new Consumer<String>() {
+            @Override
+            public void accept(String str) {
+                System.out.println(str);
+            }
+        });
+
+        s.forEach(s1 -> System.out.println(s1));
+    }
+}
+```
+
 ## 4 HashSet
+
+### 4.1 HashSet 底层原理
+
+- HashSet 集合底层采取哈希表存储数据
+- 哈希表是一种对于增删改查数据性能都较好的结构
+
+### 4.2 哈希表组成
+
+- ```JDK8```之前：数组+链表
+- ```JDK8```开始：数组+链表+红黑树
+
+### 4.3 哈希值
+
+- 根据```hashCode```方法算出来的```int```类型的整数
+- 该方法定义在```Object```类中，所有对象都可以调用，默认使用地址值进行计算
+- 一般情况下，会重写```hashCode```方法，利用对象内部的属性值计算哈希值
+
+### 4.4 对象的哈希值特点
+
+- 如果没有重写```hashCode```方法，不同对象计算出的哈希值是不同的
+- 如果已经重写```hashcode```方法，不同的对象只要属性值相同，计算出的哈希值就是一样的
+- 在小部分情况下，不同的属性值或者不同的地址值计算出来的哈希值也有可能一样。（哈希碰撞）
+
+```java
+Student stu1 = new Student("张三", 23);
+Student stu2 = new Student("张三", 23);
+
+System.out.println(stu1.hashCode());  // 24022543
+System.out.println(stu2.hashCode());  // 24022543
+
+System.out.println("abc".hashCode());  // 96354
+System.out.println("acD".hashCode());  // 96354
+```
+
+### 4.5 HashSet JDK8 底层原理
+
+1. 默认长度16，默认加载因子0.75的数组，数组名```table```
+
+   ```java
+   HashSet<String> hm = new HashSet<>();
+   ```
+
+2. 根据元素的哈希值跟数组的长度计算出应存入的位置
+
+   ```java
+   int index = (数组长度 - 1) & 哈希值;
+   ```
+
+3. 判断当前位置是否为```null```，如果是```null```直接存入
+
+4. 如果位置不为```null```，表示有元素，则调用```equals```方法比较属性值
+
+5. 一样：不存；不一样：存入数组，形成链表
+
+   ```JDK8```以前：新元素存入数组，老元素挂在新元素下面
+
+   ```JDK8```及以后：新元素直接挂在老元素下面
+
+- 加载因子：数组中的元素个数 > 数组长度 * 0.75 = 12,时，数组会扩容到原来的两倍
+- ```JDK8```及以后，当链表长度大于8，而且数组长度大于等于64，会自动转为红黑树
+- 如果集合中存储的是自定义对象，必须要重写```hashCode```和```equals```方法
+
+### 4.6 HashSet 的三个问题
+
+- 问题1：HashSet为什么存和取的顺序不一样?
+- 问题2：HashSet为什么没有索引?
+- 问题3：HashSet是利用什么机制保证数据去重的?
 
 ## 5 LinkedHashSet
 
+> - **有序**、不重复、无索引。
+> - 这里的有序指的是保证存储和取出的元素顺序一致
+> - 原理：底层数据结构是依然哈希表，只是每个元素又额外的多了一个双链表的机制记录存储的顺序。
+
+```java
+public static void main(String[] args) {
+    Student stu1 = new Student("zhangsan", 23);
+    Student stu2 = new Student("lisi", 23);
+    Student stu3 = new Student("zhangsan", 23);
+    Student stu4 = new Student("zhangsan", 203);
+
+    LinkedHashSet<Student> lhs = new LinkedHashSet<>();
+
+    System.out.println(lhs.add(stu1));
+    System.out.println(lhs.add(stu2));
+    System.out.println(lhs.add(stu3));
+    System.out.println(lhs.add(stu4));
+
+    System.out.println(lhs);
+
+}
+```
+
+- 在以后如果要数据去重，我们使用哪个?
+
+  默认使用```HashSet```。如果要求去重且存取有序，才使用```LinkedHashSet```
+
 ## 6 TreeSet
 
-综合案例、使用场景
-源码分析
+> - 不重复、无索引、可排序
+> - 可排序: 按照元素的默认规则（有小到大）排序。
+> - ```TreeSet```集合底层是基于红黑树的数据结构实现排序的，增删改查性能都较好
 
+### 6.1 举个栗子
 
+```java
+import java.util.Iterator;
+import java.util.TreeSet;
+import java.util.function.Consumer;
 
+public class A05_TreeSetDemo1 {
+    public static void main(String[] args) {
+        TreeSet<Integer> ts = new TreeSet<>();
 
+        ts.add(3);
+        ts.add(4);
+        ts.add(1);
+        ts.add(2);
+        ts.add(5);
 
+        System.out.println(ts);
 
+        // 迭代器遍历
+        Iterator<Integer> it = ts.iterator();
+        while (it.hasNext()) {
+            System.out.println(it.next());
+        }
 
+        // 增强 for
+        for (Integer t : ts) {
+            System.out.println(t);
+        }
 
+        // lambda
+        ts.forEach(new Consumer<Integer>() {
+            @Override
+            public void accept(Integer i) {
+                System.out.println(i);
+            }
+        });
 
+        ts.forEach(i -> System.out.println(i));
+    }
+}
+```
 
+### 6.2 TreeSet 集合默认的规则
 
+> 默认排序 / 自然排序：```Javabean```类实现```Comparable```接口指定比较规则
 
+- 对于数值类型：```Integer```，```Double```，默认按照从小到大的顺序进行排序
+- 对于字符、字符串类型：按照字符在```ASCII```码表中的数字升序进行排序
 
+```java
+import com.itheima.a01mycollection.Student;
 
+import java.util.TreeSet;
 
+public class A06_TreeSetDemo2 {
+    public static void main(String[] args) {
+        Student stu1 = new Student("zhangsan", 23);
+        Student stu2 = new Student("lisi", 24);
+        Student stu3 = new Student("wangwu", 25);
 
+        TreeSet<Student> ts = new TreeSet<>();
 
+        ts.add(stu1);
+        ts.add(stu2);
+        ts.add(stu3);
 
+        System.out.println(ts);
+        // [Student{name = zhangsan, age = 23}, Student{name = lisi, age = 24}, Student{name = wangwu, age = 25}]
+    }
+}
+```
 
+自定义对象，为了能够排序，必须要教程```Comparable```接口，重写```compareTo```方法
 
+```java
+import java.util.Objects;
 
+public class Student implements Comparable<Student>{
+    private String name;
+    private int age;
 
+    ...
+        
+    @Override
+    public int compareTo(Student o) {
+        // 指定排序规则
+        // this: 表示当前要添加的元素
+        // o: 表示已经在红照树存在的元素
 
+        // 返回值:
+        // 负数:表示当前要添加的元素是小的，存左边
+        // 正数:表示当前要添加的元素是大的，存右边
+        // 0:表示当前要添加的元素已经存在，舍弃
+        System.out.println("this:" + this);
+        System.out.println("o:" + o);
+        System.out.println("--------------");
+        return this.getAge() - o.getAge();
+}
+}
 
+```
 
+### 6.3 TreeSet 集合比较器排序
+
+> 比较器排序：创建```TreeSet```对象时候，传递比较器```Comparator```指定规则
+>
+> 默认使用第一种，如果第一种不能满足当前需求，就使用第二种
+
+```java
+import java.util.TreeSet;
+
+public class A07_TreeSetDemo3 {
+    public static void main(String[] args) {
+        /*
+            需求:请自行选择比较器排序和自然排序两种方式;
+            要求:存入四个字符串，“c”，“ab”，“df”，“qwer”
+            按照长度排序，如果一样长则按照首宁字母排序
+         */
+        TreeSet<String> ts = new TreeSet<>((o1, o2) -> {
+                // o1：当前要添加的元素
+                // o2：已经在红黑树的元素
+                // 返回值：和之前一样
+                int i = o1.length() - o2.length();
+                // 如果长度一样 就按照首字母（调用 String 已经写好的）
+                i = i == 0 ? o1.compareTo(o2) : i;
+                return i;
+        });
+
+        ts.add("c");
+        ts.add("ab");
+        ts.add("df");
+        ts.add("qwer");
+
+        System.out.println(ts);  // [c, ab, df, qwer]
+    }
+}
+```
+
+### 6.4 小案例
+
+```java
+        /*
+            需求:创建5个学生对象
+            属性:(姓名,年龄，语文成绩,数学成绩,英语成绩),
+            按照总分从高到低输出到控制台
+            如果总分一样，按照语文成绩排如果语文一样，
+            按照数学成绩排如果数学成绩一样，按照英语成绩排
+            如果英文成绩一样，按照年龄排
+            如果年龄一样，按照姓名的字母顺序排
+            如果都一样，认为是同一个学生，不存。
+         */
+@Override
+public int compareTo(Student o) {
+    // 比较总分
+    int sum1 = this.getChinese() + this.getMath() + this.getEnglish();
+    int sum2 = o.getChinese() + o.getMath() + o.getEnglish();
+    int i = sum1 - sum2;
+    // 比较语文
+    i = i == 0 ? this.getChinese() - o.getChinese() : i;
+    // 比较数学
+    i = i == 0 ? this.getMath() - o.getMath() : i;
+    // 总分和语文数学一样了 英语也就一样了
+    i = i == 0 ? this.getAge() - o.getAge() : i;
+    // 都一样 比较名字
+    i = i == 0 ? this.getName().compareTo(o.getName()) : i;
+
+    return i;
+
+}
+```
+
+### 6.4 总结
+
+1. ```TreeSet```集合的特点是怎么样的？
+
+   - 可排序、不重复、无索引
+
+   - 底层基于红黑树实现排序，增删改查性能较好
+
+2. ```TreeSet```集合自定义排序规则有几种方式
+   - 方式一：```Javabean```类实现```Comparable```接口，指定比较规则
+   - 方式二：创建集合时，自定义```Comparator```比较器对象，指定比较规则
+
+3. 方法返回值的特点
+   - 负数：表示当前要添加的元素是小的，存左边
+   - 正数：表示当前要添加的元素是大的，存右边
+   - ```0```：表示当前要添加的元素已经存在，舍弃
+
+## 7 总结与源码分析
+
+### 7.1 使用场景
+
+1. **如果想要集合中的元素可重复**
+
+   **用```ArrayList```集合，基于数组的。 （用的最多）**
+
+2. 如果想要集合中的元素可重复，而且当前的**增删操作明显多于查询**
+
+   用```LinkedList```集合，基于链表的
+
+3. **如果想对集合中的元素去重**
+
+   **用```HashSet```集合，基于哈希表的。（用的最多）**
+
+4. 如果想对集合中的元素去重，而且**保证存取顺序**
+
+   用```LinkedHashSet```集合，基于哈希表和双链表，效率低于```HashSet```
+
+5. 如果想对集合中的元素进行**排序**
+
+   用```TreeSet```集合，基于红黑树。后续也可以用```List```集合实现排序
+
+恭喜发发在2023年2月9日```00:19:15```看完上片
+
+![image-20230209001931904](assets/image-20230209001931904.png)
