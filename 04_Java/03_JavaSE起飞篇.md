@@ -216,3 +216,134 @@ public class A05_HashDemo2 {
 
 ## 3 LinkedHashMap
 
+- 由键决定：**有序**、不重复、无索引。
+- 这里的有序指的是保证存储和取出的元素顺序一致
+- **原理**：底层数据结构是依然哈希表，只是每个键值对元素又额外的多了一个双链表的机制记录存储的顺序。
+
+```java
+import java.util.LinkedHashMap;
+
+public class A07_LinkedHashMapDemo1 {
+    public static void main(String[] args) {
+        LinkedHashMap<String, Integer> lhm = new LinkedHashMap<>();
+
+        lhm.put("a", 789);
+        lhm.put("b", 585);
+        lhm.put("c", 455);
+
+        System.out.println(lhm);
+    }
+}
+```
+
+## 4 TreeMap
+
+### 4.1 介绍
+
+- ```TreeMap```跟```TreeSet```底层原理一样，都是红黑树结构的
+- 由键决定特性：不重复、无索引、可排序
+- 可排序：**对键进行排序**
+- 注意：默认按照键的从小到大进行排序，也可以自己规定键的排序规则
+  - 实现```Comparable```接口，指定比较规则。
+  - 创建集合时传递```Comparator```比较器对象，指定比较规则
+
+### 4.2 简单的
+
+```java
+import java.util.Comparator;
+import java.util.TreeMap;
+
+public class A08_TreeMapDemo1 {
+    /*
+        降序排列
+     */
+    public static void main(String[] args) {
+        TreeMap<Integer, String> tm = new TreeMap<>(new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o2 - o1;
+            }
+        });
+
+        tm.put(1, "奥利奥");
+        tm.put(2, "康师傅");
+        tm.put(4, "六个核桃");
+        tm.put(5, "可口可乐");
+        tm.put(3, "雪碧");
+
+        System.out.println(tm);  // {5=可口可乐, 4=六个核桃, 3=雪碧, 2=康师傅, 1=奥利奥}
+    }
+}
+```
+
+### 4.3 自定义对象
+
+```java
+import java.util.TreeMap;
+
+public class A09_TreeMapDemo2 {
+    public static void main(String[] args) {
+        TreeMap<Student1, String> tm = new TreeMap<>();
+
+        Student1 s1 = new Student1("张三", 23);
+        Student1 s2 = new Student1("李四", 24);
+        Student1 s3 = new Student1("王五", 25);
+
+        tm.put(s1, "北京");
+        tm.put(s2, "天津");
+        tm.put(s3, "上海");
+
+        System.out.println(tm);
+    }
+}
+```
+
+```java
+package com.itheima.a01mymap;
+
+public class Student1 implements Comparable<Student1>{
+    private String name;
+    private int age;
+
+    ...
+
+    @Override
+    public int compareTo(Student1 o) {
+        // this: 要添加
+        // o: 红黑树的元素
+
+        //返回值:
+        //负数: 表示当前要添加的元是小的，存左边
+        // 正数:表示当前要添加的元素是人的，存右边
+        // 0: 表示当前要添加的元素已经存在，舍弃
+        int i = this.getAge() - o.getAge();
+        i = i == 0 ? this.getName().compareTo(o.getName()) : i;
+
+        return i;
+    }
+}
+```
+
+### 4.4 小案例：统计个数
+
+需求:学符串“aababcabcdabcde'
+请统计字符串中每一个字符出现的次数，并按照以下格式输出
+输出结果:
+a(5)b(4)c(3) d(2) e(1)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
