@@ -326,10 +326,315 @@ public class Student1 implements Comparable<Student1>{
 
 ### 4.4 小案例：统计个数
 
-需求:学符串“aababcabcdabcde'
-请统计字符串中每一个字符出现的次数，并按照以下格式输出
-输出结果:
-a(5)b(4)c(3) d(2) e(1)
+```java
+import java.util.TreeMap;
+import java.util.function.BiConsumer;
+
+public class A10_TreeMapDemo3 {
+    public static void main(String[] args) {
+        /*
+            需求:
+                学符串“aababcabcdabcde”
+                请统计字符串中每一个字符出现的次数，并按照以下格式输出
+            输出结果:
+                a(5) b(4) c(3) d(2) e(1)
+         */
+        String s = "aababcabcdabcde";
+        TreeMap<Character, Integer> tm = new TreeMap<>();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+
+            if (tm.containsKey(c)) {
+                tm.put(c, tm.get(c) + 1);
+            } else {
+                tm.put(c, 1);
+            }
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        tm.forEach(new BiConsumer<Character, Integer>() {
+            @Override
+            public void accept(Character key, Integer value) {
+                sb.append(key).append("(").append(value).append(") ");
+            }
+        });
+
+        System.out.println(sb);  // a(5) b(4) c(3) d(2) e(1) 
+    }
+}
+```
+
+### 4.5 源码分析
+
+- ```TreeMap```添加元素的时候，键是否需要重写```hashCode```和```equals```方法?
+
+  此时是不需要重写的。
+
+  ```HashMap```是哈希表结构的，```JDK8```开始由数组，链表，红黑树组成的。
+
+- 既然有红黑树，```HashMap```的键是否需要实现```Compareable```接口或者传递比较器对象呢?
+
+  不需要的。
+
+  因为在```Hashmap```的底层，默认是利用哈希值的大小关系来创建红黑树的
+
+- ```TreeMap```和```HashMap```谁的效率更高？
+
+  如果是最坏情况，添加了8个元素，这8个元素形成了链表，此时```TreeMap```的效率要更高但是这种情况出现的几率非常的少。一般而言，还是```HashMap```的效率要更高。
+
+- 你觉得在```Map```集合中，Java会提供一个如果键重复了，不会覆盖的```put```方法呢？
+
+  此时```putIfAbsent```本身不重要。
+
+  传递一个思想:代码中的逻辑都有两面性，如果我们只知道了其中的A面，而且代码中还发现了有变量可以控制两面性的发生。
+
+  那么该逻辑一定会有B面。
+
+  习惯：
+
+  - ```boolean```类型的变量控制
+
+    一般只有AB两面，因为```boolean```只有两个值
+
+  - ```int```类型的变量控制
+
+    一般至少有三面，因为```int```可以取多个值。
+
+- 三种双列集合，以后如何选择?
+  ```HashMap``` ```LinkedHashMap``` ```TreeMap```
+
+  - 默认：```HashMap```（效率最高）
+  - 如果要保证存取有序：```LinkedHashMap```
+  - 如果要进行排序：```TreeMap```
+
+# day 02综合项目
+
+## 1 可变参数
+
+### 1.1 使用方法
+
+```java
+public class A11_ArgsDemo1 {
+    public static void main(String[] args) {
+        // JDK 5
+        // 可变参数
+        // 方法的形参个数可以是变化的
+        // 底层:
+        // 可变参数底层就是一个数组
+        // 只不过不需要我们自己创建了，Java会帮我们创建好
+
+        getSum(1, 2, 3, 4, 5);
+
+    }
+
+    public static void getSum(int ... args) {
+        int sum = 0;
+        for (int arg : args) {
+            sum += arg;
+        }
+        System.out.println(sum);
+    }
+}
+```
+
+### 1.2 总结
+
+- 可变参数本质上就是一个数组
+
+- 作用：在形参中接收多个数据
+
+- 格式：```数据类型...参数名称```
+
+  举例：```int...a```
+
+- 注意事项：
+
+  形参列表中可变参数只能有一个
+
+  可变参数必须放在形参列表的最后面
+
+## 2 Collections
+
+> - java.util.Collections：是集合工具类
+> - 作用```Collections```不是集合，而是集合的工具类
+
+### 2.1 Collections 常用 API
+
+|                           方法名称                           |              说明               |
+| :----------------------------------------------------------: | :-----------------------------: |
+| ```public static <T> boolean addAll(Collection<T> c, T ... elements)``` |          批量添加元素           |
+|        ```public static void shuffle(List<?> list)```        |     打乱List集合元素的顺序      |
+|       ```public static <T> void sort(List<T> list)```        |              排序               |
+| ```public static <T> void sort(List<T> list，Comparator<T> c)``` |     根据指定的规则进行排序      |
+| ```public static <T> int binarySearch (List<T> list, T key)``` |      以二分查找法查找元素       |
+| ```public static <T> void copy(List<T> dest, List<T> src)``` |        拷贝集合中的元素         |
+|    ```public static <T> int fill (List<T> list, T obj)```    |     使用指定的元素填充集合      |
+|   ```public static <T> void max/min(Collection<T> coll)```   | 根据默认的自然排序获取最大/小值 |
+| ```public static <T> void swap(List<?> list,int i,int j)```  |    交换集合中指定位置的元素     |
+
+```java
+import java.util.ArrayList;
+import java.util.Collections;
+
+public class A13_CollectionsDemo1 {
+    public static void main(String[] args) {
+        ArrayList<String> list = new ArrayList<>();
+
+        Collections.addAll(list, "abxc", "ac", "abc", "123");
+        System.out.println(list);  // [abxc, ac, abc, 123]
+
+        Collections.shuffle(list);
+        System.out.println(list);  // [ac, abxc, abc, 123]
+    }
+}
+```
+
+### 2.2 综合小练习
+
+#### 2.2.1 随机点名
+
+```java
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
+
+public class Test1 {
+    public static void main(String[] args) {
+        /*
+            随机点名
+         */
+        ArrayList<String> list = new ArrayList<>();
+        Collections.addAll(list, "范闲","范建","范统","杜子腾","杜琦燕","宋合泛","侯笼藤","朱益群","朱穆朗玛峰","袁明媛");
+        Random r = new Random();
+        int index = r.nextInt(list.size());
+        System.out.println(list.get(index));
+
+        Collections.shuffle(list);
+        System.out.println(list.get(0));
+    }
+}
+```
+
+#### 2.2.2 带概率的随机点名
+
+```java
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
+
+public class Test2 {
+    public static void main(String[] args) {
+        /*
+            班级里有N个学生
+            要求:
+                70%的概率随机到男生
+                30%的概率随机到女生
+         */
+        ArrayList<Integer> list = new ArrayList<>();
+        Collections.addAll(list, 1, 1, 1, 1, 1, 1, 1);
+        Collections.addAll(list, 0, 0, 0);
+        Collections.shuffle(list);
+
+        Random r = new Random();
+        Integer number = list.get(r.nextInt(list.size()));
+
+        ArrayList<String> boyList = new ArrayList<>();
+        ArrayList<String> girlList = new ArrayList<>();
+
+        Collections.addAll(boyList, "范闲", "范建", "范统", "杜子腾", "杜琦燕", "宋合泛", "侯笼藤", "朱益群", "朱穆朗玛峰", "袁明媛");
+        Collections.addAll(girlList, "杜琦燕", "袁明媛", "李猜", "田蜜蜜");
+
+        if (number == 1) {
+            System.out.println(boyList.get(r.nextInt(boyList.size())));
+        } else {
+            System.out.println(girlList.get(r.nextInt(girlList.size())));
+        }
+    }
+}
+```
+
+#### 2.2.3 不重复的随机点名
+
+```java
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
+
+public class Test3 {
+    public static void main(String[] args) {
+        /*
+            班级里有5个学生
+            要求:
+            被点到的学生，不会再被点到。
+            但是如果班级中所有的学生都点完了，需要重新开启第二轮点名。
+        */
+
+        ArrayList<String> list1 = new ArrayList<>();
+        ArrayList<String> list2 = new ArrayList<>();
+        Collections.addAll(list1, "范闲", "范建", "范统", "杜子腾", "杜琦燕", "宋合泛", "侯笼藤", "朱益群", "朱穆朗玛峰", "袁明媛");
+        int count = list1.size();
+        Random r = new Random();
+
+        for (int j = 0; j < 10; j++) {
+
+            System.out.println("----------第" + j + "轮点名----------");
+
+            for (int i = 0; i < count; i++) {
+                int index = r.nextInt(list1.size());
+                String name = list1.remove(index);
+                list2.add(name);
+                System.out.println(name);
+            }
+
+            list1.addAll(list2);
+            list2.clear();
+        }
+    }
+}
+```
+
+## 3 集合嵌套
+
+```java
+import java.util.*;
+
+public class Test4 {
+    public static void main(String[] args) {
+        HashMap<String, ArrayList<String>> hm = new HashMap<>();
+
+        ArrayList<String> city1 = new ArrayList<>();
+        city1.add("南京市");
+        city1.add("扬州市");
+
+        ArrayList<String> city2 = new ArrayList<>();
+        city2.add("石家庄市");
+        city2.add("唐山市");
+
+        ArrayList<String> city3 = new ArrayList<>();
+        city3.add("遂宁市");
+        city3.add("成都市");
+
+        hm.put("江苏省", city1);
+        hm.put("河北省", city2);
+        hm.put("四川省", city3);
+
+        Set<Map.Entry<String, ArrayList<String>>> entries = hm.entrySet();
+        for (Map.Entry<String, ArrayList<String>> entry : entries) {
+            String key = entry.getKey();
+            ArrayList<String> value = entry.getValue();
+            
+            StringJoiner sj = new StringJoiner("", "", "");
+            for (String s : value) {
+                sj.add(s);
+            }
+
+            System.out.println(key + " = " + sj);
+            
+        }
+    }
+}
+```
 
 
 
