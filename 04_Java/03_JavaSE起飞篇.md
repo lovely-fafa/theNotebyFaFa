@@ -408,7 +408,7 @@ public class A10_TreeMapDemo3 {
   - 如果要保证存取有序：```LinkedHashMap```
   - 如果要进行排序：```TreeMap```
 
-# day 02综合项目
+# day 02 综合项目
 
 ## 1 可变参数
 
@@ -635,6 +635,381 @@ public class Test4 {
     }
 }
 ```
+
+# day 03 集合进阶
+
+## 1 创建不可变集合
+
+### 1.1 创建不可变集合的应用场景
+
+- 如果某个数据不能被修改，把它防御性地拷贝到不可变集合中是个很好的实践
+- 或者当集合对象被不可信的库调用时，不可变形式是安全的。
+
+### 1.2 List 集合
+
+```java
+List<String> list = List.of("张三", "李四", "王五");
+
+System.out.println(list.get(1));
+System.out.println(list.get(2));
+System.out.println(list.get(0));
+
+for (String s : list) {
+    System.out.println(s);
+}
+
+Iterator<String> it = list.listIterator();
+while (it.hasNext()) {
+    System.out.println(it.next());
+}
+
+for (int i = 0; i < list.size(); i++) {
+    String s = list.get(i);
+    System.out.println(s);
+}
+
+// list.remove("李四");
+```
+
+### 1.3 Set 集合
+
+```java
+// 创建不可变的 set 集合时 要保证参数的唯一性
+Set<String> set = Set.of("张三", "李四", "王五");
+
+for (String s : set) {
+    System.out.println(s);
+}
+
+Iterator<String> it = set.iterator();
+while (it.hasNext()) {
+    System.out.println(it.next());
+}
+```
+
+### 1.4 HashMap 集合
+
+```java
+public static void main(String[] args) {
+    /*
+            细节1：键不能重复
+            细节2：最多传 20 个参数 也就是说只能有 10 对键值对
+            细节3：如果非要大于 20 个 可以把键值对看成一个整体
+         */
+
+    Map<String, String> map = Map.of("张三", "南京", "李四", "北京", "王五", "天津");
+
+    Set<String> keys = map.keySet();
+    for (String key : keys) {
+        System.out.println(key + "=" + map.get(key));
+    }
+
+    Set<Map.Entry<String, String>> entries = map.entrySet();
+    for (Map.Entry<String, String> entry : entries) {
+        String key = entry.getKey();
+        String value = entry.getValue();
+        System.out.println(key + "=" + value);
+    }
+}
+
+// 为什么要有最大的个数限制
+//    public static<K, V> void of(K...keys, V...values) {
+//        // 可以看到这个地方报错了 因为可变参数只能有一个且在最后
+//    }
+```
+
+大于10对键值对的方法
+
+```java
+// 细节3：如果非要大于 20 个 可以把键值对看成一个整体
+
+// 1. 创建普通的 map 集合
+HashMap<String, String> hm = new HashMap<>();
+hm.put("张三", "南京");
+hm.put("李四", "北京");
+hm.put("王五", "上海");
+hm.put("赵六", "北京");
+hm.put("孙七", "深圳");
+hm.put("周八", "杭州");
+hm.put("吴九", "宁波");
+hm.put("郑十", "无锡");
+hm.put("刘一", "苏州");
+hm.put("陈二", "嘉兴");
+hm.put("aaa", "111");
+
+// 2. 利用上面的数据获取一个不可变集合的方法一
+// 获取键值对（entry对象）
+Set<Map.Entry<String, String>> entries = hm.entrySet();
+
+// 把 entry 变成数组
+// 这个地方的 0 是数组的长度
+Map.Entry[] arr1 = new Map.Entry[0];
+
+// toArray 方法在底层会比较集合的长度跟数组的长度两者的大小
+// 如果集合的长度 > 数组的长度 : 数据在数组中放不下，此时会根据实际数据的个数，重新创建数组
+// 如果集合的长度 <= 数组的长度: 数据在数组中放的下，此时不会创建新的数组，而是直接用
+// 所以上面那个 0 可以随便写
+Map.Entry[] arr2 = entries.toArray(arr1);  // 这里使用的带参构造 是为了告诉他 数组里面的类型是 Entry 对象
+
+// 得到不可变的 map 集合
+Map map1 = Map.ofEntries(arr2);
+
+// 3. 利用上面的数据获取一个不可变集合的方法二（方法一精简版）
+Map map2 = Map.ofEntries(hm.entrySet().toArray(new Map.Entry[0]));
+
+// 4. 利用上面的数据获取一个不可变集合的方法三（方法二的接口）
+// JDK 10 才有的 底层就是方法二
+Map<String, String> map3 = Map.copyOf(hm);
+```
+
+### 1.5 总结
+
+1. 不可变集合的特点?
+
+   定义完成后不可以修改，或者添加、删除
+
+2. 如何创建不可变集合?
+
+   ```List```、```Set```、```Map```接口中，都存在```of```方法可以创建不可变集合
+
+3. 三种方式的细节
+
+   - ```List```：直接用
+
+   - ```Set```：元素不能重复
+
+   - ```Map```：元素不能重复、键值对数量最多是10个
+
+     超过10个用```ofEntries```方法，JDK10通过接口
+
+## 2 Stream 流
+
+### 2.1 stream 流的作用
+
+结合了Lambda表达式，简化集合、数组的操作
+
+### 2.2 Stream 流的使用步骤
+- 先得到一条```Stream```流（流水线），并把数据放上去
+- 利用```Stream```流中的```API```进行各种操作
+  - 中间方法
+    - 过滤转换
+    - 统计
+  - 终结方法
+    - 打印
+- 方法调用完毕之后，还可以调用其他方法
+
+注意
+
+1. 中间方法，返回新的```Stream```流，原来的```Stream```流**只能使用一次**，建议使用链式编程注意
+2. 修改```Stream```流中的数据，不会影响原来集合或者数组中的数据
+
+### 2.3 获取 Stream 流
+
+|   获取方式   |                        方法名                        |                             说明                             |
+| :----------: | :--------------------------------------------------: | :----------------------------------------------------------: |
+|   单列集合   |          ```default Streame<E> stream()```           |                 ```Collection```中的默认方法                 |
+|   双列集合   |                          无                          | 无法直接使用```stream```流，需要用```getKey()```或```getValue()```取到键或值 |
+|     数组     | ```public static <T> Streame<T> stream(T[] array)``` |                ```Arrays```工具类中的静态方法                |
+| 一堆零散数据 |  ```public static<T> Streame<T> of(T... values)```   |                 ```Stream```接口中的静态方法                 |
+
+- 单列集合
+
+  ```java
+  ArrayList<String> list1 = new ArrayList<>();
+  Collections.addAll(list1, "a", "b", "C", "a", "b", "C", "a", "b", "C");
+  Stream<String> stream1 = list1.stream();
+  stream1.forEach(s -> System.out.println(s));
+  ```
+
+- 双列集合
+
+  ```java
+  HashMap<String, String> hm = new HashMap<>();
+  hm.put("张三", "南京");
+  hm.put("李四", "北京");
+  hm.put("王五", "上海");
+  hm.put("赵六", "北京");
+  
+  // 1. 获取 stream 的第一种方法
+  hm.keySet().stream().forEach(s -> System.out.println(s));
+  
+  // 2. 获取 stream 的第二种方法
+  hm.entrySet().stream().forEach(s -> System.out.println(s));
+  ```
+
+- 数组
+
+  ```java
+  // 基本数据类型
+  int[] arr1 = {1, 2, 3, 4, 5};
+  Arrays.stream(arr1).forEach(s -> System.out.println(s));
+  
+  // 引用数据类型
+  String[] arr2 = {"1", "2", "3", "4", "5"};
+  Arrays.stream(arr2).forEach(s -> System.out.println(s));
+  ```
+
+- 一堆零散的数据
+
+  ```java
+  Stream.of(1, 2, 5, 6, 8).forEach(s -> System.out.println(s));
+  ```
+
+注意：```Stream```接口中静态方法```of```的细节：方法的形参是一个可变参数，可以传递一堆零散的数据，也可以传递数组。但是数组必须是**引用数据类型**的，如果传递**基本数据类型**，是会把整个数组当做一个元素，放到```Stream```当中。所以这个地方，我们应该用获取数组的```Stream```的方法。
+
+### 2.4 Stream 流中间方法
+
+|                        中间方法                        |                 说明                 |
+| :----------------------------------------------------: | :----------------------------------: |
+| ```Stream<T> filter(Predicate<? super T> predicate)``` |                 过滤                 |
+|          ```Stream<T> limit(long maxSize)```           |            获取前几个元素            |
+|              ```Stream<T> skip(long n)```              |            跳过前几个元素            |
+|               ```Stream<T> distinct()```               | 元素去重，依赖(hashCode和equals方法) |
+|  ```static<T> Stream<T> concat(Stream a Stream b)```   |        合并a和b两个流为一个流        |
+|       ```Stream<R> map(Function<T,R> mapper)```        |          转换流中的数据类型          |
+
+```java
+public class StreamDemo6 {
+    public static void main(String[] args) {
+        ArrayList<String> list = new ArrayList<>();
+        Collections.addAll(list, "张无忌", "周芷若", "赵镇", "张", "张三丰", "张攀山", "张良", "王二麻子", "谢广坤");
+
+        // 1. 过滤
+        // 匿名内部类
+        list.stream().filter(new Predicate<String>() {
+            @Override
+            public boolean test(String s) {
+                return s.startsWith("张");
+            }
+        }).forEach(s -> System.out.println(s));
+        // Lambda 表达式
+        list.stream().filter(s -> s.startsWith("张")).forEach(s -> System.out.println(s));
+
+        // 2. 获取前几个
+        list.stream().
+                limit(3).  // 前 3 个
+                forEach(s -> System.out.println(s));
+
+        // 3. 跳过前几个
+        list.stream()
+                .skip(3)  // 跳过前 3 个
+                .forEach(s -> System.out.println(s));
+    }
+}
+```
+
+```java
+public class StreamDemo7 {
+    public static void main(String[] args) {
+        ArrayList<String> list1 = new ArrayList<>();
+        Collections.addAll(list1, "张无忌", "张无忌", "周芷若", "赵镇", "张", "张三丰", "张攀山", "张良", "王二麻子", "谢广坤");
+
+        ArrayList<String> list2 = new ArrayList<>();
+        Collections.addAll(list2, "fafa");
+
+        // 去重
+        list1.stream().distinct().forEach(s -> System.out.println(s));
+
+        // 合并 a 和 b 两个流
+        Stream.concat(list1.stream(), list2.stream()).forEach(s -> System.out.println(s));
+    }
+}
+```
+
+```java
+public class StreamDemo8 {
+    public static void main(String[] args) {
+        // 输出每一个人的年龄
+        ArrayList<String> list1 = new ArrayList<>();
+        Collections.addAll(list1, "张无忌-10", "周芷若-50", "赵镇-30", "张-20");
+
+        // 类型装换之匿名内部类
+
+        // 第一个类型：流中原有是数据类型
+        // 第二个类型：转换为什么类型
+
+        // apply 的形参 s ：依次表示流里面的每一个数据
+        // 返回值：表示转换后的数据
+        list1.stream().map(new Function<String, Integer>() {
+
+            @Override
+            public Integer apply(String s) {
+                return Integer.parseInt(s.split("-")[1]);
+            }
+        }).forEach(s -> System.out.println(s));
+
+        // 类型装换之 Lambda 表达式
+        list1.stream().map(s -> Integer.parseInt(s.split("-")[1])).forEach(s -> System.out.println(s));
+    }
+}
+```
+
+### 2.5 Stream 流的终结方法
+
+|                名称                 |            说明            |
+| :---------------------------------: | :------------------------: |
+| ```void forEach(Consumer action)``` |            遍历            |
+|         ```long count()```          |            统计            |
+|           ```toArray()```           | 收集流中的数据，放到数组中 |
+| ```collect(Collector collector)```  | 收集流中的数据，放到集合中 |
+
+```java
+public class StreamDemo9 {
+    public static void main(String[] args) {
+        ArrayList<String> list = new ArrayList<>();
+        Collections.addAll(list, "张无忌-10", "周芷若-50", "赵镇-30", "张-20");
+
+        // 1. 遍历
+        // 1.1 匿名内部类
+        list.stream().forEach(new Consumer<String>() {
+            @Override
+            public void accept(String s) {
+                System.out.println(s);
+            }
+        });
+        // 1.2 Lambda 表达式
+        list.stream().forEach(s -> System.out.println(s));
+
+        // 2. 统计
+        long count = list.stream().count();
+        System.out.println(count);
+
+        // 3. 搜集
+        // 3.1 空参构造 但是是 object 类型的
+        Object[] arr1 = list.stream().toArray();
+        System.out.println(arr1);
+
+        // 3.2 带参构造之匿名内部类
+        // IntFunction 的泛型：具体类型的数组
+        // apply 的形参：流中数据的个数，要跟数组的长度保持一致
+        // apply 的返回值：具体类型的数组
+        // 方法体：就是创建数组
+        String[] arr2 = list.stream().toArray(new IntFunction<String[]>() {
+            // toArray 方法的参数的作用: 负责创建一个指定类型的数组
+            // toArray 方法的底层，会依次得到流里面的每一个数据，并把数据放到数组当中
+            // toArray 方法的返回值: 是一个装着流里面所有数据的数组
+            @Override
+            public String[] apply(int value) {
+                return new String[value];
+            }
+        });
+
+        System.out.println(Arrays.toString(arr2));  // [张无忌-10, 周芷若-50, 赵镇-30, 张-20]
+
+        // 3.3 带参构造之 Lambda 表达式
+        String[] arr3 = list.stream().toArray(value -> new String[value]);
+        System.out.println(Arrays.toString(arr3));
+    }
+}
+```
+
+
+
+
+
+## 3 方法引用
+
+
 
 
 
