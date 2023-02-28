@@ -1003,17 +1003,426 @@ public class StreamDemo9 {
 }
 ```
 
+```java
+public class StreamDemo10 {
+    public static void main(String[] args) {
+        ArrayList<String> list = new ArrayList<>();
+        Collections.addAll(list, "张三丰-男-10", "张无忌-男-15", "周芷若-女-14", "赵敏-女-13", "张强-男-20",
+                "张翠山-男-4", "张良-男-35", "王二麻子-男-37", "谢广坤-男-41");
 
+        // 1. 收集男性到 List 集合中
+        List<String> newList1 = list.stream()
+                .filter(s -> "男".equals(s.split("-")[1]))
+                .collect(Collectors.toList());
+        System.out.println(newList1);
 
+        // 2. 收集男性到 Set 集合中
+        Set<String> newList2 = list.stream().filter(s -> "男".equals(s.split("-")[1])).collect(Collectors.toSet());
+        System.out.println(newList2);
 
+        // 3. 收集男性到 Map 集合中
+        // 3.1 匿名内部类
+        // 键：姓名
+        // 值：年龄
+        /**
+         * toMap：参数一：键的生成规则
+         *        参数二：值的生成规则
+         * <p>
+         * 参数一：
+         *      Function：泛型一：流中每一个数据的类型
+         *                泛型二：Map 集合的键的数据类型
+         *      apply 形参：流里面的每一个数据
+         *          方法体：生成键的代码
+         *          返回值：已经生成的键
+         * <p>
+         * 参数二：
+         *      Function：泛型一：流中每一个数据的类型
+         *                泛型二：Map 集合的值的数据类型
+         *      apply 形参：流里面的每一个数据
+         *          方法体：生成值的代码
+         *          返回值：已经生成的值
+         */
+        Map<String, Integer> newList3 = list.stream()
+                .filter(s -> "男".equals(s.split("-")[1]))
+                .collect(Collectors.toMap(new Function<String, String>() {
+                    @Override
+                    public String apply(String s) {
+                        return s.split("-")[0];
+                    }
+                }, new Function<String, Integer>() {
+                    @Override
+                    public Integer apply(String s) {
+                        return Integer.parseInt(s.split("-")[2]);
+                    }
+                }));
+        System.out.println(newList3);
+
+        // 3.2 Lambda 表达式
+        Map<String, Integer> newList4 = list.stream()
+                .filter(s -> "男".equals(s.split("-")[1]))
+                .collect(Collectors.toMap(k -> k.split("-")[0],
+                        v -> Integer.parseInt(v.split("-")[2])));
+        System.out.println(newList4);
+    }
+}
+```
+
+### 2.6 总结：常用方法
+
+- 中间方法：```filter```，``` limit```，```skip```，```distinct```，```concat```，```map```
+- 终结方法：```forEach```，```count```，```collect```
+
+### 2.7 小练习
+
+- 数据过滤
+
+  ```java
+  public static void main(String[] args) {
+      /*
+          定义一个集合，并添加一些整数 1,2,3,4,5,6,7,8,9,18
+          过滤奇数，只留下偶数。
+          并将结果保存起来
+       */
+      ArrayList<Integer> list = new ArrayList<>();
+      Collections.addAll(list, 1, 2, 3, 4, 5, 6, 7, 8, 9, 18);
+  
+      List<Integer> newList = list.stream()
+              .filter(s -> s % 2 == 0)
+              .collect(Collectors.toList());
+      System.out.println(newList);
+  }
+  ```
+
+- 提取
+
+  ```java
+  public class Test2 {
+      public static void main(String[] args) {
+          /*
+              创建一个ArrayList集合，并添加以下宁符串，宁符中中前面是姓名，后面是年龄
+              zhangsan.23
+              lisi 24"
+              wangwu 25"
+              保留年龄大于等于24岁的人，并将结果收集到Map集合中，姓名为键，年龄为值
+           */
+          ArrayList<String> list = new ArrayList<>();
+          list.add("zhangsan,23");
+          list.add("lisi,24");
+          list.add("wangwu,25");
+  
+          Map<String, Integer> newList = list.stream()
+                  .filter(s -> Integer.parseInt(s.split(",")[1]) >= 24)
+                  .collect(Collectors.toMap(s -> s.split(",")[0],
+                          s -> Integer.parseInt(s.split(",")[1])));
+          System.out.println(newList);
+      }
+  }
+  ```
+
+- 练习三
+
+  ```java
+  public class Test3 {
+      public static void main(String[] args) {
+          /*
+              现在有两个ArrayList集合，分别存储6名男演员的名字和年龄以及6名女演员的名字和年龄。
+              姓名和年龄中间用逗号隔开。
+              比如:张三,23
+              要求完成如下的操作:
+                  1，男演员只要名字为3个字的前两人
+                  2，女演员只要姓杨的，并且不要第一个
+                  3，把过滤后的男演员姓名和女演员姓名合并到一起
+                  4，将上一步的演员姓名封装成Actor对象。
+                  5，将所有的演员对象都保存到List集合中
+              备注:演员类Actor，属性有: name，age
+  
+              男演员: "蔡坤坤,24", "谷嘉,39", "肖梁梁,27", "张天天,31", "刘诗,35", "杨小幂,33"
+              女演员: "杨颖,36", "高元元,43", "叶咸,23", "刘不甜,22", "吴签,24", "赵小颖,35"
+           */
+          ArrayList<String> list1 = new ArrayList<>();
+          ArrayList<String> list2 = new ArrayList<>();
+          Collections.addAll(list1, "蔡坤坤,24", "谷嘉,39", "肖梁梁,27", "张天天,31", "刘诗,35", "杨小幂,33");
+          Collections.addAll(list2, "杨颖,36", "高元元,43", "叶咸,23", "刘不甜,22", "吴签,24", "赵小颖,35");
+  
+          Stream<String> stream1 = list1.stream()
+                  .filter(s -> s.split(",")[0].length() == 3)
+                  .limit(2);
+  
+          Stream<String> stream2 = list2.stream()
+                  .filter(s -> s.startsWith("杨"))
+                  .skip(1);
+  
+          // 类型转换之匿名内部类
+          List<Actor> newList1 = Stream.concat(stream1, stream2)
+                  .map(new Function<String, Actor>() {
+                      @Override
+                      public Actor apply(String s) {
+                          String name = s.split(",")[0];
+                          int age = Integer.parseInt(s.split(",")[1]);
+                          return new Actor(name, age);
+                      }
+                  }).collect(Collectors.toList());
+          System.out.println(newList1);
+          // 类型转换之 Lambda 表达式
+          List<Actor> newList2 = Stream.concat(stream1, stream2)
+                          .map(s -> new Actor(s.split(",")[0],
+                                  Integer.parseInt(s.split(",")['1'])))
+                  .collect(Collectors.toList());
+          System.out.println(newList2);
+      }
+  }
+  ```
 
 ## 3 方法引用
 
+> 把已经有的方法拿过来用，当做函数式接口中抽象方法的方法体
+
+### 3.1 使用条件
+
+- 引用处需要是函数式接口
+- 被引用的方法需要已经存在
+- 被引用方法的形参和返回值需要跟抽象方法的形参和返回值保持一致
+- 被引用方法的功能需要满足当前的要求
+
+```::```：方法引用符
+
+```java
+public class FunctionDemo1 {
+    public static void main(String[] args) {
+        Integer[] arr = {3, 5, 8, 4, 1, 6, 2};
+        // 匿名内部类
+        Arrays.sort(arr, new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o2 - o1;
+            }
+        });
+        System.out.println(Arrays.toString(arr));
+
+        // lambda 表达式
+        Arrays.sort(arr, (Integer o1, Integer o2) -> {
+            return o2 - o1;
+        });
+        System.out.println(Arrays.toString(arr));
+
+        // lambda 表达式简化
+        Arrays.sort(arr, (o1, o2) -> o2 - o1);
+        System.out.println(Arrays.toString(arr));
+
+        // 方法引用
+        Arrays.sort(arr, FunctionDemo1::subtraction);
+        System.out.println(Arrays.toString(arr));
+    }
+
+    public static int subtraction (int num1, int num2) {
+        return num2 - num1;
+    }
+}
+```
+
+### 3.2 引用静态方法
+
+- 格式：```类名::静态方法```
+- 范例：```Integer::parseInt```
+
+```java
+public class FunctionDemo2 {
+    public static void main(String[] args) {
+        ArrayList<String> list = new ArrayList<>();
+        Collections.addAll(list, "1", "2", "3", "4");
+
+        // 匿名内部类
+        list.stream().map(new Function<String, Integer>() {
+            @Override
+            public Integer apply(String s) {
+                return Integer.parseInt(s);
+            }
+        }).forEach(s -> System.out.println(s));
+
+        // 方法引用
+        // 方法需要已经存在
+        // 方法的形参和返回值需要跟抽象方法的形参和返回值保持一致
+        // 方法的功能需要把形参的字符中转换成整数
+        list.stream().map(Integer::parseInt).forEach(s -> System.out.println(s));
+    }
+}
+```
+
+### 3.3 引用成员方法
+
+- 格式：```对象::成员方法```
+
+- 其他类：```其他类对象::方法名```
+
+- 本类：```this::方法名```
+
+  只能在非静态方法中使用，因为静态方法没有```this```
+
+- 父类：```super::方法名```
+
+  只能在非静态方法中使用，因为静态方法没有```supper```
+
+```java
+public class FunctionDemo3 {
+    public static void main(String[] args) {
+        ArrayList<String> list = new ArrayList<>();
+        Collections.addAll(list, "张无忌", "周芷若", "赵敏", "张强", "张三丰");
+
+        // 其他类
+        list.stream().filter(new StringOperation1()::stringJude).forEach(s -> System.out.println(s));
+
+        // 本类
+        // list.stream().filter(this.stringJude()).forEach(s -> System.out.println(s));  // 静态方法是不能 this 的
+        list.stream().filter(new FunctionDemo3()::stringJude).forEach(s -> System.out.println(s));  // 静态方法是不能 this 的
+
+    }
+    
+    public boolean stringJude(String s) {
+        return s.startsWith("张")  && s.length() == 3;
+    }
+}
+```
+
+### 3.4 引用构造方法
+
+- 格式：```类名::new```
+
+  注意该类的构造方法是否接受该类型的参数
+
+```java
+List<Student> newList = list.stream().map(Student::new).collect(Collectors.toList());
+```
+
+### 3.5 其他调用方式
+
+- 使用类名引用成员方法
+
+  不能引用所有类中的成员方法。如果抽象方法的第一个参数是```A```类型的，只能引用```A```类中的方法。
+
+  - 格式：```类名::成员方法```
+  - 范例：```String::substring```
+  - 方法引用的规则
+    1. 需要有函数式接口
+    2. 被引用的方法必须已经存在
+    3. 被引用方法的形参，需要跟抽象方怯的第二个形参到最后一个形参保持一致，返回值需要保持一致。
+    4. 被引用方法的功能需要满足当前的需求
+  - 抽象方法形参的详解
+    - 第一个参数：表示被引用方法的调用者，决定了可以引用哪些类中的方法。在Stream流当中，第一个参数一般都表示流里面的每一个数据。假设流里面的数据是字符串，那么使用这种方式进行方法引用，只能引用```String```这个类中的方法。
+    - 第二个参数到最后一个参数：跟被引用方法的形参保持一致，如果没有第二个参数，说明被引用的方法需要是无参的成员方法。
+  - 局限性
+    - 不能引用所有类中的成员方法。
+    - 是跟抽象方法的第一个参数有关，这个参数是什么类型的，那么就只能引用这个类中的方法。
+
+  ```java
+  public class FunctionDemo5 {
+      public static void main(String[] args) {
+          ArrayList<String> list = new ArrayList<>();
+          Collections.addAll(list, "aaa", "bbb", "ccc", "ddd");
+  
+          // 拿着流里面的每一个数据，去调用 String 类中的 toUpperCase 方法，方法的返回值就是转换之后的结果。
+          list.stream().map(String::toUpperCase).forEach(s -> System.out.println(s));
+      }
+  }
+  ```
+
+- 引用数组的构造方法
+
+  - 格式：```数据类型l]::new```
+  - 范例：```int[]::new```
+
+  ```java
+  public class FunctionDemo {
+      public static void main(String[] args) {
+          ArrayList<Integer> list = new ArrayList<>();
+          Collections.addAll(list, 1, 2, 3, 4, 5);
+  
+          // 匿名内部类
+          Integer[] arr = list.stream().toArray(new IntFunction<Integer[]>() {
+              @Override
+              public Integer[] apply(int value) {
+                  return new Integer[5];
+              }
+          });
+  
+          System.out.println(Arrays.toString(arr));
+  
+          // 方法引用
+          Integer[] arr2 = list.stream().toArray(Integer[]::new);
+          System.out.println(Arrays.toString(arr2));
+      }
+  }
+  ```
+
+- 综合小例子
+
+  ```java
+  public class FunctionDemo8 {
+      public static void main(String[] args) {
+          /**
+           * 需求:
+           *      创建集合添加学生对象学牛对象属性
+           *      name, age
+           * 要求:
+           *      获取姓名并放到数组当中
+           *      使用方法引用完成
+           */
+          ArrayList<Student> list = new ArrayList<>();
+          list.add(new Student("张三", 123));
+          list.add(new Student("张三1", 1234));
+          list.add(new Student("张三2", 12134));
+  
+          String[] nameList = list.stream().map(Student::getName).toArray(String[]::new);
+          Integer[] ageList = list.stream().map(Student::getAge).toArray(Integer[]::new);
+  
+          System.out.println(Arrays.toString(nameList));
+          System.out.println(Arrays.toString(ageList));
+      }
+  }
+  ```
+
+# day 04 异常 File
+
+## 1 异常
+
+![image-20230228204349653](assets/image-20230228204349653.png)
+
+### 1.1 Error
+
+代表的系统级别错误(属于严重问题系统一旦出现问题，sun公司会把这些错误封装成Error对象。Error是给sun公司自己用的，不是给我们程序员用的。因此我们开发人员不用管它。
+
+### 1.2 Exception
+
+> 异常，代表程序可能出现的问题。我们通常会用Exception以及他的子类来封装程序出现的问题。
+
+- 运行时异常: ```RuntimeException```及其子类，编译阶段不会出现异常提醒，运行时出现的异常（如：数组索引越界异常）
+- 编译时异常: 编译阶段就会出现异常提醒的。（如：日期解析异常）
+
+```java
+public class Exception {
+    public static void main(String[] args) throws ParseException {
+        // 编译时异常（编译阶段，需要手动处理，否则代码报错）
+        String time = "2023年1月1日";
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年mm月dd日");
+        Date date = sdf.parse(time);
+        System.out.println(date);
+
+        // 运行时异常（编译阶段不需要处理，代码运行时出现的异常）
+        int[] arr = {1, 2, 3};
+        System.out.println(arr[10]);  // ArrayIndexOutOfBoundsException
+    }
+}
+```
+
+### 1.3 异常的作用
+
+- 作用一：异常是用来查询bug的关键参考信息
+- 作用二：异常可以作为方法内部的一种特殊返回值，以便通知调用者底层的执行情况
 
 
 
 
 
+## 2 File 类
 
 
 
