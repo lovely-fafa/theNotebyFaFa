@@ -1418,11 +1418,351 @@ public class Exception {
 - 作用一：异常是用来查询bug的关键参考信息
 - 作用二：异常可以作为方法内部的一种特殊返回值，以便通知调用者底层的执行情况
 
+### 1.4 异常的处理方式
 
+- JVM 默认的处理方式
 
+  - 把异常的名称，异常原因及异常出现的位置等信息输出在了控制台
+  - 程序停止执行，下面的代码不会再执行了
 
+- 捕获异常
+
+  - 目的：当代码出现异常时可以让程序继续往下执行。
+
+    ```java
+    int[] arr = {1, 2, 5, 10, 5};
+    try {
+        System.out.println(arr[10]);
+    } catch (ArrayIndexOutOfBoundsException e) {
+        // 出现了 ArrayIndexOutOfBoundsException 异常 我该如何处理
+        System.out.println("索引越界了");
+    }
+    System.out.println("看看我执行了吗？");
+    ```
+
+### 1.5 四个小问题
+
+1. 如果```try```中没有遇到问题，怎么执行?
+
+   会把```try```里面所有的代码全部执行完毕，不会执行```catch```里面的代码
+
+2. 如果```try```中可能会遇到多个问题，怎么执行?
+
+   会写多个```catch```与之对应。注意：父类异常需要写在下面。
+
+   在JDK7以后，可以在```catch```中写多个异常以捕获。
+
+   ```catch (ArrayIndexOutOfBoundsException | xxxxxx e)```
+
+3. 如果```try```中遇到的问题没有被抽获，怎么执行?
+
+   相当```try...catch```的代码白写了，最终还是会交给虚拟机进行处理。
+
+4. 如果```try```中遇到了问题，那么```try```下面的其他代码还会执行吗?
+
+   下面的代码就不会执行了，直按跳转到对应的```cateh```当中，执行```catch```里面的语句体。但是如果没有对应```catch```与之匹配，那么还是会交给虚拟机进行处理。
+
+### 1.6 对异常的处理
+
+|              方法名称               |                             说明                             |
+| :---------------------------------: | :----------------------------------------------------------: |
+|  ```public string getMessage()```   |            返回此```throwable```的详细消息字符串             |
+|   ```public string tostring()```    |                    返回此可抛出的简短描述                    |
+| ```public void printStackTrace()``` | 把异常的错误信息输出在控制台<br/>底层使用的```System.err```输出红色的语句，但是不会终止程序的运行的 |
+
+```java
+int[] arr = {11, 12, 0};
+try {
+    System.out.println(arr[10]);
+} catch (ArrayIndexOutOfBoundsException e) {
+    String message = e.getMessage();
+    System.out.println(message);  // Index 10 out of bounds for length 3
+
+    String string = e.toString();
+    System.out.println(string);  // java.lang.ArrayIndexOutOfBoundsException: Index 10 out of bounds for length 3
+
+    e.printStackTrace();  // java.lang.ArrayIndexOutOfBoundsException: Index 10 out of bounds for length 3 at com.itheima.a01myexception.ExceptionDemo11.main(ExceptionDemo11.java:7)
+}
+System.out.println("看看我执行了吗");
+```
+
+扩展：
+
+```java
+// 正常的输出语句
+System.out.println(123);
+// 错误的输出顺序
+System.err.println(123);
+```
+
+### 1.7 抛出异常
+
+- ```throws```
+
+  写在方法定义处，表示声明一个异常告诉调用者，使用本方法可能会有哪些异常
+
+  - 编译时异常：必须要写。
+  - 运行时异常：可以不写。
+
+- ```throw```
+
+  写在方法内，结束方法
+
+  手动抛出异常对象，交给调用者方法中下面的代码不再执行了
+
+```java
+public class ExceptionDemo12 {
+    public static void main(String[] args) {
+        int[] arr = {};
+        int max = 0;
+        try {
+            max = getMax(arr);
+        } catch (NullPointerException e) {
+            System.out.println("空指针异常");
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("索引越界异常");
+        }
+        System.out.println(max);
+    }
+    
+    public static int getMax(int[] arr) throws NullPointerException, ArrayIndexOutOfBoundsException {
+        if (arr == null) {
+            // 手动创建一个异常对象，并把这个异常交给方法的调用者处理
+            // 此时方法就会结束，下面的代码不会再执行了
+            throw new NullPointerException();
+        }
+
+        if (arr.length == 0) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
+
+        int max = arr[0];
+        for (int i = 1; i < arr.length; i++) {
+            if (arr[i] > max) {
+                max = arr[i];
+            }
+        }
+        return max;
+    }
+}
+```
+
+### 1.8 综合案例
+
+```java
+public class Test {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        GirlFriend gf = new GirlFriend();
+
+        while (true) {
+            try {
+                System.out.println("请输入名字：");
+                String name = sc.nextLine();
+                gf.setName(name);
+
+                System.out.println("请输入年龄：");
+                int age = Integer.parseInt(sc.nextLine());
+                gf.setAge(age);
+
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("年龄格式有误，请输入数字");
+            } catch (RuntimeException e) {
+                System.out.println("姓名的长度或年龄有误");
+            }
+        }
+        System.out.println(gf);
+    }
+}
+```
+
+```java
+public void setName(String name) {
+    int len = name.length();
+    if (len < 3 || len > 10) {
+        throw new RuntimeException();
+    }
+    this.name = name;
+}
+
+public void setAge(int age) {
+    if (age < 18 || age > 40) {
+        throw new RuntimeException();
+    }
+    this.age = age;
+}
+```
+
+### 1.9 自定义异常
+
+1. 定义异常类
+
+   ```xxxException```
+
+2. 写继承关系
+
+   - 运行时：```RuntimeException```核心就表示由于参数错误而导效的问题
+   - 编译时：```Exception```核心提醒程序员检查本地信息
+
+3. 空参构造
+
+4. 带参构造
+
+   报错信息
+
+```java
+public class AgeOutOfBoundsException extends RuntimeException {
+    public AgeOutOfBoundsException() {
+    }
+
+    public AgeOutOfBoundsException(String message) {
+        super(message);
+    }
+}
+```
 
 ## 2 File 类
+
+### 2.1 File 类
+
+- ```File```对象就表示一个路径，可以是文件的路径、也可以是文件夹的路径
+- 这个路径可以是存在的，也允许是不存在的
+
+| 方法名称                                 | 说明                                               |
+| ---------------------------------------- | -------------------------------------------------- |
+| public File(String pathname)             | 根据文件路径创建文件对象                           |
+| public File(String parent, String child) | 根据父路径名字符串和子路径名字符串创建文件对象     |
+| public File(File parent, String child)   | 根据父路径对应文件对象和子路径名字符串创建文件对象 |
+
+```java
+// 1. 字符串变成 File 对象
+String str = "C\\User\\Desktop\\a.txt";
+File f1 = new File(str);
+System.out.println(f1);
+
+// 2. 拼接为 File 对象
+String parent = "C\\User\\Desktop";
+String child = "a.txt";
+File f2 = new File(parent, child);
+System.out.println(f2);
+
+// 3. File 对象与字符串拼接
+File f3 = new File("C\\User\\Desktop");
+File f4 = new File(f3, "a.txt");
+System.out.println(f4);
+```
+
+### 2.2 常见成员方法（获取、判断）
+
+|               方法名称                |                   说明                   |
+| :-----------------------------------: | :--------------------------------------: |
+|  ```public boolean isDirectory()```   | 判断此路径名表示的```File```是否为文件夹 |
+|     ```public boolean isFile()```     |  判断此路径名表示的```File```是否为文件  |
+|     ```public boolean exists()```     |   判断此路径名表示的```File```是否存在   |
+|      ```public long length()```       |        返回文件的大小（字节数量）        |
+| ```public String getAbsolutePath()``` |            返回文件的绝对路径            |
+|     ```public String getPath()```     |         返回定义文件时使用的路径         |
+|     ```public String getName()```     |          返回文件的名称，带后缀          |
+|   ```public long lastModified()```    |  返回文件的最后修改时间 （时间毫秒值）   |
+
+```java
+// 1. 文件夹路径判断
+File f1 = new File("D:\\aaa\\a.txt");
+System.out.println(f1.isDirectory());
+
+// 2. 文件路径判断
+System.out.println(f1.isFile());
+
+// 3. 是否存在
+System.out.println(f1.exists());
+```
+
+```java
+File f1 = new File("D:\\aaa\\a.txt");
+
+// 1. 文件大小
+// 细节一：只能获得文件的大小 单位 kb
+// 细节二：不能获得文件夹的大小
+long len = f1.length();
+System.out.println(len);
+
+// 2. 绝对路径
+File f2 = new File("a.txt");
+System.out.println(f2.getAbsoluteFile());
+
+// 3. 定义文件对象的路径
+System.out.println(f2.getPath());
+
+// 4. 获取文件名字
+// 细节一：调用者是文件：返回文件名+后缀名
+//       调用者是文件夹：返回文件夹名字
+System.out.println(f2.getName());
+
+// 5. 文件最后的修改时间（时间毫秒值）
+long time = f2.lastModified();
+
+Date date = new Date();
+date.setTime(time);
+
+SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+String timeFormat = sdf.format(date);
+System.out.println(timeFormat);
+```
+
+### 2.3 File 的常见成员方法（创建、删除）
+
+|               方法名称               |         说明         |
+| :----------------------------------: | :------------------: |
+| ```public boolean createNewFile()``` | 创建一个新的空的文件 |
+|     ```public boolean mkdir()```     |    创建单级文件夹    |
+|    ```public boolean mkdirs()```     |    创建多级文件夹    |
+|    ```public boolean delete()```     |  删除文件、空文件夹  |
+
+```java
+// 1. 创建文件
+// 细节1：文件不存在，创建成功，返回 true
+//       文件存在，创建失败，返回 false
+// 细节2：父级路径不存在 IOException
+// 细节3：创建的一定是文件 没有后缀名 也会创建一个没有后缀名的文件
+File f1 = new File("\\b.mp3");
+boolean b = f1.createNewFile();
+System.out.println(b);  // 是否成功
+
+// 2. 创建文件夹
+// 细节1：Windows 路径必须唯一（所以一个没有后缀名的文件路径和文件夹路径会冲突...）
+// 细节2：只能创建单击文件夹 不能创建多级文件夹
+File f2 = new File("\\d");
+boolean bb = f2.mkdir();
+System.out.println(bb);  // 是否成功
+
+// 3. 创建多级文件夹
+File f3 = new File("\\d\\dd\\ccc");
+boolean bbb = f3.mkdirs();
+System.out.println(bbb);
+
+// 细节1：删除不走回收站
+// 细节2：删除文件夹
+//       有内容：失败
+//       空文件夹：成功
+File f1 = new File("\\d");
+boolean b = f1.delete();
+System.out.println(b);
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
