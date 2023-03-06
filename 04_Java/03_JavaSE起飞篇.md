@@ -1750,25 +1750,421 @@ boolean b = f1.delete();
 System.out.println(b);
 ```
 
+### 2.4 File 的常见成员方法（获取并遍历）
+
+|            方法名称             |           说明           |
+| :-----------------------------: | :----------------------: |
+| ```public File[] listFiles()``` | 获取当前该路径下所有内容 |
+
+```java
+File f = new File("D:\\大学牲");
+File[] files = f.listFiles();
+for (File file : files) {
+    System.out.println(file);
+}
+```
+
+- 当调用者```File```表示的路径不存在时，返回```null```
+- 当调用者```File```表示的路径是文件时，返回```null```
+- 当调用者```File```表示的路径是一个空文件夹时，返回一个长度为0的数组
+- 当调用者```File```表示的路径是一个有内容的文件夹时，将里面所有文件和文件夹的路径放在```File```数组中返回
+- 当调用者```File```表示的路径是一个有隐藏文件的文件夹时，将里面所有文件和文件夹的路径放在```File```数组中返回，包含隐藏文件
+- 当调用者```File```表示的路径是需要权限才能访问的文件夹时，返回```null```
+
+|                       方法名称                       |                   说明                   |
+| :--------------------------------------------------: | :--------------------------------------: |
+|        ```public static File[] listRoots()```        |           列出可用的文件系统根           |
+|             ```public String[] list()```             |         获取当前该路径下所有内容         |
+|   ```public String[] ist(FilenameFilter filter)```   | 利用文件名过滤器获取当前该路径下所有内容 |
+|           ```public File[] listFiles()```            |         获取当前该路径下所有内容         |
+|   ```public File[] listFiles(FileFilter filter)```   | 利用文件名过滤器获取当前该路径下所有内容 |
+| ```public File[] listFiles(FilenameFilter filter)``` | 利用文件名过滤器获取当前该路径下所有内容 |
+
+```java
+// 1. 获取盘符
+File[] arr = File.listRoots();
+System.out.println(Arrays.toString(arr));
+
+// 2. 获取内容（只有名字 没有路径）
+File f1 = new File("D:\\大学牲");
+String[] list = f1.list();
+for (String s : list) {
+    System.out.println(s);
+}
+
+// 3. 文件过滤器
+String[] arr3 = f1.list(new FilenameFilter() {
+    @Override
+    public boolean accept(File dir, String name) {
+        return name.endsWith(".pdf");
+    }
+});
+System.out.println(Arrays.toString(arr3));
+```
+
+```java
+File f = new File("D:\\大学牲");
+
+File[] files1 = f.listFiles(new FileFilter() {
+    @Override
+    public boolean accept(File pathname) {
+        return pathname.getName().endsWith(".pdf");
+    }
+});
+for (File file : files1) {
+    System.out.println(file);
+}
+
+System.out.println("----------------------------");
+
+File[] files2 = f.listFiles(new FilenameFilter() {
+    @Override
+    public boolean accept(File dir, String name) {
+        return name.endsWith(".pdf");
+    }
+});
+for (File file : files2) {
+    System.out.println(file);
+}
+```
+
+### 2.5 小练习：递归删除文件夹
+
+```java
+public static void delete(File src) {
+    File[] files = src.listFiles();
+    for (File file : files) {
+        if (file.isFile()) {
+            file.delete();
+        } else {
+            delete(file);
+        }
+    }
+    src.delete();
+}
+```
+
+![image-20230306121106270](assets/image-20230306121106270.png)
+
+### 2.6 小练习：统计文件类型个数
+
+```java
+public static HashMap<String, Integer> countFileInfo(File src) {
+    HashMap<String, Integer> hm = new HashMap<>();
+
+    File[] files = src.listFiles();
+    if (files != null) {
+        for (File file : files) {
+            if (file.isFile()) {
+                String fileName = file.getName();
+                String type = fileName;
+                if (fileName.contains(".")) {
+                    String[] fileNameSplit = fileName.split("\\.");
+                    type = fileNameSplit[fileNameSplit.length - 1];
+                }
+
+                if (hm.containsKey(type)) {
+                    hm.put(type, hm.get(type) + 1);
+                } else {
+                    hm.put(type, 1);
+                }
+            } else {
+                HashMap<String, Integer> sonMap = countFileInfo(file);
+                for (String k : sonMap.keySet()) {
+                    if (hm.containsKey(k)) {
+                        hm.put(k, hm.get(k) + sonMap.get(k));
+                    } else {
+                        hm.put(k, sonMap.get(k));
+                    }
+                }
+            }
+        }
+    }
+    return hm;
+}
+```
+
+# day 05 IO 流
+
+> ```IO```流:存储和读取数据的解决方案
+>
+> - ```I```：input
+> - ```O```：output
+
+## 1 IO 流分类
+
+- 按照流向
+
+  - 输出流：程序
+  - 输入流：文件
+
+- 按照操作文件的类型
+
+  > 能够用记事本打开的就是纯文本文件
+
+  - 字节流：可以操作所有类型的文件
+
+  - 字符流：只能操作纯文本文件
 
 
+![image-20230306152801124](assets/image-20230306152801124.png)
 
+![image-20230306152812900](assets/image-20230306152812900.png)
 
+## 2 FileOutputStream
 
+### 2.1 小例子
 
+```java
+public static void main(String[] args) throws IOException {
+    // 1. 创建对象
+    // 细节1：参数是字符中表示的路径或者是 File 对象都是可以的
+    // 细节2：如果文件不存在会创建一个新的文件，但是要保证父级路径是存在的
+    // 细节3：如果文件已经存在，会清空文件
+    FileOutputStream fos = new FileOutputStream("day05-code\\src\\a.txt");
 
+    // 2. 写出数据
+    // 细节: write 方法的参数是整数，但是实际上写到本地文件中的是整数在 ASCII 上对应的字符 (显而易见啊 这个是字节流？是吗？)
+    fos.write(97);
 
+    // 3. 释放资源
+    fos.close();
+}
+```
 
+### 2.2 FileOutputStream 写数据的 3 种方式
 
+|                   方法名称                   |             说明             |
+| :------------------------------------------: | :--------------------------: |
+|           ```void write(int b)```            |      一次写一个字节数据      |
+|          ```void write(byte[] b)```          |    一次写一个字节数组数据    |
+| ```void write(byte[] b, int off, int len)``` | 一次写一个字节数组的部分数据 |
 
+```java
+public static void main(String[] args) throws IOException {
+    FileOutputStream fos = new FileOutputStream("day05-code\\src\\b.txt");
 
+    // 1. 第一种
+    fos.write(97);
+    fos.write(98);
 
+    // 2. 第二种：一次写一个字节数组
+    byte[] arr1 = {11, 22, 33};
+    fos.write(arr1);
 
+    // 3. 第三种：一次写一个字节数组的部分数据
+    // 参数 1：数组
+    // 参数 2：起始索引
+    // 参数 1：个数
+    byte[] arr2 = {97, 98, 99, 100};
+    fos.write(arr2, 1, 2);
 
+    fos.close();
+}
+```
 
+### 2.3 换行写与续写
 
+```java
+public static void main(String[] args) throws IOException {
+    FileOutputStream fos = new FileOutputStream("day05-code\\src\\a.txt");
 
+    // 1. 换行写
+    String str = "fafa";
+    byte[] arr = str.getBytes();
+    fos.write(arr);
 
+    fos.write("\r\n".getBytes());
+    fos.write("666".getBytes());
+
+    fos.write("\r\nfafafafa\r\n666".getBytes());  // 所以为什么不一步到位...
+
+    fos.close();
+
+    // 2. 续写
+    // append 为 true
+    FileOutputStream fos1 = new FileOutputStream("day05-code\\src\\a.txt", true);
+    fos1.write("ahhhh".getBytes());
+    fos1.close();
+}
+```
+
+## 3 FilelnputStream
+
+> 操作本地文件的字节输入流，可以把本地文件中的数据读取到程序中来。
+
+### 3.1 小例子
+
+```java
+public static void main(String[] args) throws IOException {
+    // 1. 创建对象
+    // 细节1：如果文件不存在 直接报错
+    FileInputStream fis = new FileInputStream("day05-code\\src\\a.txt");
+
+    // 2. 读数据
+    // 细节1：一次读一个字节 读出来的数据是 ASCLL 上对应的数据
+    // 细节2：读到文件末尾，read 返回的是 -1
+    int b1 = fis.read();
+    System.out.println((char) b1);
+
+    int b2 = fis.read();
+    System.out.println(b2);
+
+    int b3 = fis.read();
+    System.out.println(b3);
+
+    int b4 = fis.read();
+    System.out.println(b4);
+
+    fis.close();
+}
+```
+
+### 3.2 循环读取
+
+```java
+FileInputStream fls = new FileInputStream("day05-code\\src\\a.txt");
+
+int b;
+// 这比较复杂捏
+while ((b = fls.read()) != -1) {
+    System.out.println((char) b);
+}
+
+fls.close();
+```
+
+### 3.3 文件拷贝
+
+```java
+FileInputStream fls = new FileInputStream("D:\\大学牲\\大二上_2021_2022\\会展概论\\小组作业\\PPT\\会展概论.pdf");
+FileOutputStream fos = new FileOutputStream("day05-code\\src\\res.pdf");
+
+// 核心思想：边读不写
+int b;
+while ((b = fls.read()) != -1) {
+    fos.write(b);
+}
+
+fos.close();
+fls.close();
+```
+
+### 3.3 大文件拷贝——一次读多个字节
+
+|               方法名称               |          说明          |
+| :----------------------------------: | :--------------------: |
+|       ```public int read()```        |   一次读一个字节数据   |
+| ```public int read(byte[] buffer)``` | 一次读一个字节数组数据 |
+
+```java
+FileInputStream fls = new FileInputStream("day05-code\\src\\a.txt");
+
+byte[] bytes = new byte[3];
+
+// 一次读取多个字节数据，具体读多少，跟散组的长度有关
+// 返回值：本次读取到了多少个字节数据
+int len1 = fls.read(bytes);
+System.out.println(len1);
+String str1 = new String(bytes, 0, len1);
+System.out.println(str1);
+
+int len2 = fls.read(bytes); // 返回值：本次读取到了多少个字节数据
+System.out.println(len2);
+// 这个地方 相当于是在往 数组 里面添加数据
+// 如果此时，文本里面读剩下的数据填不满数组 则这一次的没有填写到的数组部分的值是上一次的
+// 所以，这个地方 我们把数组转化为字符串时 根据 len 的值 把本次读到的数据转化为字符串了
+String str2 = new String(bytes, 0, len2);
+System.out.println(str2);
+
+fls.close();
+```
+
+```java
+long start = System.currentTimeMillis();
+
+FileInputStream fls = new FileInputStream("D:\\百度网盘\\学习OpenCV 3 中文版.zip");
+FileOutputStream fos = new FileOutputStream("D:\\百度网盘\\学习OpenCV 3 中文版2.zip");
+
+int len;
+byte[] bytes = new byte[1024 * 1024 * 5];
+while ((len = fls.read(bytes)) != -1) {
+    fos.write(bytes, 0, len);
+}
+
+fos.close();
+fls.close();
+
+long end = System.currentTimeMillis();
+System.out.println(end - start);
+```
+
+## 4 try...catch 异常处理（了解）
+
+### 4.1 try 完整
+
+```java
+try {
+    
+} catch (IOException e) {
+    
+} finnally {
+    
+}
+```
+
+特点：```finally```里面的代码一定被执行，除非虚拟机停止
+
+### 4.2 try 捕获 IO 流
+
+![image-20230306230416145](assets/image-20230306230416145.png)
+
+- 基本做法
+
+```java
+public static void main(String[] args) {
+
+    // 为什么要这样
+    // 因为 直接写在 try 里面 变量就会只存在在 try 这个大括号里面 catch 就拿不到
+    // 但是又不能在外面直接定义 因为有可能会编译时异常 放在外面就 try 不到了
+    FileInputStream fls = null;
+    FileOutputStream fos = null;
+
+    try {
+        fls = new FileInputStream("D:\\百度网盘\\学习OpenCV 3 中文版.zip");
+        fos = new FileOutputStream("D:\\百度网盘\\学习OpenCV 3 中文版2.zip");
+
+        int len;
+        byte[] bytes = new byte[1024 * 1024 * 5];
+        while ((len = fls.read(bytes)) != -1) {
+            fos.write(bytes, 0, len);
+        }
+    } catch (IOException e) {
+        throw new RuntimeException(e);
+    } finally {
+
+        // 有可能在创建 FileOutputStream 对象时出现异常
+        // 会被上面的 try 捕获
+        // 但是 此时 fos 就是 null 了所以我们要先判断 fos 是不是 null
+        // fos 不是 null 我们才要把他 close 掉
+        if (fos != null) {
+            try {
+                fos.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        if (fls != null) {
+            try {
+                fls.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+}
+```
 
 
 
