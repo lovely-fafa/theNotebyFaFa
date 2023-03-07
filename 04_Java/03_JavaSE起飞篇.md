@@ -2002,7 +2002,7 @@ public static void main(String[] args) throws IOException {
     FileInputStream fis = new FileInputStream("day05-code\\src\\a.txt");
 
     // 2. 读数据
-    // 细节1：一次读一个字节 读出来的数据是 ASCLL 上对应的数据
+    // 细节1：一次读一个字节 读出来的数据是 ASCII 上对应的数据
     // 细节2：读到文件末尾，read 返回的是 -1
     int b1 = fis.read();
     System.out.println((char) b1);
@@ -2164,6 +2164,187 @@ public static void main(String[] args) {
         }
     }
 }
+```
+
+- JDK7
+
+```java
+public static void main(String[] args) {
+    // 注意：只有实现了 Autocloseable 接口的类，才能在小括号中创建对象。
+    try(FileInputStream fls = new FileInputStream("D:\\百度网盘\\学习OpenCV 3 中文版.zip");
+        FileOutputStream fos = new FileOutputStream("D:\\百度网盘\\学习OpenCV 3 中文版2.zip")) {
+
+        int len;
+        byte[] bytes = new byte[1024 * 1024 * 5];
+        while ((len = fls.read(bytes)) != -1) {
+            fos.write(bytes, 0, len);
+        }
+
+    } catch (IIOException e) {
+        e.printStackTrace();
+    }
+}
+```
+
+- JDK9
+
+```java
+public static void main(String[] args) throws FileNotFoundException {
+    FileInputStream fls = new FileInputStream("D:\\百度网盘\\学习OpenCV 3 中文版.zip");
+    FileOutputStream fos = new FileOutputStream("D:\\百度网盘\\学习OpenCV 3 中文版2.zip")
+
+    try(fls; fos) {
+        int len;
+        byte[] bytes = new byte[1024 * 1024 * 5];
+        while ((len = fls.read(bytes)) != -1) {
+            fos.write(bytes, 0, len);
+        }
+
+    } catch (IIOException e) {
+        e.printStackTrace();
+    }
+}
+```
+
+## 5 字符集
+
+### 5.1 ASCII 字符集
+
+- 存储英文，一个字节（8位）就可以了
+- ASCII编码规则：查表，讲二进制数，前面补0，补齐8位
+- ASCII解码规则：直接转成十进制，查表
+
+### 5.2 不知道叫什么
+
+- GB2312 字符集：1980年发布，1981年5月1日实施的简体中文汉字编码国家标准。收录7445个图形字符，其中包括6763个简体汉字。
+
+- BIG5 字符集（大五码）：台湾地区繁体中文标准字符集，共收录13053个中文字，1984年实施
+
+- GBK 字符集：2000年3月17日发布，收录21003个汉字3。包含国家标准 GB13000-1 中的全部中日韩汉字，和 BIG5 编码中的所有汉字。
+
+  windows 系统默认使用的就是 GBK。系统显示：ANSI
+
+- Unicode 字符集（万国码）：国际标准字符集，它将世界各种语言的每个字符定义一个唯一的编码，以满足跨语言、跨平台的
+  文本信息转换。
+
+### 5.3 GBK 存储规则
+
+- 英文
+
+  和 ASCII 一样。
+
+- 汉字
+
+  - 规则1：汉字两个字节存储
+
+  - 规则2：高位字节二进制一定以1开头，转成十进制之后是一个负数
+
+    就是为了和英文区分。因为英文是0开头的，此时汉字1开头，便可以区分了
+
+    ```
+    10111010 10111010 01100001
+    1 开头是中文 所以读两个字节：10111010 10111010：汉
+    0 开头是英文 所以：01100001：a
+    
+    01100001 01100010 0110 0011：abc
+    ```
+
+### 5.4 Unicode 字符集
+
+- UTF-16 编码规则：用2~4个字节保存
+
+- UTF-32 编码规则：固定使用四个字节保存
+
+- UTF-8 编码规则：用1~4个字节保存
+
+  - 英文是1个字节
+
+  - 简体中文是3个字节
+
+  - 编码方式
+
+    ```
+    xxx 是查 Unicode 查表得到的二进制的值
+    
+    0xxxxxxx （ASCII码）
+    110xxxxx 10xxxxxx
+    1110xxxx 10xxxxxx 10xxxxxx
+    1110xxxx 10xxxxxx 10xxxxxx 10xxxxxx
+    ```
+
+注意：UTF-8 不是一个字符集，他是 Unicode 字符集的一种编码方式
+
+### 5.5 为什么会乱码
+
+原因1：读取数据时未读完整个汉字
+
+原因2：编码和解码时的方式不统一
+
+### 5.6 Java 编码与解码
+
+- 编码
+
+|                String 类中的方法                 |         说明         |
+| :----------------------------------------------: | :------------------: |
+|          ```public byte[] getBytes()```          | 使用默认方式进行编码 |
+| ```public byte[] getBytes(String charsetName)``` | 使用指定方式进行编码 |
+
+- 解码
+
+|                String 类中的方法                |         说明         |
+| :---------------------------------------------: | :------------------: |
+|           ```string(byte[] bytes)```            | 使用默认方式进行解码 |
+| ```string(byte[] bytes， string charsetName)``` | 使用指定方式进行解码 |
+
+```java
+// 1. 编码
+String str1 = "ai你哟";
+byte[] bytes1 = str1.getBytes();  // idea 默认是 utf-8
+System.out.println(Arrays.toString(bytes1));
+
+byte[] bytes2 = str1.getBytes("GBK");  // idea 默认是 utf-8
+System.out.println(Arrays.toString(bytes2));
+
+// 2. 编码
+String str2 = new String(bytes1);
+System.out.println(str2);
+
+String str3 = new String(bytes2, "GBK");
+System.out.println(str3);
+```
+
+## 6 字符流
+
+- 字符流的底层其实就是字节流。
+- 字符流 = 字节流 + 字符集
+- 特点
+  - 输入流：一次读一个字节，遇到中文时，一次读多个字节
+  - 输出流：底层会把数据按照指定的编码方式进行编码，变成字节再写到文件中
+- 使用场景：对于纯文本文件进行读写操作
+
+## 7 FileReader
+
+### 7.1 创建字符流对象
+
+|              构造方法              |                         说明                         |
+| :--------------------------------: | :--------------------------------------------------: |
+|    public FileReader(File file)    |                         说明                         |
+| public FileReader(string pathname) | 创建字符输入流关联本地文件创建字符输入流关联本地文件 |
+
+### 7.2 读取数据
+
+|               成员方法               |             说明             |
+| :----------------------------------: | :--------------------------: |
+|       ```public int read()```        |   读取数据，读到末尾返回-1   |
+| ```public int read(char[] buffer)``` | 读取多个数据，读到末尾返回-1 |
+
+- 细节1：按字节进行读取，遇到中文，一次读多个字节，读取后解码，返回一个整数
+- 细节2：读到文件末尾了，read方法返回-1。
+
+### 7.3 释放资源
+
+```java
+public int close()
 ```
 
 
