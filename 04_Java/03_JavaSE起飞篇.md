@@ -1629,11 +1629,11 @@ public class AgeOutOfBoundsException extends RuntimeException {
 - ```File```对象就表示一个路径，可以是文件的路径、也可以是文件夹的路径
 - 这个路径可以是存在的，也允许是不存在的
 
-| 方法名称                                 | 说明                                               |
-| ---------------------------------------- | -------------------------------------------------- |
-| public File(String pathname)             | 根据文件路径创建文件对象                           |
-| public File(String parent, String child) | 根据父路径名字符串和子路径名字符串创建文件对象     |
-| public File(File parent, String child)   | 根据父路径对应文件对象和子路径名字符串创建文件对象 |
+|                    方法名称                    |                        说明                        |
+| :--------------------------------------------: | :------------------------------------------------: |
+|       ```public File(String pathname)```       |              根据文件路径创建文件对象              |
+| ```public File(String parent, String child)``` |   根据父路径名字符串和子路径名字符串创建文件对象   |
+|  ```public File(File parent, String child)```  | 根据父路径对应文件对象和子路径名字符串创建文件对象 |
 
 ```java
 // 1. 字符串变成 File 对象
@@ -1884,7 +1884,7 @@ public static HashMap<String, Integer> countFileInfo(File src) {
 }
 ```
 
-# day 05 IO 流
+# day 05 IO 流（上）
 
 > ```IO```流:存储和读取数据的解决方案
 >
@@ -2326,17 +2326,17 @@ System.out.println(str3);
 
 ### 7.1 创建字符流对象
 
-|              构造方法              |                         说明                         |
-| :--------------------------------: | :--------------------------------------------------: |
-|    public FileReader(File file)    |                         说明                         |
-| public FileReader(string pathname) | 创建字符输入流关联本地文件创建字符输入流关联本地文件 |
+|                 构造方法                 |                         说明                         |
+| :--------------------------------------: | :--------------------------------------------------: |
+|    ```public FileReader(File file)```    |                         说明                         |
+| ```public FileReader(string pathname)``` | 创建字符输入流关联本地文件创建字符输入流关联本地文件 |
 
 ### 7.2 读取数据
 
-|               成员方法               |             说明             |
-| :----------------------------------: | :--------------------------: |
-|       ```public int read()```        |   读取数据，读到末尾返回-1   |
-| ```public int read(char[] buffer)``` | 读取多个数据，读到末尾返回-1 |
+|               成员方法               |                说明                |          区别          |
+| :----------------------------------: | :--------------------------------: | :--------------------: |
+|       ```public int read()```        |   读取数据，读到末尾返回```-1```   |    读取数据 + 解码     |
+| ```public int read(char[] buffer)``` | 读取多个数据，读到末尾返回```-1``` | 读取数据 + 解码 + 强转 |
 
 - 细节1：按字节进行读取，遇到中文，一次读多个字节，读取后解码，返回一个整数
 - 细节2：读到文件末尾了，read方法返回-1。
@@ -2346,6 +2346,479 @@ System.out.println(str3);
 ```java
 public int close()
 ```
+
+```java
+FileReader fr = new FileReader("day05-code\\aaa\\a.txt");
+
+// 字符流的底层也是字节流，默认也是一个宁节一个字节的读取的。
+// 如果遇到中文就会一次读取多个，GBK 一次读两个字节，UTF-8 一次读三个字节
+// read () 细节:
+//      1.read():默认也是一个字节一个字节的读取的
+//      2.在读取之后，方法的底层还会进行解码并转成十进制。
+//          最终把这个十进制作为返回值
+//          这个十进制的数据也表示在字符集上的数字
+
+// 我想看到中文汉字，就是把这些十进制数据，再进行强转就可以了
+int ch;
+while ((ch = fr.read()) != -1) {
+    System.out.print((char) ch);
+}
+fr.close();
+```
+
+```java
+FileReader fr = new FileReader("day05-code\\aaa\\a.txt");
+
+char[] chars = new char[2];
+int len;
+
+// 读取数据 解码 强转
+while ((len = fr.read(chars)) != -1) {
+    System.out.print(new String(chars, 0, len));
+}
+
+fr.close();
+```
+
+## 8 FileWriter
+
+### 8.1 构造方法
+
+|                         构造方法                         |               说明               |
+| :------------------------------------------------------: | :------------------------------: |
+|            ```public Filewriter(File file)```            |    创建字符输出流关联本地文件    |
+|         ```public Filewriter(string pathname)```         |    创建字符输出流关联本地文件    |
+|    ```public Filewriter(File file，boolean append)```    | 创建字符输出流关联本地文件，续写 |
+| ```public Filewriter(string pathname，boolean append)``` | 创建字符输出流关联本地文件，续写 |
+
+### 8.2 成员方法
+
+|                   成员方法                    |          说明          |
+| :-------------------------------------------: | :--------------------: |
+|            ```void write(int c)```            |      写出一个字符      |
+|         ```void write(String str)```          |     写出一个字符串     |
+| ```void write(String str,int off, int len)``` | 写出一个字符串的一部分 |
+|         ```void write(char[] cbuf)```         |    写出一个字符数组    |
+| ```void write(char[] cbuf,int off,int len)``` |  写出字符数组的一部分  |
+
+### 8.3 小细节
+
+- 创建字符输出对象
+  - 细节1：参数是字符串表示的路径或者```File```对象都是可以的
+  - 细节2：如果文件不存在会创建一个新的文件，但是要保证父级路径是存在的
+  - 细节3：如果文件已经存在，则会清空文件，如果不想清空可以打开续写开关
+- 写数据
+  - 细节：如果```write```方法的参数是整数，但是实际上写到本地文件中的是整数在字符集上对应的字符
+- 释放资源
+  - 细节：每次使用完流之后都要释放资源
+
+```java
+FileWriter fw = new FileWriter("day05-code\\aaa\\a0.txt");
+
+// 1. 写一个字符
+fw.write(25105);
+
+// 2. 写一个字符串
+fw.write("huo下午茶呀！");
+
+// 3. 写一个字符串的一部分
+fw.write("huo下午茶呀！", 1, 3);
+
+// 4. 写出一个字符数组
+char[] chars = {'a', 'b', '我'};
+fw.write(chars);
+
+// 5. 写出一个字符数组的一部分
+fw.write(chars, 2, 1);
+
+fw.close();
+```
+
+## 9 字符流原理解析
+
+### 9.1 字符输入流
+
+- 创建字符输入流对象
+
+  底层：关联文件，并创建缓冲区（长度为```8192```的字节数组）（字节流没有缓冲区）
+
+- 读取数据
+
+  - 判断缓冲区中是否有数据可以读取
+    - 缓冲区没有数据：就从文件中获取数据，装到缓冲区中，每次尽可能装满缓冲区。如果文件中也没有数据了，返回-1。
+    - 缓冲区有数据：就从缓冲区中读取
+
+- 空参的```read```方法：一次读取一个字节，遇到中文一次读多个字节，把字节解码并转成十进制返回。如果需要看字符，需要手动强转。
+- 有参的```read```方法：把读取字节，解码，强转三步合并了，强转之后的字符放到数组中。
+
+```java
+FileReader fr = new FileReader("day05-code\\aaa\\a0.txt");
+
+// 这个地方 把文件的 8192 字节读到缓冲区
+// 并且这个地方会返回第一个字符
+fr.read();
+
+// 写这个文件 此时会清空该文件
+// 但是此时缓冲区仍有数据！
+FileWriter fw = new FileWriter("day05-code\\aaa\\a0.txt");
+
+int b;
+while ((b = fr.read()) != -1) {
+    // 输出本次缓冲区的 8191 个字节的数据（因为第一个字节的已经在 14 行输出了）
+    // 但是由于文件清空 所以接下来也不会有第一次缓冲区没得完的数据的输出了
+    System.out.println((char) b);
+}
+
+fw.close();
+fr.close();
+```
+
+### 9.2 字节输出流
+
+![image-20230308190507354](assets/image-20230308190507354.png)
+
+- 什么时候数据会去文件里面
+
+  - 装满了
+
+    意思就是，就算没有```flush```或```close```，如果满了，还是会到文件里面。但是没满的话，就不会去文件里面，那么这部分数据就会丢失
+
+  - ```flush```
+
+  - ```close```
+
+- ```flush```和```close```方法
+
+  ```flush```刷新：刷新之后，还可以继续往文件中写出数据
+
+  ```close```关流：断开通道，无法再往文件中写出数据
+
+|         成员方法          |                说明                |
+| :-----------------------: | :--------------------------------: |
+| ```public void flush()``` | 将缓冲区中的数据，刷新到本地文件中 |
+| ```public void close()``` |          释放资源 / 关流           |
+
+## 10 综合练习
+
+### 10.1 字节流和字符流的使用场景
+
+- 字节流
+
+  拷贝任意类型的文件
+
+- 字符流
+
+  读取纯文本文件中的数据
+
+  往纯文本文件中写出数据
+
+### 10.2 文件夹拷贝
+
+```java
+private static void copyDir(File src, File dest) throws IOException {
+
+    dest.mkdirs();
+
+    File[] files = src.listFiles();
+    if (files != null) {
+        for (File file : files) {
+            if (file.isFile()) {
+                FileInputStream fls = new FileInputStream(file);
+                FileOutputStream fos = new FileOutputStream(new File(dest, file.getName()));
+
+                byte[] bytes = new byte[1024];
+                int len;
+                while ((len = fls.read(bytes)) != -1) {
+                    fos.write(bytes, 0, len);
+                }
+
+                fos.close();
+                fls.close();
+            } else {
+                copyDir(file, new File(dest, file.getName()));
+            }
+        }
+    }
+}
+```
+
+### 10.3 文件加密
+
+> 一个数 与 另一个数进行 异或```^``` 运算后得到新的一个数 新的这个数和另一个数再进行异或```^``` 运算后 又会回到最开始的那个数
+
+```java
+FileInputStream fis = new FileInputStream("day05-code\\aaa\\ency_xyn_pic.jpg");
+FileOutputStream fos = new FileOutputStream("day05-code\\aaa\\decry_xyn_pic.jpg");
+
+int b;
+while ((b = fis.read()) != -1) {
+    fos.write(b ^ 2227);
+}
+
+fos.close();
+fis.close();
+```
+
+# day 06 IO 流（）
+
+![image-20230309110034070](assets/image-20230309110034070.png)
+
+## 1 缓冲流
+
+### 1.1 字节缓冲流
+
+- 底层自带了长度为8192的缓冲区提高性能
+
+|                      方法名称                      |                   说明                   |
+| :------------------------------------------------: | :--------------------------------------: |
+|   ```public BufferedInputStream(Inputeam is)```    | 把基本流包装成高级流，提高读取数据的性能 |
+| ```public BufferedOutputStream(OutputStream os)``` | 把基本流包装成高级流，提高写出数据的性能 |
+
+- 一次读一个字节
+
+```java
+BufferedInputStream bis = new BufferedInputStream(new FileInputStream("day06-code\\a.txt"));
+BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream("day06-code\\ab.txt"));
+
+int b;
+while ((b = bis.read()) != -1) {
+    bos.write(b);
+}
+
+bos.close();
+bis.close();
+```
+
+- 一次读多个字节
+
+```java
+BufferedInputStream bis = new BufferedInputStream(new FileInputStream("day06-code\\a.txt"));
+BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream("day06-code\\ab.txt"));
+
+byte[] bytes = new byte[1024];
+int len;
+
+while ((len = bis.read(bytes)) != -1) {
+    bos.write(bytes, 0, len);
+}
+
+bos.close();
+bis.close();
+```
+
+### 1.2 字节缓冲流底层原理
+
+![image-20230309115325141](assets/image-20230309115325141.png)
+
+### 1.3 字符缓冲流
+
+> 由于字符流有缓冲区，所以字符缓冲流提高的性能并不是很明显
+
+|              方法名称               |        说明        |
+| :---------------------------------: | :----------------: |
+| ```public BufferedReader(Reader)``` | 把基本流变成高级流 |
+| ```public BufferedWriter(Writer)``` | 把基本流变成高级流 |
+
+- 字符缓冲流特有方法
+
+|        特有方法        |              方法              | 说明                                               |
+| :--------------------: | :----------------------------: | -------------------------------------------------- |
+| 字符缓冲输入流特有方法 | ```public string readLine()``` | 读取一行数据，如果没有数据可读了，会返回```null``` |
+| 字符缓冲输出流特有方法 |  ```public void newLine()```   | 跨平台的换行                                       |
+
+- 换行
+  - Mac：```\r```
+  - Linux：```\n```
+  - Windows：```\r\n```
+
+```java
+BufferedReader br = new BufferedReader(new FileReader("day06-code\\a.txt"));
+
+// readLine 会读一行 但是最后的回车换行符不会读的
+String line1 = br.readLine();
+System.out.println(line1);
+
+String line2 = br.readLine();
+System.out.println(line2);
+
+// 循环
+String line;
+while ((line = br.readLine()) != null) {
+    System.out.println(line);
+}
+
+br.close();
+```
+
+```java
+BufferedWriter bw = new BufferedWriter(new FileWriter("day06-code\\ac.txt", true));
+
+bw.write("你嘴角上扬的样子，百度收不到");
+
+// 这样是不能跨平台的
+bw.write("\r\n");
+// 跨平台换行并换行
+bw.newLine();
+bw.write("床前明月光");
+
+bw.close();
+```
+
+### 1.4 总结
+
+- 缓冲流有哪些
+
+  - 字节缓冲输入流：```BufferedinputStream```
+  - 字节缓冲输出流：```BufferedOutputStream```
+  - 字符缓冲输入流：```BufferedReader```
+  - 字符缓冲输出流：```BufferedWriter```
+
+- 缓冲流为什么能提高性能
+
+  - 缓冲流自带长度为8192的缓冲区
+
+    注意，字节输出流是8192的字节数组，即```8192/1024=8kb```缓冲区。
+
+    对于字符输出流，是8192个字符数组，一个字符两个字节，即```8192*2/1024=16kb```缓冲区。
+
+  - 可以显著提高字节流的读写性能
+
+  - 对于字符缓冲流而言提升不明显，对于字符缓冲流而言，关键点是两个特有的方法
+
+- 字符缓冲流两个特有的方法是什么?
+
+  - 字符缓冲输入流```BufferedReader: readLine()```
+  - 字符缓冲输出流```BufferedWriter: newLine()```
+
+### 4.5小练习——四种方式拷贝文件
+
+```java
+public class Test1 {
+    public static void main(String[] args) throws IOException {
+        long start = System.currentTimeMillis();
+
+//        method1();  // 38.145秒
+//        method2();  // 0.014秒
+//        method3();  // 21.321秒
+        method4();  // 1.716秒
+
+        long end = System.currentTimeMillis();
+        System.out.println((end - start) / 1000.0 + "秒");
+    }
+
+    public static void method1() throws IOException {
+        FileInputStream fis = new FileInputStream("E:\\绿色软件_不可多得的安装包\\安装包\\setupproplus2019retail.x86.zh-cn安装包.exe");
+        FileOutputStream fos = new FileOutputStream("E:\\绿色软件_不可多得的安装包\\安装包\\学习java的复制粘贴时的文件.iso");
+
+        int b;
+        while ((b = fis.read()) != -1){
+            fos.write(b);
+        }
+
+        fos.close();
+        fis.close();
+    }
+
+    public static void method2() throws IOException {
+        FileInputStream fis = new FileInputStream("E:\\绿色软件_不可多得的安装包\\安装包\\setupproplus2019retail.x86.zh-cn安装包.exe");
+        FileOutputStream fos = new FileOutputStream("E:\\绿色软件_不可多得的安装包\\安装包\\学习java的复制粘贴时的文件.iso");
+
+        byte[] bytes = new byte[8192];
+        int len;
+        while ((len = fis.read(bytes)) != -1) {
+            fos.write(bytes, 0, len);
+        }
+
+        fos.close();
+        fis.close();
+    }
+
+    public static void method3() throws IOException {
+        BufferedInputStream bis = new BufferedInputStream(new FileInputStream("E:\\绿色软件_不可多得的安装包\\安装包\\ideaIU-2022.3.1.exe"));
+        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream("E:\\绿色软件_不可多得的安装包\\安装包\\学习java的复制粘贴时的文件.iso"));
+
+        int b;
+        while ((b = bis.read()) != -1) {
+            bos.write(b);
+        }
+
+        bos.close();
+        bis.close();
+    }
+
+    public static void method4() throws IOException {
+        BufferedInputStream bis = new BufferedInputStream(new FileInputStream("E:\\绿色软件_不可多得的安装包\\安装包\\ideaIU-2022.3.1.exe"));
+        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream("E:\\绿色软件_不可多得的安装包\\安装包\\学习java的复制粘贴时的文件.iso"));
+
+        byte[] bytes = new byte[8192];
+        int len;
+        while ((len = bis.read(bytes)) != -1) {
+            bos.write(bytes, 0, len);
+        }
+
+        bos.close();
+        bis.close();
+    }
+}
+```
+
+## 2 转换流
+
+### 2.1 简介
+
+转换流是字符流和字节流之间的桥梁。
+
+![image-20230309225955672](assets/image-20230309225955672.png)
+
+- 作用
+  - 指定字符集读写（JDK11淘汰）
+  - 字节流想要使用字符流的方法
+
+### 2.2 转换文件编码
+
+- 读 GBK
+
+
+
+- 写 GBK
+
+
+
+- GBK 文件转 UTF-8
+
+
+
+### 2.3 读取文件数据
+
+利用字节流读取文件中的数据，每次读一整行，而且不能出现乱码
+
+
+
+
+
+## 3 序列化流
+
+
+
+
+
+## 4 打印流
+
+
+
+
+
+## 5 压缩流
+
+
+
+
+
+## 6 Commons-ion
+
+
+
+
 
 
 
