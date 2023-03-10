@@ -2778,39 +2778,373 @@ public class Test1 {
 
 - 读 GBK
 
+```java
+public class ConvertStreamDemo1 {
+    public static void main(String[] args) throws IOException {
+        // liaojie();
 
+        FileReader fr = new FileReader("day06-code\\gbkFile.txt", Charset.forName("GBK"));
+        int ch;
+        while ((ch = fr.read()) != -1) {
+            System.out.print((char) ch);
+        }
+        fr.close();
+
+    }
+
+    /**
+     * 了解即可 FileReader 已经实现了
+     * @throws IOException
+     */
+    private static void liaojie() throws IOException {
+        // 1. 创建对象并指定编码
+        InputStreamReader isr = new InputStreamReader(new FileInputStream("day06-code\\gbkFile.txt"), "GBK");
+        // 2. 读取数据
+        int ch;
+        while ((ch = isr.read()) != -1) {
+            System.out.print((char) ch);
+        }
+        // 3. 释放资源
+        isr.close();
+    }
+}
+```
 
 - 写 GBK
 
+```java
+public class ConvertStreamDemo2 {
+    public static void main(String[] args) throws IOException {
+        // liaojie();
+        FileWriter fw = new FileWriter("day06-code\\cc.txt", Charset.forName("GBK"));
+        fw.write("你好哇");
+        fw.close();
+    }
 
+    /**
+     * 了解即可 FileWriter 已经实现了
+     * @throws IOException
+     */
+    private static void liaojie() throws IOException {
+        OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream("day06-code\\c.txt"), "GBK");
+        osw.write("您好");
+        osw.close();
+    }
+}
+```
 
 - GBK 文件转 UTF-8
 
+```java
+public class ConvertStreamDemo3 {
+    public static void main(String[] args) throws IOException {
+        // JDK11Before();
 
+        // 现在的新的处理方法
+        FileReader fr = new FileReader("day06-code\\gbkFile.txt", Charset.forName("GBK"));
+        FileWriter fw = new FileWriter("day06-code\\gbkFileToUtf.txt", Charset.forName("UTF-8"));
+
+        int b;
+        while ((b = fr.read()) != -1) {
+            fw.write(b);
+        }
+
+        fw.close();
+        fr.close();
+
+    }
+
+    /**
+     * JDK11 的方法 了解即可
+     * @throws IOException
+     */
+    private static void JDK11Before() throws IOException {
+        InputStreamReader isr = new InputStreamReader(new FileInputStream("day06-code\\gbkFile.txt"), "GBK");
+        OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream("day06-code\\gbkFileToUtf.txt"));
+
+        int b;
+        while ((b = isr.read()) != -1) {
+            osw.write(b);
+        }
+
+        osw.close();
+        isr.close();
+    }
+}
+```
 
 ### 2.3 读取文件数据
 
 利用字节流读取文件中的数据，每次读一整行，而且不能出现乱码
 
+```java
+FileInputStream fis = new FileInputStream("day06-code\\a.txt");
+InputStreamReader isr = new InputStreamReader(fis);
+BufferedReader br0 = new BufferedReader(isr);
 
+String str = br0.readLine();
+System.out.println(str);
+br0.close();
 
+// 一步到位
+BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("day06-code\\a.txt")));
+String line;
+while ((line = br.readLine()) != null) {
+    System.out.println(line);
+}
+br.close();
+```
 
+### 2.4 总结
 
-## 3 序列化流
+- 转换流的名字是什么?
+  - 字符转换输入流：```InputStreamReader```
+  - 字符转换输出流：```OutputStreamWriter```
+- 转换流的作用是什么?
+  - 指定字符集读写（JDK11淘汰）
+  - 字节流想要使用字符流的方法
 
+## 3 序列化与反序列化流
 
+### 3.1 序列化流 / 对象操作输出流
 
+可以把Java中的对象写到本地文件中
 
+|                     构造方法                      |         说明         |
+| :-----------------------------------------------: | :------------------: |
+| ```public ObjectOutputStream(OutputStream out)``` | 把基本流包装成高级流 |
+
+|                    成员方法                     |              说明              |
+| :---------------------------------------------: | :----------------------------: |
+| ```public final void WriteObject(Object obj)``` | 把对象序列化（写出）到文件中去 |
+
+小细节：写的对象，需要继承```Serializable```接口，否则会出现```NotSerializableException```异常
+
+```java
+/**
+ * Serializable 即可没有抽象方法 这种接口叫做 标记型接口
+ * 一但实现了这个接口 那么就表示当前的 Student 类可以被反序列化
+ * 可以理解为：合格证
+ */
+
+public class Student implements Serializable {
+    private String name;
+    private int age;
+    ...
+}
+```
+
+```java
+public class ObjectStreamDemo1 {
+    public static void main(String[] args) throws IOException {
+        Student stu = new Student("张三", 23);
+
+        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("day06-code\\d.txt"));
+        oos.writeObject(stu);
+        oos.close();
+    }
+}
+```
+
+### 3.2 反序列化流 / 对象操作输入流
+可以把序列化到本地文件中的对象，读取到程序中来
+
+|                    构造方法                     |        说明        |
+| :---------------------------------------------: | :----------------: |
+| ```public ObjectInputStream(InputStream out)``` | 把基本流变成高级流 |
+
+|             成员方法             |                    说明                    |
+| :------------------------------: | :----------------------------------------: |
+| ```public Object readObject()``` | 把序列化到本地文件中的对象，读取到程序中来 |
+
+```java
+ObjectInputStream ois = new ObjectInputStream(new FileInputStream("day06-code\\d.txt"));
+Student o = (Student) ois.readObject();
+System.out.println(o);
+ois.close();
+```
+
+### 3.3 小细节
+
+- 版本号
+
+  如果一个类序列化到了本地文件后，更改了类中的信息，此时反序列化到内存会抛出```InvalidClassException```异常。解决办法是把这个JavaBean的版本号定死。我们可以设置IDEA即可。
+
+![image-20230310192045633](assets/image-20230310192045633.png)
+
+- 不想把某些成员变量序列号到文件中
+
+  使用瞬态关键字```transient```，该关键字标记的成员变量不参与序列化过程。
+
+```java
+@Serial
+private static final long serialVersionUID = -3544011625688167053L;
+private String name;
+private int age;
+private String address;
+// transient: 瞬态关键字
+// 作用:不会把当前属性序列化到本地文件当中
+private transient int id;
+```
+
+### 3.4 
+
+如果一个序列化了多个对象，我们去反序列化时，就会不知道究竟读多少次```ois.readObject()```。同时，如果读到文件末尾了，会直接抛出```EOFException```异常。
+
+所以我们的解决办法是把多个对象放在一个```ArrayList```里面，把这个```ArrayList```序列化到文件里面。反序列化时，直接得到```ArrayList```，循环遍历即可。
+
+```java
+Student stu1 = new Student("zhangsan", 23, "南京");
+Student stu2 = new Student("zlisi", 230, "北京");
+Student stu3 = new Student("zhangsi", 253, "天津");
+
+ArrayList<Student> list = new ArrayList<>();
+list.add(stu1);
+list.add(stu2);
+list.add(stu3);
+
+ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("day06-code\\e.txt"));
+oos.writeObject(list);
+oos.close();
+```
+
+```java
+ObjectInputStream ois = new ObjectInputStream(new FileInputStream("day06-code\\e.txt"));
+
+ArrayList<Student> list = (ArrayList<Student>) ois.readObject();
+for (Student student : list) {
+    System.out.println(student);
+}
+
+ois.close();
+```
 
 ## 4 打印流
 
+> 只有写 没有读
 
+### 4.1 分类
 
+- ```PrintStream```
+- ```PrintWriter```
 
+### 4.2 特点
+
+- 特点1：打印流只操作文件目的地，不操作数据源
+
+- 特点2：特有的写出方法可以实现，数据原样写出
+
+  例如：打印：97 文件中：97
+
+  打印：```true``` 文件中：```true```
+
+- 特点3：**特有的**写出方法，可以实现自动刷新，自动换行
+
+  打印一次数据 = 写出 + 换行 + 刷新
+
+### 4.3 字节打印流
+
+> 字节流底层没有缓冲区，开不开自动刷新都一样
+
+|                           构造方法                           | 说明                             |
+| :----------------------------------------------------------: | -------------------------------- |
+|      ```public PrintStream(OutputStream/File/String)```      | 关联字节输出流 / 文件 / 文件路径 |
+| ```public PrintStream(String fileName， Charset charset)```  | 指定字符编码                     |
+| ```public PrintStream(OutputStream out，boolean autoFlush)``` | 自动刷新                         |
+| ```public PrintStream(OutputStream out， boolean autoFlush, String encoding)``` | 指定字符编码且自动刷新           |
+
+|                         成员方法                         |                      说明                      |
+| :------------------------------------------------------: | :--------------------------------------------: |
+|              ```public void write(int b)```              |   常规方法：规则跟之前一样，将指定的字节写出   |
+|            ```public void println(Xxx xx)```             | **特有方法**：打印任意数据，自动刷新，自动换行 |
+|             ```public void print(Xxx xx)```              |       **特有方法**：打印任意数据，不换行       |
+| ```public void printf(String format， Object... args)``` |   **特有方法**：带有占位符的打印语句，不换行   |
+
+```java
+// 1. 创建字节打印流对象
+PrintStream ps = new PrintStream(new FileOutputStream("day06-code\\f.txt"), true, Charset.forName("UTF-8"));
+// 2. 写入数据
+ps.println(97);  // 写出 + 自动刷新 + 自动换行
+ps.println(true);
+ps.printf("%s爱上了%s", "阿珍", "阿强");
+// 3. 释放资源
+ps.close();
+```
+
+### todo:整理笔记 占位符
+
+### 4.4 字符打印流
+
+> 字符流底层有缓冲区，想要自动刷新需要开启
+
+|                           构造方法                           |             说明             |
+| :----------------------------------------------------------: | :--------------------------: |
+|         ```public PrintWriter(Write/File/String)```          | 关联字节输出流/文件/文件路径 |
+|  ```public PrintWriter(String fileName, Charset charset)```  |         指定字符编码         |
+|     ```public PrintWriter(Write w, boolean autoFlush)```     |           自动刷新           |
+| ```public PrintWriter(OutputStream out, boolean autoFlush, Charset charset)``` |    指定字符编码且自动刷新    |
+
+|                         成员方法                         |                    说明                    |
+| :------------------------------------------------------: | :----------------------------------------: |
+|              ```public void write(int b)```              | 常规方法：规则跟之前一样，写出字节或字符串 |
+|            ```public void println(Xxx xx)```             |    **特有方法**：打印任意数据，自动换行    |
+|             ```public void print(Xxx xx)```              |     **特有方法**：打印任意数据，不换行     |
+| ```public void printf(String format， Object... args)``` | **特有方法**：带有占位符的打印语句，不换行 |
+
+```java
+PrintWriter pw = new PrintWriter(new FileWriter("day06-code\\f.txt"), true);
+pw.println("喜欢你捏");
+pw.print("您好");
+pw.printf("%s爱上了%s", "阿珍", "阿强");
+pw.close();
+```
+
+### 4.5 总结
+
+- 打印流有几种?各有什么特点?
+  - 有字节打印流和字符打印流两种
+  - 打印流不操作数据源，只能操作目的地
+  - 字节打印流：默认自动刷新，特有的```println```自动换行
+  - 字符打印流：自动刷新需要开启，特有的```println```自动换行
 
 ## 5 压缩流
 
+### 5.1 解压缩流
 
+```java
+public class ZipStreamDemo1 {
+    public static void main(String[] args) throws IOException {
+        File src = new File("E:\\插来键去\\pr插件\\人工AI智能视频无损放大AE PR插件 ScaleUP v1.4.0 Win.zip");
+        File dest = new File("E:\\学习java的缓存文件");
+
+        unzip(src, dest);
+    }
+
+    public static void unzip(File src, File dest) throws IOException {
+        // 创建解压缩流
+        ZipInputStream zip = new ZipInputStream(new FileInputStream(src));
+
+        ZipEntry entry;
+        while ((entry = zip.getNextEntry()) != null) {
+            if (entry.isDirectory()) {
+                File file = new File(dest, entry.getName());
+                file.mkdirs();
+            } else {
+                FileOutputStream fos = new FileOutputStream(new File(dest, entry.getName()));
+                int b;
+                while ((b = zip.read()) != -1) {
+                    fos.write(b);
+                }
+                fos.close();
+                zip.closeEntry();
+            }
+        }
+        zip.close();
+    }
+}
+```
+
+### 5.2 压缩流
 
 
 
