@@ -2559,7 +2559,7 @@ fos.close();
 fis.close();
 ```
 
-# day 06 IO 流（）
+# day 06 IO 流（下）
 
 ![image-20230309110034070](assets/image-20230309110034070.png)
 
@@ -3146,13 +3146,209 @@ public class ZipStreamDemo1 {
 
 ### 5.2 压缩流
 
+本质：把每一个(文件/文件夹)看成```ZipEntry```对象放到压缩包中。
 
+- 压缩一个文件
 
-## 6 Commons-ion
+```java
+public class ZipStreamDemo2 {
+    public static void main(String[] args) throws IOException {
+        File src = new File("day06-code\\src\\com\\itheima\\test\\csb.txt");
+        File dest = new File("E:\\学习java的");
+        dest.mkdirs();
 
+        toZip(src, dest);
+    }
 
+    public static void toZip(File src, File dest) throws IOException {
+        // 1. 创建压缩流关联压缩对象
+        ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(new File(dest, "a.zip")));
+        // 2. 创建 ZipEntry 对象 并放入压缩包
+        ZipEntry entry = new ZipEntry("a.txt");
+        zos.putNextEntry(entry);
 
+        // 3. 把 src 文件的数据写入压缩包
+        FileInputStream fis = new FileInputStream(src);
+        int b;
+        while ((b = fis.read()) != -1) {
+            zos.write(b);
+        }
+        fis.close();
 
+        // 4. 释放资源
+        zos.closeEntry();
+        zos.close();
+    }
+}
+```
+
+- 压缩文件夹
+
+```java
+public class ZipStreamDemo3 {
+    /*
+        介个代码是我琢磨出来的 应该是对的叭
+     */
+    public static void main(String[] args) throws IOException {
+        File src = new File("farmerandlord");
+        File dest = new File("E:\\学习java的");
+        
+        // 为什么要写到外面捏 因为多级文件夹需要用递归 而创建压缩包流只需要一次捏
+        ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(new File(dest, src.getName() + ".zip")));
+        toZip(src, zos);
+        zos.close();
+    }
+
+    public static void toZip(File src, ZipOutputStream zos) throws IOException {
+        File[] files = src.listFiles();
+        for (File file : files) {
+            if (file.isFile()) {
+                ZipEntry entry = new ZipEntry(file.getPath());
+                zos.putNextEntry(entry);
+                FileInputStream fis = new FileInputStream(file);
+                int b;
+                while ((b = fis.read()) != -1) {
+                    zos.write(b);
+                }
+                fis.close();
+                zos.closeEntry();
+            } else {
+                toZip(file, zos);
+            }
+        }
+    }
+}
+```
+
+## 6 Commons-io
+
+> ```Commons-io```是```apache```开源基金组织提供的一组有关```IO```操作的开源工具包
+
+### 6.1 使用步骤
+
+- 在项目中创建一个文件夹：lib
+- 将```jar```包复制粘贴到```lib```文件夹
+- 右键点击```jar```包，选择```Addas Library``` -> 点击OK
+- 在类中导包使用
+
+### 6.2 Commons-io 成员方法
+
+|            ```FileUtils```类（文件 / 文件夹相关）            |              说明              |
+| :----------------------------------------------------------: | :----------------------------: |
+|   ```static void copyFile(File srcFile，File destFile)```    |            复制文件            |
+|  ```static void copyDirectory(File srcDir，File destDir)```  | 复制文件夹（拷贝文件夹里面的） |
+| ```static void copyDirectoryToDirectory(File srcDir，File destDir)``` |  复制文件夹（拷贝整个文件夹）  |
+|      ```static void deleteDirectory(File directory)```       |           删除文件夹           |
+|       ```static void cleanDirectory(File directory)```       |           清空文件夹           |
+| ```static String readFileToString(File file，Charset encoding)``` |  读取文件中的数据变成成宇符串  |
+| ```static void write(File file, CharSequence data,String encoding)``` |            写出数据            |
+
+|                ```IOUtils```类（流相关相关）                 |    说明    |
+| :----------------------------------------------------------: | :--------: |
+| ```public static int copy(InputStream input, OutputStream output)``` |  复制文件  |
+| ```public static int copyLarge(Reader input，Writer output)``` | 复制大文件 |
+|      ```public static String readLines(Reader input)```      |  读取数据  |
+| ```public static void write(String data, OutputStream output)``` |  写出数据  |
+
+```java
+File src = new File("day06-code\\a.txt");
+File dest = new File("day06-code\\aaaa.txt");
+
+// 1. 复制粘贴文件
+FileUtils.copyFile(src, dest);
+
+// 2. 拷贝文件夹
+// 2.1 拷贝文件夹里面的
+FileUtils.copyDirectory(new File("E:\\学习java的缓存文件"), new File("E:\\学习java的"));
+// 2.2 拷贝整个文件夹
+FileUtils.copyDirectoryToDirectory(new File("E:\\学习java的缓存文件"), new File("E:\\学习java的"));
+
+// 3. 删除文件夹
+FileUtils.delete(new File("E:\\学习java的\\学习java的缓存文件"));
+
+// 3. 清空文件夹
+FileUtils.cleanDirectory(new File("E:\\学习java的\\学习java的缓存文件"));
+```
+
+### todo:整理笔记 Commons-io
+
+### 6.3 hutool
+
+- [官网](https://hutool.cn/)
+- [文档](https://apidoc.gitee.com/dromara/hutool/)
+- [GitHub地址](https://github.com/dromara/hutool/)
+
+```java
+File file = FileUtil.file("D:\\", "aaa", "bbb", "c.txt");
+System.out.println(file);  // D:\aaa\bbb\c.txt
+
+// File f = new File("a.txt");
+// f.createNewFile();
+// 如果父级路径不存在 会报错
+// 但是 touch 就可以创建不存在我父级路径
+File touch = FileUtil.touch("D:\\aaa\\bbb\\c.txt");
+System.out.println(touch);  // D:\aaa\bbb\c.txt
+
+// 写到文件
+ArrayList<String> list = new ArrayList<>();
+list.add("aaa");
+list.add("aaa0");
+list.add("aaa012");
+File file1 = FileUtil.writeLines(list, "D:\\aaa\\bbb\\c.txt", "UTF-8", true);
+System.out.println(file1);  // D:\aaa\bbb\c.txt
+
+List<String> stringList = FileUtil.readLines("E:\\程序员\\发发的笔记\\flyJava\\day06-code\\a.txt", "UTF-8");
+for (String s : stringList) {
+    System.out.println(s);
+}
+```
+
+# day 07 综合练习
+
+## 1 网络爬虫（制造假数据）
+
+```java
+public class Test1 {
+    public static void main(String[] args) throws IOException {
+        String url = "http://www.haoming8.cn/baobao/7641.html";
+        String s = webCrawler(url);
+
+        ArrayList<String> data = getData(s);
+        System.out.println(data);
+    }
+
+    private static ArrayList<String> getData(String s) {
+        ArrayList<String> list = new ArrayList<>();
+
+        Pattern pattern = Pattern.compile("<p>(.. .. .. .. ..)</p>");
+        // <p>雅琳 雪瑶 从璐 芳卉 雅琴</p>
+        Matcher matcher = pattern.matcher(s);
+        while (matcher.find()) {
+            String group = matcher.group(1);
+            Collections.addAll(list, group.split(" "));
+        }
+        return list;
+    }
+
+    public static String webCrawler(String net) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        // 创建 URL 对象
+        URL url = new URL(net);
+        // 链接上整个网址
+        URLConnection conn = url.openConnection();
+        // 获取数据
+        InputStreamReader isr = new InputStreamReader(conn.getInputStream());
+
+        int ch;
+        while ((ch = isr.read()) != -1) {
+            sb.append((char) ch);
+        }
+        isr.close();
+
+        return sb.toString();
+    }
+}
+```
 
 
 
