@@ -3350,9 +3350,82 @@ public class Test1 {
 }
 ```
 
+## 2 带权重的随机点名
 
+```java
+public class Test {
+    // 带权重的随机
+    public static void main(String[] args) throws IOException {
+        // 1. 读取数据到内存
+        ArrayList<Student> list = new ArrayList<>();
+        BufferedReader br = new BufferedReader(new FileReader("day07-code\\src\\com\\itheima\\myiotest6\\name.txt"));
+        String line;
+        while ((line = br.readLine()) != null) {
+            String[] arr = line.split("-");
+            Student stu = new Student(arr[0], arr[1], Integer.parseInt(arr[2]), Double.parseDouble(arr[3]));
+            list.add(stu);
+        }
+        br.close();
 
+        // 2. 计算权重总和
+        double weight = 0;
+        for (Student stu : list) {
+            weight += stu.getWeight();
+        }
 
+        // 3. 计算每一个人的实际占比
+        double[] arr = new double[list.size()];
+        int index = 0;
+        for (Student stu : list) {
+            arr[index] = stu.getWeight() / weight;
+            index++;
+        }
 
+        // 4. 计算每一个人的权重占比
+        for (int i = 1; i < arr.length; i++) {
+            arr[i] = arr[i] + arr[i - 1];
+        }
 
+        // 5. 随机抽取
+        double number = Math.random();
+        // 判断 number 在 arr 中的位置：二分查找
+        int index2 = Arrays.binarySearch(arr, number);  // 返回 - 插入点 - 1
+        int index3 = - index2 - 1;
+        Student stu = list.get(index3);
+        System.out.println(stu);
+
+        // 6. 修改权重
+        double w = stu.getWeight() / 2;
+        stu.setWeight(w);
+
+        // 7. 保存数据
+        BufferedWriter bw = new BufferedWriter(new FileWriter("day07-code\\src\\com\\itheima\\myiotest6\\name.txt"));
+        for (Student s : list) {
+            bw.write(s.toString());
+            bw.newLine();
+        }
+        bw.close();
+    }
+}
+```
+
+## 3 配置文件
+
+### 3.1 好处
+
+- 好处1：可以把软件的设置永久化存储
+- 好处2：如果我们要修改参数，不需要改动代码，直接修改配置文件就可以了
+
+### 3.2 常见的配置文件
+
+- ```XML```
+- ```ini```
+- ```properties```
+- ```YAML```
+
+### 3.3 properties
+
+> ```properties```是一个双列集合集合，拥有```Map```集合所有的特点。
+
+```properties```有一些特有的方法，可以把集合中的数据，按照键值对的形式写到配置文件当中。也可以把配置文件中的数据，读取到集合中来。
 
