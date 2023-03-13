@@ -3429,3 +3429,209 @@ public class Test {
 
 ```properties```有一些特有的方法，可以把集合中的数据，按照键值对的形式写到配置文件当中。也可以把配置文件中的数据，读取到集合中来。
 
+```java
+Properties prop = new Properties();
+
+// 细节虽然我们可以往Properties当中添加任意的数据类型，但是一般只会往里面添加字符申类型的数据
+prop.put("aaa", "111");
+prop.put("a0aa", "111");
+prop.put("aa0a", "111");
+prop.put("0aaa", "111");
+
+// 1. 遍历
+Set<Object> keySet = prop.keySet();
+for (Object k : keySet) {
+    System.out.println(k + " = " + prop.get(k));
+}
+
+// 2. 遍历
+Set<Map.Entry<Object, Object>> entries = prop.entrySet();
+for (Map.Entry<Object, Object> entry : entries) {
+    System.out.println(entry.getKey() + " = " + entry.getValue());
+}
+```
+
+- 写入文件
+
+  ```java
+  Properties prop = new Properties();
+  
+  prop.put("aaa", "111");
+  prop.put("a0aa", "111");
+  prop.put("aa0a", "111");
+  prop.put("0aaa", "111");
+  
+  FileOutputStream fos = new FileOutputStream("day07-code\\src\\com\\itheima\\myiotest4\\a.properties");
+  prop.store(fos, "test");
+  ```
+
+- 读入内存
+
+  ```java
+  Properties prop = new Properties();
+  FileInputStream fis = new FileInputStream("day07-code\\src\\com\\itheima\\myiotest4\\a.properties");
+  prop.load(fis);
+  fis.close();
+  
+  System.out.println(prop);
+  ```
+
+# day 08 多线程
+
+## 1 什么是多线程
+
+- 进程
+
+  进程是程序的基本执行实体。简单理解：应用软件中互相独立，可以同时运行的功能。
+
+- 线程
+
+  线程是操作系统能够进行运算调度的最小单位。它被包含在**进程**之中，是进程中的实际运作单位。
+
+- 多线程的作用
+
+  提高效率
+
+- 应用场景
+
+  只要你想让多个事情同时运行就需要用到多线程
+
+  比如：软件中的耗时操作、所有的聊天软件、所有的服务器
+
+## 2 多线程的两个概念
+
+- 并发：在同一时刻，有多个指令在单个```CPU```上**交替**执行。
+- 并行：在同一时刻，有多个指令在多个```CPU```上**同时**执行
+
+## 3 多线程的实现方式
+
+### 3.1 继承 Thread 类的方式进行实现
+
+继承```Thread```类，重写```run```方法
+
+```java
+public class MyThread extends Thread {
+    @Override
+    public void run() {
+        for (int i = 0; i < 100; i++) {
+            System.out.println(getName() + " HelloWorld");
+        }
+    }
+}
+```
+
+实例化```MyThread```类，调用```setName```方法取名字后，调用```start()```方法运行
+
+```java
+MyThread t1 = new MyThread();
+MyThread t2 = new MyThread();
+
+// 取名字
+t1.setName("线程 1");
+t2.setName("线程 2");
+
+t1.start();
+t2.start();
+```
+
+### 3.2 实现 Runnable 接口的方式进行实现
+
+1. 自己定义一个类实现```Runnable```接口
+2. 重写里面的```run```方法
+3. 创建自己的类的对象
+4. 创建一个```Thread```类的对象，并开启线程
+
+其中，```Thread.currentThread().getName()```可以获取当前的线程对象，拿到名字
+
+```java
+public class MyRun implements Runnable {
+    @Override
+    public void run() {
+        for (int i = 0; i < 100; i++) {
+            // 先获取当前线程的对象
+            Thread t = Thread.currentThread();
+            System.out.println(t.getName() + "  HelloWorld");
+            System.out.println(Thread.currentThread().getName() + "  HelloWorld");
+        }
+    }
+}
+```
+
+### 3.3 利用 Callable 接口和 Future 接口方式实现
+
+- 特点
+  - 可以获取到多线程运行的结果
+- 步骤
+  1. 创建一个类```MyCallable```实现```Callable```接口
+  2. 重写```call```方法（是有返回值的，表示多线程运行的结果）
+  3. 创建```MyCallable```的对象（表示多线程要执行的任务）
+  4. 创建```FutureTask```的对象（作用管理多线程运行的结果）
+  5. 创建```Thread```类的对象，并启动（表示线程）
+
+```java
+public class MyCallable implements Callable<Integer> {
+    @Override
+    public Integer call() throws Exception {
+        // 开启这个线程 计算 1 - 100 的和
+        int sum = 0;
+        for (int i = 0; i <= 100; i++) {
+            sum = sum + i;
+        }
+
+        return sum;
+    }
+}
+```
+
+```java
+// 创建 MyCallable 的对象(表示多线程要执行的任务)
+MyCallable mc = new MyCallable();
+// 创建 FutureTask 的对象(作用管理多线程运行的结果)
+FutureTask<Integer> ft = new FutureTask<>(mc);
+// 创建线程的对象
+Thread t = new Thread(ft);
+// 启动线程
+t.start();
+Integer result = ft.get();
+System.out.println(result);
+```
+
+### 3.3 多线程三种实现方式对比
+
+|                        |                       优点                       |                             缺点                             |
+| :--------------------: | :----------------------------------------------: | :----------------------------------------------------------: |
+|   继承```Thread```类   | 编程比较简单，可以直接使用```Thread```类中的方法 | 可以扩展性较差<br/>不能再继承其他的类<br/>因为```Java```只能单继承 |
+| 实现```Runnable```接口 |   扩展性强，实现该接口的同时还可以继承其他的类   |       编程相对复杂，不能直接使用```Thread```类中的方法       |
+| 实现```Callable```接口 |   扩展性强，实现该接口的同时还可以继承其他的类   |       编程相对复杂，不能直接使用```Thread```类中的方法       |
+
+## 4 采用的成员方法
+
+|              方法名称               |                   说明                   |
+| :---------------------------------: | :--------------------------------------: |
+|         `String getName()`          |             返回此线程的名称             |
+|     `void setName(String name)`     | 设置线程的名字（构造方法也可以设置名字） |
+| ```static Thread currentThread()``` |            获取当前线程的对象            |
+| ```static void sleep(long time)```  |     让线程休眠指定的时间，单位为毫秒     |
+|   `setPriority(int newPriority)`    |             设置线程的优先级             |
+|      `final int getPriority()`      |             获取线程的优先级             |
+| `final void setDaemon(boolean on)`  |              设置为守护线程              |
+|    `public static void yield()`     |           出让线程 / 礼让线程            |
+|     `public static void join()`     |           插入线程 / 插队线程            |
+
+### 
+
+## 5 线程安全的问题
+
+
+
+
+
+
+
+## 6 死锁
+
+
+
+
+
+## 7 生产者和消费者
