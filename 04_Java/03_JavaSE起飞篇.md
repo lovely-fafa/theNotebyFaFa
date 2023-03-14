@@ -2987,7 +2987,7 @@ private String address;
 private transient int id;
 ```
 
-### 3.4 
+### 3.4 多个对象序列化
 
 如果一个序列化了多个对象，我们去反序列化时，就会不知道究竟读多少次```ois.readObject()```。同时，如果读到文件末尾了，会直接抛出```EOFException```异常。
 
@@ -3606,6 +3606,8 @@ System.out.println(result);
 
 ## 4 采用的成员方法
 
+### 4.1 方法说明
+
 |              方法名称               |                   说明                   |
 | :---------------------------------: | :--------------------------------------: |
 |         `String getName()`          |             返回此线程的名称             |
@@ -3618,20 +3620,268 @@ System.out.println(result);
 |    `public static void yield()`     |           出让线程 / 礼让线程            |
 |     `public static void join()`     |           插入线程 / 插队线程            |
 
-### 
+### 4.2 基本的成员方法
+
+```java
+/*
+    细节：
+        1、如果我们没有给线程设置名字，线程也是有默认的名字的格式: Thread-X(X序号，从 0 开始的)
+        2、如果我们要给线程设置名字，可以用 set 方法进行设置，也可以构造方法设置 但是继承 Thread 类时 需要重写构造
+ */
+
+MyThread t1 = new MyThread("坦克");
+MyThread t2 = new MyThread("飞机");
+
+// todo: 有参构造和 setName 都设置了 那会怎么样捏
+t1.setName("线程 1 ");
+t1.setName("线程 2 ");
+
+t1.start();  // Thread-1 HelloWorld
+t2.start();  // Thread-0 HelloWorld
+
+Thread t = Thread.currentThread();
+/*
+    细节
+    获取当前线程的对象
+    当 JVM 虚拟机启动之后，会自动地启动多条线程
+    其中有一条线程就叫做 main 线程
+    他的作用就是去调用 main 方法，并执行里面的代码
+    在以前，我们写的所有的代码，其实都是运行在 main 线程当中
+ */
+System.out.println(t.getName());  // main
+
+System.out.println("11111111111");
+Thread.sleep(5000);
+// 1、哪条线程执行到这个方法，那么哪条线程就会在这里停留对应的时间
+// 2、方法的参数：就表示睡眠的时间，单位毫秒 1秒 = 1000毫秒
+// 3、当时间到了之后，线程会自动的醒米，继续执行下面的其他代码
+System.out.println("22222");
+```
+
+### 4.2 优先级
+
+- 线程的调度
+  - 抢占式调度
+  - 非抢占式调度
+
+```java
+MyRunnable mr = new MyRunnable();
+
+Thread t1 = new Thread(mr, "飞机");
+Thread t2 = new Thread(mr, "坦克");
+
+System.out.println(t1.getPriority());  // 线程的 默认优先级 是 5
+System.out.println(t2.getPriority());
+
+t1.setPriority(1);
+t2.setPriority(10);
+
+t1.start();
+t2.start();
+
+System.out.println(Thread.currentThread().getPriority());  // 线程的 默认优先级 是 5
+```
+
+### 4.3 守护线程
+
+当非守护线程结束后，守护线程便会被结束。
+
+```java
+MyThread1 t1 = new MyThread1();
+MyThread2 t2 = new MyThread2();
+
+t1.setName("女神");  // 非守护线程
+t2.setName("备胎");
+
+// 第二个线程为守护线程
+t2.setDaemon(true);
+
+// 当 t1 执行完毕后 t2 也会被结束
+t1.start();
+t2.start();
+```
+
+### 4.4 出让线程 / 礼让线程（了解）
+
+让线程之间的调度更加均匀。
+
+```java
+public class MyThread extends Thread{
+    @Override
+    public void run() {
+        for (int i = 0; i < 100; i++) {
+            System.out.println(getName() + "@" + i);
+
+            // 出让当前 CPU 的执行权
+            // 本次线程执行到这一行代码后 会让出 CPU
+            Thread.yield();
+        }
+    }
+}
+```
+
+### 4.5 插入线程 / 插队线程（了解）
+
+```java
+MyThread t = new MyThread();
+t.setName("土豆");
+t.start();
+
+// 把 t 这个线程插入到当前线程之前
+// t：土豆线程
+// 当前线程：main 线程
+t.join();
+
+// 会在 main 线程当中执行
+for (int i = 0; i < 10; i++) {
+    System.out.println("main 线程@" + i);
+}
+```
+
+![image-20230314194008112](assets/image-20230314194008112.png)
 
 ## 5 线程安全的问题
 
+### 5.1 同步代码块
 
+- 特点1：锁默认打开，有一个线程进去了，锁自动关闭
+- 特点2：里面的代码全部执行完毕，线程出来，锁自动打开
 
+```java
+public class ThreadDemo {
+    public static void main(String[] args) {
+        /*
+            某电影院目前正在上映国产大片，共有 100 张票，而它有 3 个窗口卖票，请设计一个程序模拟该电影院卖票
+         */
+        MyThread t1 = new MyThread();
+        MyThread t2 = new MyThread();
+        MyThread t3 = new MyThread();
 
+        t1.setName("窗口 1");
+        t2.setName("窗口 2");
+        t3.setName("窗口 3");
 
+        t1.start();
+        t2.start();
+        t3.start();
+    }
+}
+```
 
+```java
+public class MyThread extends Thread{
+    //表示这个类所有的对象，相共享 ticket
+    static int ticket = 0;
+
+    @Override
+    public void run() {
+        while (true) {
+            // 锁对象 一定要是唯一的
+            synchronized (MyThread.class) {
+                if (ticket < 100){
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    ticket++;
+                    System.out.println(getName() + " 正在卖票第 " + ticket + " 张票！！");
+                } else {
+                    break;
+                }
+            }
+        }
+    }
+}
+```
+
+### 5.2 同步方法
+
+就是把```synchronized```关键字加到方法上。
+
+- 特点1：同步方法是锁住方法里面所有的代码
+- 特点2：锁对象不能自己指定
+  - 非静态：`this`
+  - 静态：当前类的字节码文件对象```MyTread.class```
+
+```java
+public class MyRunnable implements Runnable{
+    // 因为 Runnable 只会被创建一次 所以没必要加 static
+    int ticket = 0;
+    @Override
+    public void run() {
+        while (true) {
+            if (method()) break;
+        }
+    }
+
+    private synchronized boolean method() {
+        if (ticket == 100) {
+            return true;
+        } else {
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            ticket++;
+            System.out.println(Thread.currentThread().getName() + " 在卖第 " + ticket + " 张票");
+        }
+        return false;
+    }
+}
+```
+
+### 5.3 Lock 锁
+
+虽然我们可以理解同步代码块和同步方法的锁对象问题。但是我们并没有直接看到在哪里加上了锁，在哪里释放了锁。为了更清晰的表达如何加锁和释放锁，JDK5以后提供了一个新的锁对象`Lock`。`Lock`实现提供比使用`synchronized`方法和语句，可以获得更广泛的锁定操作。Lock中提供了获得锁和释放锁的方法。
+
+- `void lock()`:获得锁
+- `void unlock()`:释放锁
+
+`Lock`是接口，不能直接实例化。这里采用它的实现类`ReentrantLock`来实例化。`ReentrantLock`的构造方法是`ReentrantLock()`，创建一个`ReentrantLock`的实例。
+
+```java
+public class MyThread extends Thread{
+    //表示这个类所有的对象，相共享 ticket
+    static int ticket = 0;
+
+    //表示这个类所有的对象，相共享 ticket
+    static Lock lock = new ReentrantLock();
+
+    @Override
+    public void run() {
+        while (true) {
+
+            // 加锁
+            lock.lock();
+
+            try {
+                if (ticket < 100){
+                    Thread.sleep(100);
+                    ticket++;
+                    System.out.println(getName() + " 正在卖票第 " + ticket + " 张票！！");
+                } else {
+                    break;
+                }
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            } finally {
+                // 无论如何 代码都会执行解锁
+                // 当某线程的 ticket==100 时 直接 break 跳出循环
+                // 此时若不通过无论如何都会执行的 finally 使线程解锁 那么其他线程就会一直等待解锁
+                lock.unlock();
+            }
+        }
+    }
+}
+```
 
 ## 6 死锁
 
+一种错误，两个锁嵌套了
 
+## 7 生产者和消费者（等待唤醒机制）
 
+> 生产者消费者模式是一个十分经典的多线程协作的模式。
 
-
-## 7 生产者和消费者
