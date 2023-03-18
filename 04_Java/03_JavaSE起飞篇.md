@@ -3885,3 +3885,561 @@ public class MyThread extends Thread{
 
 > 生产者消费者模式是一个十分经典的多线程协作的模式。
 
+|      方法名称      |               说明               |
+| :----------------: | :------------------------------: |
+|   `void wait()`    | 当前线程等待，直到被其他线程唤醒 |
+|  `void notify()`   |         随机唤醒单个线程         |
+| `void notifyAll()` |           唤醒所有线程           |
+
+### 7.1 第一种
+
+- 生产者
+
+  ```java
+  public class Cook extends Thread{
+      @Override
+      public void run() {
+          while (true) {
+              synchronized (Desk.lock) {
+                  if (Desk.count == 0) {
+                      break;
+                  } else {
+                      if (Desk.foodFlag == 1) {
+                          // 有食物 等待
+                          try {
+                              Desk.lock.wait();
+                          } catch (InterruptedException e) {
+                              throw new RuntimeException(e);
+                          }
+                      } else {
+                          // 没有食物
+                          System.out.println("做了一碗面条");
+                          // 修改状态
+                          Desk.foodFlag = 1;
+                          // 唤醒
+                          Desk.lock.notifyAll();
+                      }
+                  }
+              }
+          }
+      }
+  }
+  ```
+
+- 消费者
+
+  ```java
+  public class Foodie extends Thread{
+      @Override
+      public void run() {
+          while (true) {
+              synchronized (Desk.lock) {
+                  if (Desk.count == 0) {
+                      break;
+                  } else {
+                      // 核心的业务逻辑
+                      // 判断座子上是否有面条
+                      if (Desk.foodFlag == 0) {
+                          // 等待
+                          try {
+                              Desk.lock.wait();  // 当前线程与锁绑定
+                          } catch (InterruptedException e) {
+                              throw new RuntimeException(e);
+                          }
+                      } else {
+                          // 修改状态
+                          Desk.count--;
+                          // 有面条 吃
+                          System.out.println("正在吃面条 还能再吃 " + Desk.count + " 碗！！！");
+                          // 唤醒这把锁的所有线程
+                          Desk.lock.notifyAll();
+                          // 修改状态
+                          Desk.foodFlag = 0;
+                      }
+                  }
+              }
+          }
+      }
+  }
+  ```
+
+- 桌子
+
+  ```java
+  public class Desk {
+      // 表示座子上是否有面条
+      public static int foodFlag = 0;
+  
+      // 总个数
+      public static int count = 10;
+  
+      // 锁对象
+      public static Object lock = new Object();
+  }
+  ```
+
+- 测试类
+
+  ```java
+  public class ThreadDome {
+      public static void main(String[] args) {
+          Cook c = new Cook();
+          Foodie f = new Foodie();
+  
+          c.setName("厨师");
+          f.setName("吃货");
+  
+          c.start();
+          f.start();
+      }
+  }
+  ```
+
+### 7.2 第二种：阻塞队列
+
+- 继承结构
+  - `Iterable`
+  - `Collection`
+  - `Queue`
+  - `BlockingQueue`
+- 接口
+  - `ArrayBlockingQueue`：底层是数组，有界
+  - `LinkedBlockingQueue`：底层是链表，无界。但不是真正的无界，最大为```int`的最大值。
+
+- 生产者
+
+  ```java
+  public class Foodie extends Thread{
+  
+      ArrayBlockingQueue<String> queue;
+  
+      public Foodie(ArrayBlockingQueue<String> queue) {
+          this.queue = queue;
+      }
+  
+      @Override
+      public void run() {
+          while (true) {
+              // 不断放面条到阻塞队列
+              try {
+                  String food = queue.take();
+                  System.out.println(food);
+              } catch (InterruptedException e) {
+                  throw new RuntimeException(e);
+              }
+          }
+      }
+  }
+  ```
+
+- 消费者
+
+  ```java
+  public class Cook extends Thread {
+  
+      ArrayBlockingQueue<String> queue;
+  
+      public Cook(ArrayBlockingQueue<String> queue) {
+          this.queue = queue;
+      }
+  
+      @Override
+      public void run() {
+          while (true) {
+              // 不断放面条到阻塞队列
+              try {
+                  queue.put("面条");
+              } catch (InterruptedException e) {
+                  throw new RuntimeException(e);
+              }
+          }
+      }
+  }
+  ```
+
+- 测试类
+
+  ```java 
+  public class ThreadDemo {
+      public static void main(String[] args) {
+          // 1. 创建阻塞队列
+          ArrayBlockingQueue<String> queue = new ArrayBlockingQueue<>(1);
+  
+          // 2. 创建线程对象 并把阻塞队列传递过去
+          Cook c = new Cook(queue);
+          Foodie f = new Foodie(queue);
+  
+          // 3. 启动线程
+          c.start();
+          f.start();
+      }
+  }
+  ```
+
+## 8 线程的状态
+
+![image-20230315175445886](assets/image-20230315175445886.png)
+
+- `NEW`
+  至今尚未启动的线程处于这种状态。 
+- `RUNNABLE`
+  正在Java虚拟机中执行的线程处于这种状态。 
+- `BLOCKED`
+  受阻塞并等待某个监视器锁的线程处于这种状态。 
+- `WAITING`
+  无限期地等待另一个线程来执行某一特定操作的线程处于这种状态。 
+- `TIMED_WAITING`
+  等待另一个线程来执行取决于指定等待时间的操作的线程处于这种状态。 
+- `TERMINATED`
+  已退出的线程处于这种状态。 
+
+在给定时间点上，一个线程只能处于一种状态。这些状态是虚拟机状态，它们并没有反映所有操作系统线程状态。
+
+## 9 综合练习
+
+![image-20230315220949620](assets/image-20230315220949620.png)
+
+```java
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.concurrent.Callable;
+
+public class MyCallable implements Callable<Integer> {
+
+    ArrayList<Integer> list;
+
+    public MyCallable(ArrayList<Integer> list) {
+        this.list = list;
+    }
+
+
+    @Override
+    public Integer call() throws Exception {
+        ArrayList<Integer> boxList = new ArrayList<>();
+        while (true) {
+            synchronized (MyThread1.class) {
+                if (list.size() == 0) {
+                    System.out.println(Thread.currentThread().getName() + boxList);
+                    break;
+                } else {
+                    Collections.shuffle(list);
+                    Integer remove = list.remove(0);
+                    // System.out.println(getName() + "抽到了 " + remove);
+                    boxList.add(remove);
+                }
+            }
+
+            Thread.sleep(10);
+
+        }
+
+        if (boxList.size() == 0) {
+            return null;
+        } else {
+            return Collections.max(boxList);
+        }
+    }
+}
+```
+
+```java
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
+
+public class Test2 {
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
+
+        ArrayList<Integer> list = new ArrayList<>();
+        Collections.addAll(list, 10, 5, 20, 50, 100, 200, 500, 800, 2, 80, 300, 700);
+
+        MyCallable mc = new MyCallable(list);
+
+        FutureTask ft1 = new FutureTask<>(mc);
+        FutureTask ft2 = new FutureTask<>(mc);
+
+        Thread t1 = new Thread(ft1);
+        Thread t2 = new Thread(ft2);
+
+        t1.setName("抽奖箱 1 ");
+        t2.setName("抽奖箱 2 ");
+
+        t1.start();
+        t2.start();
+
+        Integer max1 = (Integer) ft1.get();
+        Integer max2 = (Integer) ft2.get();
+        System.out.println(max1);
+        System.out.println(max2);
+    }
+}
+```
+
+## 10 线程池
+
+### 10.1 原理
+
+1. 创建一个池子，池子中是空的
+2. 提交任务时，池子会创建新的线程对象，任务执行完毕，线程归还给池子。下回再次提交任务时，不需要创建新的线程，直接复用已有的线程即可。
+3. 但是如果提交任务时，池子中没有空闲线程，也无法创建新的线程，任务就会排队等待
+
+### 10.2 代码实现
+
+`Executors`：线程池的工具类通过调用方法返回不同类型的线程池对象。
+
+|                           方法名称                           |           说明           |
+| :----------------------------------------------------------: | :----------------------: |
+|    `public static ExecutorService newCachedThreadPool()`     | 创建一个没有上限的线程池 |
+| `public static ExecutorService newFixedThreadPool(int nThreads)` |    创建有上限的线程池    |
+
+```java
+// 1. 获取线程池对象
+// ExecutorService pool1 = Executors.newCachedThreadPool();
+ExecutorService pool1 = Executors.newFixedThreadPool(2);
+
+// 2. 提交任务
+pool1.submit(new MyRunnable());
+pool1.submit(new MyRunnable());
+pool1.submit(new MyRunnable());
+pool1.submit(new MyRunnable());
+
+// 3. 销毁线程池
+pool1.shutdown();
+```
+
+### 10.3 自定义线程池
+
+- 参数
+  - 核心元素一：正式员工数量
+  - 核心元素二：餐厅最大员工数。核心线程数量 （不能小于0），线程池中最大线程的数量（最大数量 >= 核心线程数量）
+  - 核心元素三：临时员工空闲多长时间被辞退（值）。空闲时间（值）（不能小于0）
+  - 核心元素四：临时员工空闲多长时间被辞退（单位）。空闲时间（单位）（用`TimeUnit`指定）
+  - 核心元素五：排队的客户。阻塞队列（不能为`null`）
+  - 核心元素六：从哪里招人。创建线程的方式（不能为`null`）
+  - 核心元素七：当排队人数过多，超出顾客请下次再来（拒绝服务）。要执行的任务过多时的解决方案(不能为`null`）
+- 自定义线程池(任务拒绝策略)
+
+|               任务拒绝策略               |                             说明                             |
+| :--------------------------------------: | :----------------------------------------------------------: |
+|     `ThreadPoolExecutor.AbortPolicy`     | **默认策略:** 丢弃任务并抛出`RejectedExecutionException`异常 |
+|    `ThreadPoolExecutor,DiscardPolicy`    |          丢弃任务，但是不抛出异常 这是不推荐的做法           |
+| `ThreadPoolExecutor.DiscardoldestPolicy` |      抛弃队列中等待最久的任务 然后把当前任务加入队列中       |
+|  `ThreadPoolExecutor.CallerRunsPolicy`   |           调用任务的`run()`方法绕过线程池直接执行            |
+
+```java
+ThreadPoolExecutor pool = new ThreadPoolExecutor(
+    3,  // 核心线程数量 不能小于0
+    6,  // 最大线程数量，不能小于0 最大数量 >= 核心数量
+    60,  // 空闲线程最大存活时间
+    TimeUnit.SECONDS,  // 时间单位
+    new ArrayBlockingQueue<>(3),  // 任务队列
+    Executors.defaultThreadFactory(), // 创建线程工厂
+    new ThreadPoolExecutor.AbortPolicy() // 拒绝策略
+);
+```
+
+- 不断的提交任务，会有以下三个临界点
+  - 当核心线程满时，再提交任务就会排队
+  - 当核心线程满，队伍满时，会创建临时线程
+  - 当核心线程满，队伍满，临时线程满时，会触发任务拒绝策略
+
+### 10.4 线程池数量
+
+- 最大并行数
+
+  ```java
+  // 向 java 虚拟机返回可用处理器的数目
+  int runtime = Runtime.getRuntime().availableProcessors();
+  System.out.println(runtime);  // 8
+  ```
+
+- CPU 密集型运算
+
+  `最大并行数 + 1`
+
+- I/O 密集型运算
+  $$
+  最大并行数 \times 期望CPU利用率\times\frac{总时间(CPU计算时间+等待时间)}{CPU 计算时间}
+  $$
+  使用 `ThreadDump`可以计算 CPU 计算时间、等待时间
+
+## todo：整理资料
+
+volatile
+JMM
+悲观锁、乐观锁、CAS
+原子性
+并发工具类
+
+# day 09 网络编程
+
+## 1 入门网络编程
+
+### 1.1 定义
+
+在网络通信协议下，不同计算机上运行的程序，进行的数据传输。
+
+### 1.2 常见软件架构
+
+- C/S：Client/Server（客户端 / 服务器）
+
+  在用户本地需要下载并安装客户端程序，在远程有一个服务器端程序。
+
+  优缺点
+
+  - 画面可以做的非常精美，用户体验好
+  - 需要开发客户端，也需要开发服务端
+  - 用户需要下载和更新的时候太麻烦
+
+- B/S：Browser/Server（浏览器 / 服务器）
+
+  只需要一个浏览器，用户通过不同的网址。客户访问不同的服务器。
+
+  优缺点
+
+  - 不需要开发客户端，只需要页面 + 服务端
+  - 用户不需要下载，打开浏览器就能使用
+  - 如果应用过大，用户体验受到影响
+
+## 2 网络编程三要素
+
+- IP
+
+  在网络中的地址，是唯一的标识。
+
+- 端口号
+
+  应用程序在设备中唯一的标识
+
+- 协议
+
+  数据在网络中传输的规则，常见的协议有`UDP`、`TCP`、`http`、`https`、`ftp`。
+
+### 2.1 IP
+
+全称：Internet Protocol，是互联网协议地址，也称IP地址。是分配给上网设备的数字标签。
+
+- IPV4
+
+  全称：Internet Protocol version 4，互联网通信协议第四版。采用32位（`32bit`，4字节）地址长度，分为4组。
+
+- IPV6
+
+  全称：Internet Protocol version 6，互联网通信协议第六版。由于互联网的莲勃发展，IP地址的需求量愈来愈大，而IPv4的模式下IP的总数是有限的。IPv4采用128位地址长度，分成8组。
+
+特殊的IP地址：127.0.0.1，也可以是`localhost`：是回送地址也称本地回环地址，也称本机IP，永远只会寻找当前所在本机。
+
+### 2.2 InetAddress 的使用
+
+```java
+InetAddress address1 = InetAddress.getByName("127.0.0.1");
+System.out.println(address1);
+InetAddress address2 = InetAddress.getByName("DESKTOP-G5QH31C");
+System.out.println(address2);
+
+// 1. 获取主机名
+String hostName = address2.getHostName();
+System.out.println(hostName);
+
+// 1. 获取 ip 地址
+String address = address2.getHostAddress();  // DESKTOP-G5QH31C
+System.out.println(address);  // 192.168.174.1
+```
+
+### 2.3 端口号
+
+应用程序在设备中唯一的标识。
+
+端口号：由两个字节表示的整数，取值范围0~65535。其中0~1023之间的端口号用于一些知名的网络服务或者应用。我们自己使用1024以上的端口号就可以了。
+
+### 2.4 协议
+
+计算机网络中，连接和通信的规则被称为网络通信协议。
+
+- OSI 参考模型：世界互联协议标准，全球通信规范，单模型过于理想化，未能在因特网上进行广泛推
+- TCP / IP参考模型（或TCP / IP协议）：事实上的国际标准
+
+![image-20230318223222126](assets/image-20230318223222126.png)
+
+### 2.5 UDP 协议
+
+- 用户数据报协议（User Datagram Protocol）
+- UDP是面向无连接通信协议速度快，有大小限制一次最多发送64K，数据不安全，易丢失数据
+
+```java
+// 发送数据
+
+// 1. 创建 DatagramSocket 对象（快递公司）
+// 细节
+// 绑定端口，以后我们就是通过这个端口往外发送
+// 空参: 所有可用的端口中随机一个进行使用
+// 有参:指定端口号进行绑定
+DatagramSocket ds = new DatagramSocket();
+
+// 2. 打包数据
+String str = "你好呀！";
+byte[] bytes = str.getBytes();
+InetAddress address = InetAddress.getByName("127.0.0.1");
+int port = 10086;
+
+DatagramPacket dp = new DatagramPacket(bytes, bytes.length, address, port);
+
+// 3. 发送数据
+ds.send(dp);
+
+// 4. 释放资源
+ds.close();
+```
+
+```java
+// 接收数据
+
+// 1. 创建 DatagramSocket 对象(快递公司)
+// 细节:
+// 在按收的时候，一定要绑定端口
+// 面且绑定的端口定要跟发送的编口保持一致
+DatagramSocket ds = new DatagramSocket(10086);
+
+// 2. 接收数据
+byte[] bytes = new byte[1024];
+DatagramPacket dp = new DatagramPacket(bytes, bytes.length);
+// 该方法是阻塞的
+// 程序执行到这一步的时候，会在这里死等
+// 等发送端发道消息
+ds.receive(dp);
+
+// 3. 解析数据
+byte[] data = dp.getData();
+int length = dp.getLength();
+InetAddress address = dp.getAddress();
+int port = dp.getPort();
+
+System.out.println("数据是：" + new String(data, 0, length));
+System.out.println("数据是从 " + address + " 的 " + port + " 端口来的...");
+
+// 4. 释放资源
+ds.close();
+```
+
+### 2. TCP 协议
+
+- 传输控制协议TCP（Transmission Control Protocol）
+- TCP 协议是面向连接的通信协议，速度慢，没有大小限制，数据安全。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
