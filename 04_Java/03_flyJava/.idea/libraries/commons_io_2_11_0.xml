@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="commons-io-2.11.0">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/commons-io-2.11.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ideaLibSources/commons-io-2.11.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
