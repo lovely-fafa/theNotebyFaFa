@@ -393,12 +393,80 @@ function getData() {
   - 集成打包上线
 - 依赖环境：NodeJS
 
-### 3.2 
+### 3.2 Vue 项目简介与凯风珑城
+
+- Vue 项目 - 创建
+
+  - 命令行：`vue create vue-projectName`
+  - 图形化界面：`vue ui`
+
+- Vue 项目 - 目录结构
+
+  ![image-20230326180859447](assets/image-20230326180859447.png)
+
+- Vue 项目 - 启动
+
+  - 图形化界面
+  - 命令行：`npm serve`
+
+- Vue 项目 - 配置端口
+
+  更改`vue.config.js`文件
+
+  ```javascript
+  const { defineConfig } = require('@vue/cli-service')
+  module.exports = defineConfig({
+    transpileDependencies: true,
+    // 更改端口号
+    devServer: {
+      port: 7000
+    }
+  })
+  ```
+
+- Vue 的组件文件以`.vue`结尾，每个组件由三个部分组成：`<template>`、`<script>`、`<style>`。
 
 ## 4 Vue 组件库 Element
+
+### 4.1 简介
+
+- Element：是饿了么团队研发的，一套为开发者、设计师和产品经理准备的基于 Vue 2.0 的桌面端**组件**库。
+- 组件：组成网页的部件，例如 超链接、按钮、图片、表格、表单、分页条等等。
+- 官网：https://element.eleme.cn/#/zh-CNListener
+
+### 4.2 快速入门
+
+- 安装 ElementUI 组件库
+
+  **项目文件夹下**`npm install element-ui@2.15.3`。（组件库文件会下载到项目文件夹的 node_modules 文件夹。）
+
+- 在`main.js`引入 ElementUI 组件库
+
+  ```javascript
+  import ElementUI from 'element-ui'
+  import 'element-ui/lib/theme-chalk/index.css';
+  
+  Vue.use(ElementUI);
+  ```
+
+- 访问官网，复制组件代码
+
+### 4.3 常见组件
+
+- 按钮
+
+- 表格
+
+- 分页器
+
+- 对话框
+
+  Dialog 对话框：在保留当前页面状态的情况下，告知用户并承载相关操作
+
+- From 表单
+
 ## 5 Vue 路由
 ## 6 打包部署
-
 
 
 
