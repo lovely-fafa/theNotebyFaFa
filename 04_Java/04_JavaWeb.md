@@ -466,11 +466,148 @@ function getData() {
 - From 表单
 
 ## 5 Vue 路由
+
+> 前端路由：URL中的hash(#号)与组件之间的对应关系
+
+### 5.1 Vue Router
+- 介绍：Vue Router 是 Vue 的官方路由。
+- 组成
+  - VueRouter：路由器类，根据路由请求在路由视图中动态渲染选中的组件
+  - `<router-link>`：请求链接组件，浏览器会解析成`<a>`
+  - `<router-view>`：动态视图组件，用来染展示与路由路径对应的组件
+
 ## 6 打包部署
 
+### 6.1 打包
+
+- `npm run build`
+
+### 6.2 部署
+
+- 介绍：Nginx 是一款轻量级的Web服务器/反向代理服务器及电子邮件（IMAP / POP3）代理服务器。其特点是占有内存少，并发能力强，在各大型互联网公司都有非常广泛的使用。
+- 官网: https://nginx.org/
+
+- 部署：将打包好的 dist 目录下的文件，复制到nginx安装目录的html目录下
+- 启动：双击 nginx.exe 文件即可，Nginx服务器默认占用80端口号
+- 查进程：`netstat -ano | finsStr 80`
+- 改端口号：conf 文件夹下的 nginx.conf 文件中更改端口号
+
+# day 04
+
+## 1 Maven
+
+### 1.1 概述
+
+- 介绍
+
+  Maven 是 apache 旗下的一个开源项目，是一款用于管理和构建 Java 项目的工具。
+
+  Apache Maven 是一个项目管理和构建工具，它基于项目对象模型（POM：Project Object Model）的概念，通过一小段描述信息来管理项目的构建。
+
+- 作用
+
+  - 依赖管理
+  - 项目结构
+  - 项目构建
+
+- 官网：https://maven.apache.org/
+
+- 仓库：用于存储资源，管理各种 jar 包。
+
+  - 本地仓库：自己计算机上的一个目录。
+  - 中央仓库：由 Maven 团队维护的全球唯一的。仓库地址：https://repo.maven.org/maven2
+  - 远程仓库（私服）：一般由公司团队搭建的私有仓库。
+
+- 安装与配置
+
+  - 配置本地仓库：修改 conf/settings.xml 中的`<localRepository>`为一个指定目录
+
+    ```
+    <localRepository>D:\install\apache-maven-3.9.1\mvn_repo</localRepository>
+    ```
+
+  - 配置阿里云私服：修改conf/settings.xml 中的`<mirrors>`标签，为其添加如下子标签
+  
+    ```
+    <mirror>
+        <id>alimaven</id>
+        <mirrorOf>central</mirrorOf>
+        <name>aliyun maven</name>
+        <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+    </mirror>
+    ```
+  
+  - 配置环境变量：MAVEN_HOME 为 maven 的解压目录，并将其 bin 目录加入 PATH 环境变量
+  
+  - 查看版本：`mvn -v`
+
+### 1.2 IDEA 集成  Maven
+
+#### 1.1.2 配置Maven环境
+
+- 局部配置：在项目里面
+- 全局配置：在 close project 后的弹窗里面选择 settings
+
+![image-20230327161140246](assets/image-20230327161140246.png)
+
+![image-20230327162608962](assets/image-20230327162608962.png)
+
+#### 1.2.3 创建Maven项目
+
+![image-20230327175619118](assets/image-20230327175619118.png)
+
+![image-20230327180913130](assets/image-20230327180913130.png)
+
+- 什么是Maven坐标?
+
+  - Maven 中的坐标是**资源的唯一标识，通过该坐标可以唯一定位资源位置**
+  - 使用坐标来定义项目或引入项目中需要的依赖
+
+- Maven 坐标主要组成
+
+  - groupld：定义当前Maven项目隶属组织名称（通常是域名反写，例如:com.itheima）
+  - artifactld：定义当前Maven项目名称（通常是模块名称，例如 order-service、goods-service）
+  - version：定义当前项目版本号
+
+- 举个栗子
+
+  ```xml
+  <groupld>com.itheima</groupld>
+  <artifactld>maven-project01</artifactld>
+  <version>1.0-SNAPSHOT</version>
+  ```
+
+  ```xml
+  <dependency>
+  	<groupld>ch.qos.logback</groupld>
+      <artifactld>logback-classic</artifactld>
+      <version>1.2.3</version>
+  </dependency>
+  ```
+
+好棒好棒，终于解决啦![image-20230327233157794](assets/image-20230327233157794.png)
+
+#### 1.2.4 导入Maven项目
+
+- 方式一：打开IDEA，选择右侧 Maven 面板，点击+号，选中对应项目的 pom.xml 文件，双击即可。
+- 方式二：打开IDEA，【File】-【Project Structure】-【Modules】- 【+号】-【Import Module】- 选中对应项目的pom.xm文件，双击即可。
+
+### 1.3 依赖管理
+
+依赖配置
+依赖传递
+依赖范围
+生命周期
 
 
 
+## 2 Web 入门
+
+### 2.1 SpringBootWeb 入门
+
+### 2.2 HTTP 协议
+
+### 2.3 Web 服务器-Tomcat
 
 
 
