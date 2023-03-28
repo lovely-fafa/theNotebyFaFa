@@ -489,7 +489,7 @@ function getData() {
 
 - 部署：将打包好的 dist 目录下的文件，复制到nginx安装目录的html目录下
 - 启动：双击 nginx.exe 文件即可，Nginx服务器默认占用80端口号
-- 查进程：`netstat -ano | finsStr 80`
+- 查进程：`netstat -ano | findStr 80`
 - 改端口号：conf 文件夹下的 nginx.conf 文件中更改端口号
 
 # day 04
@@ -594,21 +594,348 @@ function getData() {
 
 ### 1.3 依赖管理
 
-依赖配置
-依赖传递
-依赖范围
-生命周期
+#### 1.3.1 依赖配置
 
+- 依赖：指当前项目运行所需要的 jar 包，一个项目中可以引入多
+- 配置
+  1. 在 pom.xml 中编写`<dependencies>`标签
+  2. 在`<dependencies>`标签中使用`<dependency>`引入坐标
+  3. 定义坐标的`groupld`、`artifactld`、`version`
+  4. 点击刷新按钮，引入最新加入的坐标
+- 如果引入的依赖，在本地仓库不存在，将会连接远程仓库 / 中央仓库，然后下载依赖。（这个过程会比较耗时，耐心等待）
+- 如果不知道依赖的坐标信息，可以到https://mvnrepository.com/中搜索。
 
+```xml
+<dependencies>
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>1.18.16</version>
+        <optional>true</optional>
+    </dependency>
+
+    <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>1.4.6</version>
+    </dependency>
+</dependencies>
+```
+
+#### 1.3.2 依赖传递
+
+- 依赖具有传递性
+
+  - 直接依赖：在当前项目中通过依赖配置建立的依赖关系
+  - 间接依赖：被依赖的资源如果依赖其他资源，当前项目间接依赖其他资源
+
+- 排除依赖
+
+  排除依赖指主动断开依赖的资源，被排除的资源无需指定版本
+
+  ```xml
+  <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>1.4.6</version>
+  
+      <!-- 排除依赖 -->
+      <exclusions>
+          <exclusion>
+              <groupId>org.slf4j</groupId>
+              <artifactId>slf4j-api</artifactId>
+          </exclusion>
+      </exclusions>
+  </dependency>
+  ```
+
+#### 1.3.3 依赖范围
+
+- 依赖的 jar 包，默认情况下，可以在任何地方使用。可以通过`<scope>...</ scope>`设置其作用范围
+- 作用范围
+  - 主程序范围有效。（`main`文件夹范围内）
+  - 测试程序范围有效。（`test`文件夹范围内）
+  - 是否参与打包运行。（`package`指令范围内）
+
+|      scope值      | 主程序 | 测试程序 | 打包（运行） |     范例      |
+| :---------------: | :----: | :------: | :----------: | :-----------: |
+| `compile`（默认） |   Y    |    Y     |      Y       |    `log4j`    |
+|      `test`       |   -    |    Y     |      -       |    `junit`    |
+|    `provided`     |   Y    |    Y     |      -       | `servlet-api` |
+|     `runtime`     |   -    |    Y     |      Y       |  `jdbc`驱动   |
+
+#### 1.3.4 生命周期
+
+- Maven中有3套**相互独立**的生命周期
+  - clean：清理工作
+  - default：核心工作，如：编译、测试、打包、安装、部署等
+  - site：生成报告、发布站点等
+
+![image-20230328101044644](assets/image-20230328101044644.png)
+
+- 每套生命周期包含一些阶段（phase），阶段是有顺序的，后面的阶段依赖于前面的阶段。
+
+  注意注意：是同一套生命周期，才是后面的阶段依赖于前面的阶段。比如说运行`default`这一套生命周期的`install`时，`clean`这一套生命周期的`clean`是不会执行的。
+
+- 常见的生命周期阶段
+
+  - clean：移除上一次构建生成的文件
+  - compile：编译项目源代码
+  - test：使用合适的单元测试框架运行测试（junit）
+  - package：将编译后的文件打包，如：jar、war等
+  - install：安装项目到本地仓库
+
+- 执行指定生命周期的两种方式
+
+  - 在idea中，右侧的maven工具栏，选中对应的生命周期，双击执行。亦可单击后，选中闪电图标后，跳过。
+  - 在命令行中，通过命令执行：`mnv xxx`
 
 ## 2 Web 入门
 
 ### 2.1 SpringBootWeb 入门
 
+- 官网：https://spring.io
+- Spring 发展到今天已经形成了一种开发生态圈，Spring 提供了若干个子项目，每个项目用于完成特定的功能。
+
+![image-20230328110455926](assets/image-20230328110455926.png)
+
+![image-20230328110508403](assets/image-20230328110508403.png)
+
 ### 2.2 HTTP 协议
+
+### 2.2.1 HTTP-概述
+
+- 概念：**H**yper **T**ext **T**ransfer **P**otocol，超文本传输协议，规定了浏览器和服务器之间数据传输的规则。
+- 特点
+  1. 基于TCP协议:面向连接，安全
+  2. 基于请求-响应模型的：一次请求对应一次响应
+  3. HTTP协议是无状态的协议：对于事务处理没有记忆能力。每次请求-响应都是独立的。
+    + 缺点：多次请求间不能共享数据
+    + 优点：速度快
+
+#### 2.2.2 HTTP-请求协议
+
+> 请求协议由：请求行、请求头、请求体三部分构成。
+
+- 请求行
+
+  ```
+  GET /hello HTTP/1.1
+  ```
+
+  请求数据第一行
+
+  - 请求方式
+  - 请求路径
+  - 协议及其版本
+
+- 请求头
+
+  ```
+  Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+  Accept-Encoding: gzip, deflate, br
+  Accept-Language: zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7
+  Cache-Control: no-cache
+  Connection: keep-alive
+  Host: 127.0.0.1:8080
+  Pragma: no-cache
+  Sec-Fetch-Dest: document
+  Sec-Fetch-Mode: navigate
+  Sec-Fetch-Site: none
+  Sec-Fetch-User: ?1
+  Upgrade-Insecure-Requests: 1
+  User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36
+  sec-ch-ua: "Google Chrome";v="111", "Not(A:Brand";v="8", "Chromium";v="111"
+  sec-ch-ua-mobile: ?0
+  sec-ch-ua-platform: "Windows"
+  ```
+
+  第二行开始
+
+  |    请求头键     |                             含义                             |
+  | :-------------: | :----------------------------------------------------------: |
+  |      Host       |                         请求的主机名                         |
+  |   User-Agent    | 浏览器版本，例如Chrome浏览器的标识类似 Mozilla/5.0 ...Chrome/79<br>IE浏览器的标识类似Mozilla/5.0(Window9NT ...) like Gecko |
+  |     Accept      | 表示浏览器能接收的资源类型，如`text/*`，`image/*`或者`*/`表示所有 |
+  | Accept-Language |    表示浏览器偏好的语言，服务器可以据此返回不同语言的网页    |
+  | Accept-Encoding |     表示浏览器可以支持的压缩类型，例如 gzip、deflate 等      |
+  |  Content-Type   |                      请求主体的数据类型                      |
+  | Content-Length  |                 请求主体的大小（单位：字节）                 |
+
+- 请求体
+
+  和请求体之间隔一个空行
+
+  请求体：POST 请求，存放请求参数
+
+- 请求方式 - POST：请求参数在请求体中，POST 请求大小是没有限制的
+- 请求方式 - GET：请求参数在请求行中，没有请求体，如：/brand/findA11?name=OPPOstatus=1。GET请求大小是有限制的。
+
+#### 2.2.3 HTTP-响应协议
+
+> 响应协议由响应行、响应头、响应体三部分构成。
+
+- 响应行
+
+  ```
+  HTTP/1.1 200 OK
+  ```
+
+  响应据第一行
+
+  - 协议
+  - 状态码
+  - 描述
+
+- 响应头
+
+  第二行开始，格式为：`key: value`
+
+- 响应体
+
+  最后一部分，存放响应数据
+
+| 响应码大类 |    类别    |                             含义                             |
+| :--------: | :--------: | :----------------------------------------------------------: |
+|    1xx     |   响应中   | 临时状态码、表示请求已经接收，告诉客户端应该继续请求或者如果它已经完成则忽略它。 |
+|    2xx     |    成功    |             表示请求已经被成功接收，处理已完成。             |
+|    3xx     |   重定向   |    重定向到其他地方；让客户端再发起一次请求以完成整个处理    |
+|    4xx     | 客户端错误 | 处理发生错误，责任在客户端。如：请求了不存在的资源、客户端未被授权、禁止访问等， |
+|    5xx     | 服务器错误 |       处理发生错误，责任在服务端。如：程序抛出异常等。       |
+
+|     响应头键     |                             含义                             |
+| :--------------: | :----------------------------------------------------------: |
+|   Content-Type   |  表示该响应内容的类型，例如`text/html`、`application/json`   |
+|  Content-Length  |                表示该响应内容的长度（字节数）                |
+| Content-Encoding |                表示该响应压缩算法，例如`gzip`                |
+|  Cache-Control   | 指示客户端应如何缓存，例如`max-age=300`表示可以最多缓存300秒 |
+|    Set-Cookie    |           告诉浏览器为当前页面所在的域设置`cookie`           |
+
+#### 2.2.4 HTTP-协议解析
 
 ### 2.3 Web 服务器-Tomcat
 
+#### 2.3.1 Web 服务器
+
+Web 服务器是一个软件程序，对 HTTP 协议的操作进行封装，使得程序员不必直接对协议进行操作，让Web开发更加便捷主要功能是“提供网上信息浏览服务”。
+
+#### 2.3.2 Tomcat 简介
+
+- 概念：Tomcat 是 Apache 软件基金会一个核心项目，是一个开源免费的轻量级Web服务器，支持 Servlet / JSP 少量 JavaEE 规范
+- JavaEE：Java Enterprise Edition，Java 企业版。指 Java 企业级开发的技术规范总和。包含13项技术规范：JDBC、INDI、EJB、RMI、JSP、Servlet、XML、JMS、Java IDL、JTS、JTA、JavaMail、JAF
+- Tomcat 也被称为 Web 容器、Servlet 容器。Servlet 程序需要依赖于 Tomcat 才能运行
+- 官网：https://tomcat.apache.org/
+
+#### 2.3.3 Tomcat 基本使用
+
+- 下载：官网下载，地址：https://tomcat.apache.org/download-90.cgl
+
+- 安装：绿色版，直接解压即可
+
+- 卸载：直接删除目录即可
+
+- 启动
+
+  - 双击：`bin\startup.bat`
+
+  - 控制台中文乱码：修改`conf/ logging.properties`
+
+    ```properties
+    java.util.logging.ConsoleHandler.encoding = GBK
+    ```
+
+- 关闭
+
+  - 直接 x 掉运行窗口：强制关闭
+  - `bin\shutdown.bat`：正常关闭
+  - `Ctrl+C`：正常关闭
+
+- 出现的问题
+
+  - 启动窗口一闪而过：检查 JAVA_HOME 环境变量是否正确配置
+
+  - 端口号冲突
+
+    - 找到对应程序，将其关闭掉
+
+      ```
+      Caused by: java.net.BindException: Address already
+      ```
+
+    - 配置 Tomcat 端口号：`conf/serverxml`
+
+      ```xml
+      <Connector port="8080" protocol="HTTP/1.1" connectionTimeout="20000" redirectPort="8443" />
+      ```
+
+注意：HTTP 协议默认端口号为80，如果将 Tomcat 端口号改为80，则将来访问 Tomcat 时，将不用输入端口号
+
+Tomcat 部署项目：将项目放置到 webapps 目录下，即部署完成
+
+### 2.4 入门程序解析
+
+- 起步依赖
+  - spring-boot-starter-web：包含了web应用开发所需要的常见依赖
+  - spring-boot-starter-test：包含了单元测试所需要的常见依赖。
+  - 官方提供的 starter：https://dors.spring.io/spring-hoot/dacs/2.7.4/reference/htmlsingle/#using.build-systems.starters
+
+# day 05 请求响应
+
+![image-20230328230208039](assets/image-20230328230208039.png)
+
+- 请求（HttpServletRequest）：获取请求数据
+- 响应（HttpServletResponse）：设置响应数据
+- BS架构：Browser / Server，浏览器 / 服务器架构模式。客户端只需要浏览器，应用程序的逻辑和数据都存储在服务端。
+- CS架构：Client / Server，客户端 / 服务器架构模式。
+
+## 1 请求
+
+### 1.1 Postman
+
+- Postman 是一款功能强大的网页调试与发送网页 HTTP 请求的 Chrome 插件
+- 作用：常用于进行接口测试
+
+### 1.2 简单参数
+
+- 原始方式
+
+  在原始的 web 程序中，获取请求参数，需要通过 HttpServletRequest 对象手动获取。
+
+
+
+### 1.3 实体参数
+
+
+
+### 1.4 数组集合参数
+
+
+
+### 1.5 日期参数
+
+
+
+### 1.6 Json 参数
+
+
+
+### 1.7 路径参数
+
+
+
+
+
+
+
+
+
+## 2 响应
+
+
+
+
+
+## 3 分层解耦
 
 
 
@@ -629,3 +956,9 @@ function getData() {
 
 
 
+
+
+
+
+
+ 
