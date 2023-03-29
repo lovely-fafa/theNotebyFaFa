@@ -901,37 +901,240 @@ Tomcat 部署项目：将项目放置到 webapps 目录下，即部署完成
 
   在原始的 web 程序中，获取请求参数，需要通过 HttpServletRequest 对象手动获取。
 
+  ```java
+  @RequestMapping("/simpleParam1")
+  public String simpleParam1(HttpServletRequest request) {
+      // 获取参数
+      String name = request.getParameter("name");
+      String ageStr = request.getParameter("age");
+  
+      int age = Integer.parseInt(ageStr);
+      System.out.println(name + " - " + age);
+      return "OK";
+  }
+  ```
 
+- SpringBoot 方式
+
+  简单参数：参数名与形参变量名相同，定义形参即可接收参数
+
+  ```java
+  @RequestMapping("/simpleParam2")
+  public String simpleParam2(String name, Integer age) {
+      System.out.println(name + " - " + age);
+      return "OK";
+  }
+  ```
+
+  简单参数：如果方法形参名称与请求参数名称不匹配，可以使用`@RequestParam`完成映射。
+
+  注意：`@RequestParam中`的`required`属性默认为`true`，代表该请求参数必须传递，如果不传递将报错。如果该参数是可选的，可
+  以将`required`属性设置为`false`。
+
+  ```java
+  @RequestMapping("/simpleParam4")
+  public String simpleParam4(@RequestParam(name = "name", required = false) String username, Integer age) {
+      System.out.println(username + " - " + age);
+      return "OK";
+  }
+  ```
 
 ### 1.3 实体参数
 
+- 简单实体对象：请求参数名与形参对象属性名相同，定义`POJO`接收即可
 
+  ```java
+  @RequestMapping("/simplePojo")
+  public String simplePojo(User user) {
+      System.out.println(user);
+      return "Ok";
+  }
+  ```
+
+  ```java
+  public class User {
+      private String name;
+      private Integer age;
+  }
+  ```
+
+- 复杂实体对象：请求参数名与形参对象属性名相同，按照对象层次结构关系即可接收嵌套`POJO`属性参数
+
+  ```java
+  @RequestMapping("/complexPojo")
+  public String complexPojo(User user) {
+      System.out.println(user);
+      return "Ok";
+  }
+  ```
+  
+  ```java
+  public class User {
+      private String name;
+      private Integer age;
+  
+      private Address address;
+  }
+  ```
+  
+  ```java
+  public class Address {
+      private String province;
+      private String city;
+  }
+  ```
+  
+  `http://127.0.0.1:8080/complexPojo?name=fafa&age=20&address.province=%E5%9B%9B%E5%B7%9D&address.city=%E6%88%90%E9%83%BD`
 
 ### 1.4 数组集合参数
 
+- 数组参数：请求参数名与形参数组名称相同且请求参数为多个，定义数组类型形参即可接收参数
 
+  ```java
+  @RequestMapping("/arrayParam")
+  public String arrayParam(String[] hobby) {
+      System.out.println(Arrays.toString(hobby));
+      return "Ok";
+  }
+  ```
+
+  `http://127.0.0.1:8080/arrayParam?hobby=java&hobby=python`
+
+- 集合参数：请求参数名与形参集合名称相同且请求参数为多个，`@RequestParam`绑定参数关系
+
+  ```java
+  @RequestMapping("/listParam")
+  public String listParam(@RequestParam List<String> hobby) {
+      System.out.println(hobby);
+      return "Ok";
+  }
+  ```
+
+  `http://127.0.0.1:8080/listParam?hobby=java&hobby=python`
 
 ### 1.5 日期参数
 
+日期参数：使用`@DateTimeFormat`注解完成日期参数格式转换
 
+```java
+@RequestMapping("/dateParam")
+public String dateParam(@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime updateTime) {
+    System.out.println(updateTime);
+    return "OK";
+}
+```
+
+`http://127.0.0.1:8080/dateParam?updateTime=2022-12-12%2010:00:06`
 
 ### 1.6 Json 参数
 
+JSON参数：JSON 数据键名与形参对象属性名同，定义 POJO 类型形参即可接收参数，需要使用`@RequestBody`标识
 
+```java
+@RequestMapping("/jsonParam")
+public String jsonParam(@RequestBody User user) {
+    System.out.println(user);
+    return "OK";
+}
+```
 
 ### 1.7 路径参数
 
+路径参数：通过请求URL直接传递参数，使用 {...} 来标识该路径参数，需要使用`@PathVariable`获取路径参数
 
+```java
+@RequestMapping("/path/{id}/{username}")
+public String pathParam(@PathVariable Integer id, @PathVariable String username) {
+    System.out.println(id + " - " + username);
+    return "OK";
+}
+```
 
-
-
-
-
-
+`http://127.0.0.1:8080/path/50`
 
 ## 2 响应
 
+### 2.1 响应数据
 
+- `@ResponseBody`
+
+  - 类型：方法注解、类注解
+  - 位置：`Controller`方法上 / 类上
+  - 作用：将方法返回值直接响应，如果返回值类型是实体对象 / 集合，将会转换为 JSON 格式响应
+  - 说明：`@RestController` = `@Controller` + `@ResponseBody`
+
+- 统一响应结果
+
+  ```java
+  result(code, msg, data)
+  ```
+
+```java
+public class Result {
+    private int code;
+    private String msg;
+    private Object data;
+
+    public Result() {
+    }
+
+    public Result(int code, String msg, Object data) {
+        this.code = code;
+        this.msg = msg;
+        this.data = data;
+    }
+    ...
+        
+    public static Result success(Object data) {
+        return new Result(1, "success", data);
+    }
+
+    public static Result success() {
+        return new Result(1, "success", null);
+    }
+
+    public static Result error(String msg) {
+        return new Result(0, msg, null);
+    }
+    ...
+}
+```
+
+```java
+@RequestMapping("/hello")
+public Result hello() {
+    System.out.println("Hello World ~");
+    return Result.success("Hello World ~");
+}
+
+@RequestMapping("/getAddr")
+public Result getAddr() {
+    Address addr = new Address();
+    addr.setProvince("广东");
+    addr.setCity("深圳");
+    return Result.success(addr);
+}
+
+@RequestMapping("/listAddr")
+public Result listAddr() {
+    List<Address> list = new ArrayList<>();
+
+    Address addr1 = new Address();
+    addr1.setProvince("广东");
+    addr1.setCity("深圳");
+
+    Address addr2 = new Address();
+    addr2.setProvince("四川");
+    addr2.setCity("成都");
+
+    list.add(addr1);
+    list.add(addr2);
+
+    return Result.success(list);
+}
+```
+
+### 2.2 小案例：解析 xml 文件并响应
 
 
 
