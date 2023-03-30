@@ -1136,9 +1136,326 @@ public Result listAddr() {
 
 ### 2.2 小案例：解析 xml 文件并响应
 
+XmlParserUtils.java
 
+```java
+import org.dom4j.Document;
+import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
+
+import java.io.File;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+
+public class XmlParserUtils {
+
+    public static <T> List<T> parse(String file, Class<T> targetClass) {
+        ArrayList<T> list = new ArrayList<T>(); //封装解析出来的数据
+        try {
+            //1.获取一个解析器对象
+            SAXReader saxReader = new SAXReader();
+            //2.利用解析器把xml文件加载到内存中,并返回一个文档对象
+            Document document = saxReader.read(new File(file));
+            //3.获取到根标签
+            Element rootElement = document.getRootElement();
+            //4.通过根标签来获取 user 标签
+            List<Element> elements = rootElement.elements("emp");
+
+            //5.遍历集合,得到每一个 user 标签
+            for (Element element : elements) {
+                //获取 name 属性
+                String name = element.element("name").getText();
+                //获取 age 属性
+                String age = element.element("age").getText();
+                //获取 image 属性
+                String image = element.element("image").getText();
+                //获取 gender 属性
+                String gender = element.element("gender").getText();
+                //获取 job 属性
+                String job = element.element("job").getText();
+
+                //组装数据
+                Constructor<T> constructor = targetClass.getDeclaredConstructor(String.class, Integer.class, String.class, String.class, String.class);
+                constructor.setAccessible(true);
+                T object = constructor.newInstance(name, Integer.parseInt(age), image, gender, job);
+
+                list.add(object);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+}
+```
 
 ## 3 分层解耦
+
+### 3.1 三层架构
+
+- `controller`：控制层，接收前端发送的请求，对请求进行处理，并响应数据
+- `service`：业务逻辑层，处理具体的业务逻辑
+- `dao`: 数据访问层(Data Access obiect)(持久层)，负责数据访问操作，包括数据的增、删、改、查
+
+![image-20230330161016020](assets/image-20230330161016020.png)
+
+### 3.2 分层解耦
+
+- 内聚：软件中各个功能模块内部的功能联系
+- 耦合：衡量软件中各个层 / 模块之间的依赖、关联的程度
+- 软件设计原则：高内聚，低耦合
+
+![image-20230330161612142](assets/image-20230330161612142.png)
+
+- 控制反转：**I**nversion **o**f **c**ontrol，简称**IOC**。对象的创建控制权由程序自身转移到外部（容器），这种思想称为控制反转
+- 依赖注入：**D**ependency **I**njection，简称**DI**。容器为应用程序提供运行时，所依赖的资源，称之为依赖注入
+- Bean 对象：IOC 容器中创建、管理的对象，称之为 **bean**
+
+### 3.3 IOC & DI 入门
+
+![image-20230330162609897](assets/image-20230330162609897.png)
+
+### 3.4 lOC详解
+
+- Bean的声明
+
+  - 要把某个对象交给IOC容器管理，需要在对应的类上加上如下注解之一
+
+    |     注解      |          说明          |                             位置                             |
+    | :-----------: | :--------------------: | :----------------------------------------------------------: |
+    | `@Component`  |  声明`bean`的基础注解  |                  不属于以下三类时，用此注解                  |
+    | `@Controller` | `@Component`的衍生注解 | 标注在控制器类上<br>（因为`@RestController` = `@Controller` + `@ResponseBody`所以可以不加了） |
+    |  `@Service`   | `@Component`的衍生注解 |                        标注在业务类上                        |
+    | `@Repository` | `@Component`的衍生注解 |      标注在数据访问类上（由于与`mybatis`整合，用的少）       |
+
+  - 声明`bean`的时候，可以通过`value`属性指定`bean`的名字，如果没有指定，默认为类名首字母小写。
+
+    ```java
+    // @Component("dao")
+    @Component
+    public class EmpDaoA implements EmpDao {
+        ...
+    }
+    ```
+
+  - 使用以上四个注解都可以声明`bean`，但是在`springboot`集成`web`开发中，声明控制器`bean`只能用`@Controller`。
+
+- Bean 组件扫描
+
+  - 前面声明`bean`的四大注解，要想生效，还需要被组件扫描注解`@ComponentScan`扫描
+  - `@ComponentScan`注解虽然没有显式配置，但是实际上已经包含在了启动类声明注解`@SpringBootApplication`中，默认扫描的范围是启动类所在包及其子包。
+
+  所以，如果把需要扫描的包放到其他地方了（不推荐这个亚子），就可以重新配置`@SpringBootApplication`
+
+  ```java
+  // 重新配置
+  // "dao": 需要额外扫描的包
+  // "com.itheima": 当前类及其子包 由于重新配置会覆盖掉默认的 所以这个地方要重新写出来
+  @ComponentScan({"dao", "com.itheima"})
+  @SpringBootApplication  // 默认扫描当前包及其子包
+  public class SpringbootWebReqRespApplication {
+  
+      public static void main(String[] args) {
+          SpringApplication.run(SpringbootWebReqRespApplication.class, args);
+      }
+  
+  }
+  ```
+
+### 3.5 DI 详解
+
+#### 3.5.1 Bean 注入
+
+- `@Autowired`注解，默认是按照类型进行，如果存在多个相同类型的bean，将会报错。
+
+  - 通过以下几种方案来解决
+
+    - `@Primary`
+
+      ```java
+      @Primary
+      @Service
+      public class EmpServiceB implements EmpService {
+          ...
+      }
+      ```
+
+    - `@Qualifier`
+
+      ```java
+      @RestController
+      public class EmpController {
+          @Autowired // 运行时，IOC 容器会提供该类型的 bean 对象，并赋值给该变量 - 依赖注入
+          @Qualifier("empServiceA")
+          private EmpService empService;
+          ...
+      }
+      ```
+
+    - `@Resource`
+
+      ```java
+      @RestController
+      public class EmpController {
+          @Resource(name = "empServiceA")
+          private EmpService empService;
+          ...
+      }
+      ```
+
+#### 3.5.2 总结
+
+- `@Autowired`：默认按照类型自动装配。
+- 如果同类型的bean存在多个
+  - `@Primary`
+  - `@Autowired` + `@Qualifier("bean的名称”)`
+  - `@Resource(name="bean的名称”)`
+
+`@Resource`与`@Autowired`区别
+
+- `@Autowired`是 spring 框架提供的注解。而`@Resource`是 JDK 提供的注解
+- `@Autowired`默认是按照类型注入，而`@Resource`默认是按照名称注入。
+
+# day 06 数据库
+
+## 1 MySQL 概述
+
+### 1.1 数据库简介
+
+- 数据库：**D**ata**B**ase（DB），是存储和管理数据的仓库
+- 数据库管理系统：**D**ata**B**ase **M**anagement **S**ystem（DBMS），操纵和管理数据库的大型软件
+- SQL：**S**tructured **Q**uery **L**anguage，操作关系型数据库的编程语言，定义了一套操作关系型数据库统一标准。
+
+|   数据库   |                             简介                             |
+| :--------: | :----------------------------------------------------------: |
+|   Oracle   |             收费的大型数据库，Oracle公司的产品。             |
+|   MySQL    |                   开源免费的中小型数据库。                   |
+| SQL Server | Sun公司收购了MySOL，Oracle收购Sun公司MicroSoft公司收费的中型的数据库。C#、net等语言常使用。 |
+| PostgreSQL |                    开源免费中小型的数据库                    |
+|    DB2     |                 IBM公司的大型收费数据库产品                  |
+|   SQLite   |        嵌入式的微型数据库。如：作为Android内置数据库         |
+|  MariaDB   |                  开源免费的中小型的数据库。                  |
+
+### 1.2 数据模型
+
+`mysql -u用户名 -p密码 [-h数据库服务器IP地址 -P端口号]`
+
+关系型数据库（RDBMS）：建立在关系模型基础上，由多张相互连接的二维表组成的数据库
+
+- 特点
+  - 使用表存储数据，格式统一，便于维护
+  - 使用SQL语言操作，标准统一，使用方便，可用于复杂查询
+
+### 1.3 SQL 简介
+
+SQL：一门操作关系型数据库的编程语言，定义操作所有关系型数据库的统一标准
+
+- 通用语法
+
+  - SQL 语句可以单行或多行书写，以分号结尾
+  - SOL 语句可以使用空格 / 缩进来增强语句的可读性
+  - MySQL 数据库的 SQL 语句不区分大小写
+  - 注释
+    - 单行注释：`-- 注释内容`或`# 注释内容`（MySQL 特有）
+    - 多行注释：`/* 注释内容 */`
+
+- SQL 分类
+
+  | 分类 |                  全称                  |                          说明                          |
+  | :--: | :------------------------------------: | :----------------------------------------------------: |
+  | DDL  |  **D**ata **D**efinition **L**anguage  |  数据定义语言，用来定义数据库对象（数据库，表，字段）  |
+  | DML  | **D**ata **M**anipulation **L**anguage |     数据操作语言，用来对数据库表中的数据进行增删改     |
+  | DQL  |    **D**ata **Q**uery **L**anguage     |         数据查询语言，用来查询数据库中表的记录         |
+  | DCL  |   **D**ata **C**ontrol **L**anguage    | 数据控制语言，用来创建数据库用户、控制数据库的访问权限 |
+
+## 2 数据库设计 - DDL
+
+### 2.1 数据库操作
+
+- 查询所有数据库
+
+  ```sql
+  show databases;
+  ```
+
+- 创建数据库
+
+  ```sql
+  create database [if not exists] db01;
+  ```
+
+- 切换数据库
+
+  ```sql
+  use db01;
+  ```
+
+- 查看当前正在使用的数据库
+
+  ```sql
+  select database();
+  ```
+
+- 删除数据库
+
+  ```sql
+  drop database [if exists] dp04;
+  ```
+
+上述语法中的`database`，也可以替换成`schema`。如：`create schema db01;`。
+
+### 2.2 图形化界面
+
+- 介绍：DataGrip 是 JetBrains 旗下的一款数据库管理工具，是管理和开发 MySQL、Oracle、PostgreSQL 的理想解决方案
+- 官网：https://www.jetbrains.com/zh-cn/datagrip/
+- 安装：参考资料中提供的《DataGrip安装手册》
+
+### 2.3 表操作
+
+#### 2.3.1 创建
+
+```sql
+create table 表名(
+	字段1 字段类型[约束][comment 字段1注释],
+    ...
+    字段n 字段类型[约束][comment 字段n注释]
+)[ comment 表注释];
+```
+
+- 约束
+  - 概念：约束是作用于表中字段上的规则，用于限制存储在表中的数据
+  - 目的：保证数据库中数据的正确性、有效性和完整性
+
+|   约束   |                       描述                       |                  关键字                   |
+| :------: | :----------------------------------------------: | :---------------------------------------: |
+| 非空约束 |             限制该字段值不能为`null`             |                `not null`                 |
+| 唯一约束 |       保证字段的所有数据都是唯一、不重复的       |                 `unique`                  |
+| 主键约束 |     主键是一行数据的唯一标识，要求非空且唯一     | `primary key`<br>（`auto increment`自增） |
+| 默认约束 |   保存数据时，如果未指定该字段值，则采用默认值   |                 `default`                 |
+| 外键约束 | 让两张表的数据建立连接，保证数据的一致性和完整性 |               `foreign key`               |
+
+```sql
+create table tb_user(
+    id int primary key comment 'ID 唯一标识',
+    username varchar(20) not null unique comment '用户名',
+    name varchar(20) not null comment '姓名',
+    age int comment '年龄',
+    gender char(1) default '男' comment '性别'
+) comment '用户表';
+```
+
+
+
+
+
+
+
+
+
+
+
 
 
 
