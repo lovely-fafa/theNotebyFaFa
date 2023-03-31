@@ -1318,7 +1318,7 @@ public class XmlParserUtils {
 - `@Autowired`是 spring 框架提供的注解。而`@Resource`是 JDK 提供的注解
 - `@Autowired`默认是按照类型注入，而`@Resource`默认是按照名称注入。
 
-# day 06 数据库
+# day 06 数据库（上）
 
 ## 1 MySQL 概述
 
@@ -1446,6 +1446,219 @@ create table tb_user(
 ) comment '用户表';
 ```
 
+#### 2.3.2 数据类型
+
+数值类型
+
+|    类型     | 大小（byte） |                 有符号（SIGNED）范围                 |                  无符号（UNSIGNED）范围                  |        描述        |
+| :---------: | :----------: | :--------------------------------------------------: | :------------------------------------------------------: | :----------------: |
+| **tinyint** |      1       |                     (-128，127)                      |                         (0,255)                          |      小整数值      |
+|  smallint   |      2       |                   (-32768，32767)                    |                        (0，65535)                        |      大整数值      |
+|  mediumint  |      3       |                 (-8388608，8388607)                  |                      (0，16777215)                       |      大整数值      |
+|   **int**   |      4       |              (-2147483648，2147483647)               |                     (0，4294967295)                      |      大整数值      |
+| **bigint**  |      8       |                   (-2^63，2^63-1)                    |                       (0，2^64-1)                        |     极大整数值     |
+|    float    |      4       |       (-3.402823466 E+38，3.402823466351 E+38)       |        0 和 (1.175494351 E-38，3.402823466 E+38)         |   单精度浮点数值   |
+|   double    |      8       | (-1.7976931348623157 E+308,1.7976931348623157 E+308) | 0和 (2.2250738585072014 E-308，1.7976931348623157 E+308) |   双精度浮点数值   |
+|   decimal   |              |                                                      |                                                          | （小数值精度更高） |
+
+- 默认是有符号的，无符号需要在数据类型后加上关键字`unsigned`
+- float(5,2)：表示整个数字长度，2 表示小数位个数
+- double(5,2)：5表示整个数字长度，2表示小数位个数
+- decimal(5,2)：5表示整个数字长度，2表示小数位个数
+
+字符串类型
+
+|    类型     |         大小          |             描述             |
+| :---------: | :-------------------: | :--------------------------: |
+|  **char**   |      0-255 bytes      |          定长字符串          |
+| **varchar** |     0-65535 bytes     |          变长字符串          |
+|  tinyblob   |      0-255 bytes      | 不超过255个字符的二进制数据  |
+|  tinytext   |      0-255 bytes      |         短文本字符串         |
+|    blob     |    0-65 535 bytes     |    二进制形式的长文本数据    |
+|    text     |     0-65535 bytes     |          长文本数据          |
+| mediumblob  |  0-16 777 215 bytes   | 二进制形式的中等长度文本数据 |
+| mediumtext  |  0-16 777 215 bytes   |       中等长度文本数据       |
+|  longblob   | 0-4 294 967 295 bytes |   二进制形式的极大文本数据   |
+|  longtext   | 0-4 294 967 295 bytes |         极大文本数据         |
+
+- char(10)：最多只能存10个宇符，不足10个字符，占用10个字符空间
+- varchar(10)：最多只能存10个字符，不足10个字符，按照实际长度存储
+
+日期
+
+|     类型     | 大小(byte) |                    范围                    |        格式         |           描述           |
+| :----------: | :--------: | :----------------------------------------: | :-----------------: | :----------------------: |
+|   **date**   |     3      |          1000-01-01 至 9999-12-31          |     YYYY-MM-DD      |          日期值          |
+|     time     |     3      |          -838:59:59 至 838:59:59           |      HH:MM:SS       |     时间值或持续时间     |
+|     year     |     1      |                1901 至 2155                |        YYYY         |          年份值          |
+| **datetime** |     8      | 1000-01-01 00:00:00 至 9999-12-31 23:59:59 | YYYY-MM-DD HH:MM:SS |     混合日期和时间值     |
+|  timestamp   |     4      | 1970-01-01 00:00:01 至 2038-01-19 03:14:07 | YYYY-MM-DD HH:MM:SS | 混合日期和时间值，时间戳 |
+
+```sql
+create table db02.tb_emp
+(
+    id          int primary key auto_increment comment '主键ID',
+    username    varchar(20)                not null comment '用户名',
+    password    varchar(32) default 123456 not null comment '密码',
+    name        varchar(10)                not null comment '姓名',
+    gender      tinyint unsigned           null comment '性别 1:男 2:女',
+    image       varchar(300)               null comment '头像',
+    job         tinyint unsigned           null comment '职位 1:班主任 2:讲师 3:学工主管 4:教研主管',
+    entry_date  date                       null comment '入职日期',
+    create_time datetime                   not null comment '创建时间',
+    update_time datetime                   null comment '更新时间',
+    constraint tb_emp_pk2
+        unique (username)
+)
+    comment '员工表';
+```
+
+#### 2.3.3 查询
+
+- 查看数据库下的笔
+
+  ```sql
+  show tables;
+  ```
+
+- 查询表结构
+
+  ```sql
+  desc tb_emp;
+  ```
+
+- 查询建表语句
+
+  ```sql
+  show create table tb_emp;
+  ```
+
+#### 2.3.4 修改
+
+- 添加字段
+
+  ```sql
+  alter table tb_emp add qq varchar(11) comment 'QQ';
+  ```
+
+- 修改字段
+
+  ```sql
+  alter table tb_emp modify qq varchar(13) comment 'QQ';
+  ```
+
+- 修改字段名
+
+  ```sql
+  alter table tb_emp change qq qq_num varchar(13) comment 'QQ';
+  ```
+
+- 删掉字段
+
+  ```sql
+  alter table tb_emp change qq qq_num varchar(13) comment 'QQ';
+  ```
+
+- 修改表名
+
+  ```sql
+  rename table emp to tb_emp;
+  ```
+
+#### 2.3.5 删除
+
+```sql
+drop table if exists tb_emp;
+```
+
+## 3 数据库操作 - DML
+
+### 3.1 添加数据（insert）
+
+- 指定字段添加数据
+
+  ```sql
+  insert into 表名 (字段名1, 字段名2) values (值1, 值2);
+  insert into tb_emp (username, name, gender, create_time, update_time) values ('fafa', '发发', 0, now(), now());
+  ```
+
+- 全部字段添加数据
+
+  ```sql
+  insert into 表名 values (值1, 值2, ...);
+  insert into tb_emp value (null, "fafafa", '555555s', "发发发发", 2, '1.jpg', 1, '2010-01-01', now(), now())
+  ```
+
+- 批量添加数据（指定字段）
+
+  ```sql
+  insert into 表名 (字段名1, 字段名2) values (值1, 值2), (值1, 值2), ...;
+  
+  insert into tb_emp (username, name, gender, create_time, update_time)
+  values ('fafa1', '发发', 0, now(), now()),
+         ('fafa2', '发发', 0, now(), now()),
+         ('fafa3', '发发', 0, now(), now());
+  ```
+
+- 批量添加数据（全部字段）
+
+  ```sql
+  insert into 表名 values (值1, 值2, ...), (值1, 值2, ...), ...;
+  
+  insert into tb_emp value (null, "fafafa1", '555555s', "发发发发", 2, '1.jpg', 1, '2010-01-01', now(), now()),
+                           (null, "fafafa2", '555555s', "发发发发", 2, '1.jpg', 1, '2010-01-01', now(), now()),
+                           (null, "fafafa3", '555555s', "发发发发", 2, '1.jpg', 1, '2010-01-01', now(), now());
+  ```
+
+- 注意事项
+  1. 插入数据时，指定的字段顺序需要与值的顺序是一一对应的；
+  2. 字符串和日期型数据应该包含在引号中；
+  3. 插入的数据大小会应该在字段的规定范围内。
+
+### 3.2 修改数据（update）
+
+```sql
+update 表名 set 字段名1=值1, 字段名2=值2, ...[where 条件];
+
+update tb_emp set name = 'afaf', update_time = now() where id = 1;
+update tb_emp set entry_date = '2023-03-31', update_time = now();
+```
+
+修改语句的条件可以有，也可以没有，如果没有条件，则会修改整张表的所有数据。
+
+### 3.3 删除数据（delete）
+
+```sql
+delete from 表名 [where 条件];
+
+delete from tb_emp where id = 1;
+delete from tb_emp;
+```
+
+- 注意事项
+  1. `DELETE`语句的条件可以有，也可以没有，如果没有条件，则会删除整张表的所有数据
+  2. `DELETE`语句不能删除某一个字段的值（如果要操作，可以使用`UPDATE`，将该字段的值置为`NULL`）
+
+# day 08 数据库（下）
+
+## 1 数据库操作 - DQL
+
+```sql
+select
+    字段列表
+from
+    表名列表
+where
+    条件列表
+group by
+    分组字段列表
+having
+    分组后条件列表
+order by
+    排序字段列表
+limit
+    分页参数
+```
 
 
 
@@ -1481,4 +1694,22 @@ create table tb_user(
 
 
 
- 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
