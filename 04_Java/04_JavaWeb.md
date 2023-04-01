@@ -1660,6 +1660,150 @@ limit
     分页参数
 ```
 
+### 1.1 基本查询
+
+- 查询多个字段
+
+  ```sql
+  select 字段1, 字段2, ... from 表名;
+  
+  select name, entrydate from tb_emp;
+  ```
+
+- 查询所有字段（通配符）
+
+  ```sql
+  select * from tb_emp;
+  ```
+
+- 设置别名
+
+  `as`可以省略
+
+  别名如果有特殊符号需要引号引起来
+
+  ```sql
+  select 字段1 [[as] 别名1], 字段2 [[as] 别名2], ... from 表名;
+  
+  select name as 姓名, entrydate as 入职日期 from tb_emp;
+  select name 姓名, entrydate '入职 日期' from tb_emp;
+  ```
+
+- 去除重复记录
+
+  ```sql
+  select distinct 字段列表 from 表名;
+  
+  select distinct job from tb_emp;
+  ```
+
+注意事项：`*`号代表查询所有字段，在实际开发中尽量少用（不直观、影响效率）
+
+### 1.2 条件查询
+
+```sql
+select 字段列表 from 表名 where 条件列表;
+```
+
+|      比较运算符       |                      功能                      |
+| :-------------------: | :--------------------------------------------: |
+|          `>`          |                      大于                      |
+|         `>=`          |                    大于等于                    |
+|          `<`          |                      小于                      |
+|         `<=`          |                    小于等于                    |
+|          `=`          |                      等于                      |
+|      `<>`或`!=`       |                     不等于                     |
+| `between ... and ...` |        在某个范围之内（含最小、最大值）        |
+|       `in(...)`       |          在in之后的列表中的值，多选一          |
+|     `like 占位符`     | 模糊匹配（`_`匹配单个字符，`%`匹配任意个字符） |
+|       `is null`       |                    是`null`                    |
+
+| 逻辑运算符  |             功能             |
+| :---------: | :--------------------------: |
+| `and`或`&&` |   并且（多个条件同时成立）   |
+| `or`或`||`  | 或者（多个条件任意一个成立） |
+| `not`或`!`  |          非 ，不是           |
+
+```sql
+select * from tb_emp where name = '杨';
+
+select * from tb_emp where id <= 5;
+
+select * from tb_emp where job is null;
+
+select * from tb_emp where job is not null;
+
+select * from tb_emp where password <> '123456';
+select * from tb_emp where password != '123456';
+
+select * from tb_emp where entrydate >= '2000-01-01' and entrydate <= '2016-05-02';
+select * from tb_emp where entrydate between '2000-01-01' and '2016-05-02';
+
+select * from tb_emp where entrydate between '2000-01-01' and '2010-01-01' and gender = 2;
+
+select * from tb_emp where job = 2 or job = 3 or job = 4;
+select * from tb_emp where job in (2, 3, 4);
+
+select * from tb_emp where name like '__';
+select * from tb_emp where name like '张%';
+```
+
+### 1.3 分组查询
+
+介绍：将一列数据作为一个整体，进行纵向计算。
+
+```sql
+select 聚合函数(字段列表) from 表名
+```
+
+|  函数   |   功能   |
+| :-----: | :------: |
+| `count` | 统计数量 |
+|  `max`  |  最大值  |
+|  `min`  |  最小值  |
+|  `avg`  |  平均值  |
+|  `sum`  |   求和   |
+
+```sql
+# count(字段)
+select count(job) from tb_emp;  # 不对 null 值进行运算
+# count(常量)
+select count(0) from tb_emp;
+# count(*)  推荐使用
+select count(*) from tb_emp;
+
+select min(entrydate) from tb_emp;
+
+select max(entrydate) from tb_emp;
+
+select avg(id) from tb_emp;
+
+select sum(id) from tb_emp;
+```
+
+### 1.4 分组查询
+
+```sql
+select 字段列表 from 表名[where 条件] group by 分组字段名[having 分组后过滤条件];
+```
+
+```sql
+# 根据性别分组，统计男性和女性员工的数量 - count(*)
+select gender, count(*) from tb_emp group by gender;
+
+# 先查询入职时间在，2015-01-01 (包含) 以前的员工，并对结果根据职位分组，获取员工数量大于等于2的职位
+select job, count(*) from tb_emp where entrydate <= '2015-01-01' group by job having count(*) >= 2;
+```
+
+
+
+
+
+
+
+
+
+
 
 
 
