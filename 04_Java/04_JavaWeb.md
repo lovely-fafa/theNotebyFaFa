@@ -1795,13 +1795,168 @@ select gender, count(*) from tb_emp group by gender;
 select job, count(*) from tb_emp where entrydate <= '2015-01-01' group by job having count(*) >= 2;
 ```
 
+- `where`与`having`区别
+  1. 执行时机不同：`where`是分组之前进行过滤，不满足`where`条件，不参与分组；而`having`是分组之后对结果进行过滤。
+  2. 判断条件不同：`where`不能对聚合函数进行判断，而`having`可以
+- 注意事项
+  - 分组之后，查询的字段一般为聚合函数和分组字段，查询其他字段无任何意义
+  - 执行顺序：`where` > 聚合函数 > `having`
 
+### 1.5 排序查询
 
+```sql
+select 字段列表 from 表名 [where 条件列表] [group by 分组字段] order by 字段1 排序方式1, 字段2 排序方式2, ...;
 
+ASC：升序(默认值)
+DESC：降序
+```
 
+```sql
+# 根据 入职时间 对公司的员工进行 降序排序
+select * from tb_emp order by entrydate desc;
 
+# 根据 入职时间 对公司的员工进行 升序排序，入职时间相同，再按照 更新时间 进行降序排序
+select * from tb_emp order by entrydate, update_time desc;
+```
 
+注意事项：如果是多字段排序，当第一个字段值相同时，才会根据第二个字段进行排序。
 
+### 1.6 分页查询
+
+```sql
+select 字段列表 from 表名 limit 起始索引, 查询记录数;
+```
+
+```sql
+# 1.从起始索引0开始查询员工数据，每页展示 5 条记录
+select * from tb_emp limit 0, 5;
+
+# 2.查询 第1页 员工数据，每页展示 5 条记录
+select * from tb_emp limit 0, 5;
+
+# 3，查询 第2页 员工数据，每页展示 5 条记录
+select * from tb_emp limit 5, 5;
+
+# 4.查询 第3页 员工数据，每页展示 5 条记录
+select * from tb_emp limit 10, 5;
+```
+
+- 注意事项
+  - 起始索引从0开始，起始索引 = (查询页码 - 1) * 每页显示记录数
+  - 分页查询是数据库的方言，不同的数据库有不同的实现，MySQL 中是`LIMIT`
+  - 如果查询的是第一页数据，起始索引可以省略，直接简写为`limit 10`
+
+### 1.7 综合案例
+
+```sql
+# 案例1 : 按需求完成员工管理的条件分页查询 - 根据输入条件，查询第一页数据，每页展示10条记录输入条件:
+# 姓名:张
+# 性别: 男--
+# 入职时间: 2000-01-01   2015-12-31
+select *
+from tb_emp
+where name like '%张%'
+  and gender = 1
+  and entrydate between '2000-01-01' and '2015-12-31'
+order by update_time desc
+limit 0, 10;
+```
+
+```sql
+# 案俩2-1: 想据需求，定成员工性别信息的统计 - count (*)
+# if(条件表达式, true 取值, false 取值)
+select if(gender = 1, '男性员工', '女性员工') as 性别, gender, count(*) from tb_emp group by gender;
+```
+
+|      |   性别   | gender | count(*) |
+| :--: | :------: | :----: | :------: |
+|  1   | 男性员工 |   1    |    24    |
+|  2   | 女性员工 |   2    |    5     |
+
+```sql
+# 案例2-2: 想据需求，完成员工职位信息的统计
+# case 表达式 when 值1 then 结果1 when 值2 then 结果2 ... else ... end;
+select (case job
+            when 1 then '班主任'
+            when 2 then '讲师'
+            when 3 then '学工主管'
+            when 4 then '教研组管'
+            else '未分配' end) as '职工信息', count(*)
+from tb_emp
+group by job;
+```
+
+|      | 职工信息 | count(*) |
+| :--: | :------: | :------: |
+|  1   | 教研组管 |    1     |
+|  2   |   讲师   |    21    |
+|  3   | 学工主管 |    1     |
+|  4   |  班主任  |    5     |
+|  5   |  未分配  |    1     |
+
+- 函数
+
+  ```sql
+  # 当表达式为`true`时，取值`tvalue`；当表达式为`false`时，取值`fvalue`
+  if(表达式, tvalue, fvalue)
+  ```
+
+  ```sql
+  case expr when value1 then result1 [when value2 then value2 ...] [else result] end
+  ```
+
+## 2 多表设计
+
+### 2.1 概述
+
+项目开发中，在进行数据库表结构设计时，会根据业务需求及业务模块之间的关系，分析并设计表结构，由于业务之间相互关联，所以各个表结构之间也存在着各种联系，基本上分为三种
+
+- 一对多（多对一）
+- 多对多
+- 一对一
+
+### 2.2 一对多
+
+#### 2.2.1 一对多代码
+
+```sql
+# 创建表时指定
+create table 表名(
+	字段名 数据类型
+    ...
+	[constraint] [外键名称] foreign key(外键字段名) references 主表(字段名)
+);
+
+# 建完表后，添加外键
+alter table 表名 add constraint 外键名称 foreign key(外键字段名) references 主表(字段名);
+```
+
+#### 2.2.2 物理外键
+
+- 概念：使用`foreign key`定义外键关联另外一张表
+- 缺点
+  - 影响增、删、改的效率（需要检查外键关系）
+  - 仅用于单节点数据库，不适用与分布式、集群场景
+  - 容易引发数据库的死锁问题，消耗性能
+
+#### 2.2.3 逻辑外键
+
+- 概念：在业务层逻辑中，解决外键关联
+- 通过逻辑外键，就可以很方便的解决上述问题
+
+### 2.3 一对一
+
+- 案例：用户与身份证信息的关系
+- 关系：一对一关系，多用于单表拆分，将一张表的基础字段放在一张表中，其他字段放在另一张表中，以提升操作效率
+- 实现：在任意一方加入外键，关联另外一方的主键，并且设置外键为唯一的`UNIQUE`
+
+### 2.4 多对多
+
+实现：建立第三张中间表，中间表至少包含两个外键，分别关联两方主键
+
+![image-20230402201218548](assets/image-20230402201218548.png)
+
+### 2.5 案例
 
 
 
