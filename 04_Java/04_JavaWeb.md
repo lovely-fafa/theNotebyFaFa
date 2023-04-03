@@ -1639,7 +1639,7 @@ delete from tb_emp;
   1. `DELETE`语句的条件可以有，也可以没有，如果没有条件，则会删除整张表的所有数据
   2. `DELETE`语句不能删除某一个字段的值（如果要操作，可以使用`UPDATE`，将该字段的值置为`NULL`）
 
-# day 08 数据库（下）
+# day 08 数据库（中）
 
 ## 1 数据库操作 - DQL
 
@@ -1958,43 +1958,255 @@ alter table 表名 add constraint 外键名称 foreign key(外键字段名) refe
 
 ### 2.5 案例
 
+# day 09 数据库（下）
 
+## 1 多表查询
 
+### 1.1 概述
 
+- 多表查询：指从多张表中查询数据
+- 笛卡尔积：笛卡尔乘积是指在数学中，两个集合(A集合和B集合)的所有组合情况
 
+- 分类
+  - 连接查询
+    - 内连接：相当于查询A、B交集部分数据
+    - 外连接
+      - 左外连接：查询左表所有数据（包括两张表交集部分数据）
+      - 右外连接：查询右表所有数据（包括两张表交集部分数据）
+  - 子查询
 
+### 1.2 内连接查询
 
+- 隐式内连接
 
+  ```sql
+  select 字段列表 from 表1,表2 where 条件 ...;
+  ```
 
+- 显式内连接
 
+  ```sql
+  select 字段列表 from 表1 [inner] join 表2 on 连接条件 ...;
+  ```
 
+```sql
+# 1. 查询员工的姓名，及所属的部门名称 (隐式内连接实现)
+select emp.name, dept.name from dept, emp where dept.id = emp.dept_id;
 
+# 2. 查询员工的姓名，及所属的部门名称 (显式内连接实现)
+select emp.name, dept.name from dept inner join emp on dept.id = emp.dept_id;
 
+# 起别名
+select e.name, d.name from emp e, dept d where d.id = e.dept_id;
+```
 
+### 1.3 外连接查询
 
+- 左外连接
 
+  ```sql
+  select 字段列表 from 表1 left [outer] join 表2 on 连接条件 ...;
+  ```
 
+- 右外连接
 
+  ```sql
+  select 字段列表 from 表1 right [outer] join 表2 on 连接条件 ...;
+  ```
 
+```sql
+# 1. 查询员工表 所有 员工的姓名， 和对应的部门名称 (左外连接)
+select e.name, d.name from emp e left outer join dept d on d.id = e.dept_id;
 
+# 2. 查询部表 所有 部的名称，和对应的员工名称 (外连接)
+select e.name, d.name from emp e right outer join dept d on e.dept_id = d.id;
+select e.name, d.name from dept d left outer join emp e on e.dept_id = d.id;
+```
 
+### 1.4 子查询
 
+#### 1.4.1 概述
 
+- 介绍：SQL语句中嵌套`select`语句，称为嵌套查询，又称子查询。
 
+- 形式
 
+  ```sql
+  select * from tl where column1 = ( select column1 from t2 ... );
+  ```
 
+- 子查询外部的语句可以是`insert`、`update`、`delete`、`select`的任何一个，最常见的是 select。
 
+#### 1.4.2 分类
 
+- 标量子查询：子查询返回的结果为单个值
+- 列子查询：子查询返回的结果为一列
+- 行子查询：子查询返回的结果为一行
+- 表子查询：子查询返回的结果为多行多列
 
+#### 1.4.3 标量子查询
 
+- 子查询返回的结果是单个值（数字、字符串、日期等），最简单的形式
+- 常用的操作符：`=`、`<>`、`>`、`>=`、`<`、`<=`
 
+```sql
+# 1. 查询“教研部”的所有员工信息
+select * from emp where dept_id = (select id from dept where name = '教研部');
 
+# 2. 查询在“方东白” 入职之后的员工信息
+select * from emp where entrydate > (select entrydate from emp where name = '方东白');
+```
 
+#### 1.4.4 列子查询
 
+- 子查询返回的结果是一列（可以是多行）
+- 常用的操作符：`in` 、`not in`等
 
+```sql
+# 列子查询
+# 1. 查询“教研部”和“咨询部” 的所有员工信息
+select * from emp where dept_id in (select id from dept where name = '教研部' or name = '咨询部');
+```
 
+#### 1.4.5 行子查询
 
+- 子查询返回的结果是一行（可以是多列）
+- 常用的操作符：`=`、`<>`、`in` 、`not in`
 
+```sql
+# 行子查询
+# 1. 查询与"韦一笑”的入职日期 及 职位都相同的员工信息
+select entrydate, job from emp where name = '韦一笑';
+
+select * from emp where entrydate = '2007-01-01' and job = 2;
+select * from emp where (entrydate, job) = ('2007-01-01', 2);
+
+select * from emp where (entrydate, job) = (select entrydate, job from emp where name = '韦一笑');
+```
+
+#### 1.4.6 表子查询
+
+- 子查询返回的结果是多行多列，常作为临时表
+- 常用的操作符：`in`
+
+```sql
+# 表子查询
+# 1. 查询入职日期是 “2006-01-01”之后的员工信息，及其部名称
+select * from (select * from emp where entrydate > '2006-01-01') e, dept d where e.dept_id = d.id;
+```
+
+### 1. 5 综合案例
+
+```sql
+# 1. 查询价格低于 10元 的菜品的名称、价格 及其 品的分类名称
+select d.name, d.price, c.name
+from dish d,
+     category c
+where d.category_id = c.id
+  and d.price < 10;
+
+# 2. 查询所有价格在 10元(含)到50元(含)之同 且 状态为起售”的菜品，
+# 展示出菜品的名称、价格 及其 品的分类名称 即便英品没有分类 ，也需要将菜品查询出来。
+select d.name, d.price, c.name
+from dish d
+         left outer join category c on d.category_id = c.id
+where d.price between 10 and 50
+  and d.status = 1;
+
+# 3. 查询每个分类下最贵的菜品，展示出分类的名称、最贵的菜品的价格
+select c.name, max(d.price), d.name
+from dish d,
+     category c
+where d.category_id = c.id
+group by c.name;
+
+# 4. 查询各个分类下 菜品状态为‘起售’， 并且 该分类下菜总数大于等于 3 的 分类名称
+select c.name, count(*) count
+from dish d,
+     category c
+where d.category_id = c.id
+  and d.status = 1
+group by c.name
+having count >= 3;
+
+# 5. 查询出“商务套餐A” 中包含了哪些菜品(展示出套餐名称、价格，包含的菜品名称、价格、份数)
+select s.name, s.price, d.name, d.price, sd.copies
+from setmeal s,
+     setmeal_dish sd,
+     dish d
+where s.id = sd.setmeal_id
+  and sd.dish_id = d.id
+  and s.name = '商务套餐A';
+
+# 6. 查询出低于菜品平均价格的菜品信息 (展示出菜品名称、菜品价格)
+select d.name, d.price
+from dish as d
+where d.price < (select avg(d.price) from dish d);
+```
+
+## 2 实务
+
+### 2.1 概念
+
+**事务**是一组操作的集合，它是一个不可分割的工作单位。事务会把所有的操作作为一个整体一起向系统提交或撤销操作请求，即这些
+操作**要么同时成功，要么同时失败**。
+
+例如，下面这个，是一步一步执行的，是不应该的。违反了事务的一致性`Consistency`。
+
+```sql
+# 删除部门
+delete from dept where id = 1;
+
+# 删除 员工表
+delete from emp where dept_id = 1;
+```
+
+默认情况下，MySQL 的事务是自动提交的，也就是说，当执行一条 DML 语句，MySOL 会立即隐式的提交事务。
+
+### 2.2 事务操作
+
+- 开启事务：`start transaction;`或 `begin ;`
+- 提交事务：`commit;`
+- 回滚事务：`rollback;`
+
+```sql
+# 开启事务
+start transaction;
+
+# 删除部门
+delete from dept where id = 2;
+
+# 删除 员工表
+delete from emp where dept_id == 2;
+
+# 提交事务
+commit;
+
+# 回滚事务
+rollback;
+```
+
+### 2.3 四大特性
+
+- 原子性`Atomicity`
+
+  事务是不可分割的最小单元，要么全部成功，要么全部失败
+
+- 一致性`Consistency`
+
+  事务完成时，必须使所有的数据都保持一致状态
+
+- 隔离性`lsolation`
+
+  数据库系统提供的隔离机制，保证事务在不受外部并发操作影响
+
+- 持久性`Durability`
+
+  事务一旦提交或回滚，它对数据库中的数据的改变就是永久的的独立环境下运行
+
+## 3 索引
+
+素引（index）是帮助数据库**高效获取数据**的**数据结构**。
 
 
 
