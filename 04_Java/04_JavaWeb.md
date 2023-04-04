@@ -1515,7 +1515,7 @@ create table db02.tb_emp
 
 #### 2.3.3 查询
 
-- 查看数据库下的笔
+- 查看数据库下的表
 
   ```sql
   show tables;
@@ -2206,9 +2206,176 @@ rollback;
 
 ## 3 索引
 
-素引（index）是帮助数据库**高效获取数据**的**数据结构**。
+### 3.1 介绍
+
+- 素引（index）是帮助数据库**高效获取数据**的**数据结构**。
+- 优点
+  - 提高数据查询的效率，降低数据库的 IO 成本
+  - 通过索引列对数据进行排序，降低数据排序的成本降低 CPU 消耗
+- 缺点
+  - 索引会占用存储空间
+  - 索引大大提高了查询效率，同时却也降低了`insert`、`update`、`delete`的效率
+
+### 3.2 结构
+
+MySQL 数据库支持的索引结构有很多，如：`Hash`索引、`B+Tree`索引、`Full-Text`索引等。我们平常所说的索引，如果没有特别指明，都是指默认的`B+Tree`（多路平衡搜索树）结构组织的索引。
+
+大数据量情况下，层级深，检索速度慢，所以没有使用二叉平衡树或红黑树。
+
+![image-20230404124059030](assets/image-20230404124059030.png)
+
+- 每一个节点，可以存储多个`key`（有`n`个`key`，就有`n`个指针）
+- 所有的数据都存储在叶子节点，非叶子节点仅用于索引数据
+- 叶子节点形成了一颗双向链表，便于数据的排序及区间范围查询
+
+### 3.3 语法
+
+- 创建索引
+
+  ```sql
+  create [unique] index 索引名 on 表名 (字段名, ...);
+  ```
+
+- 查看索引
+
+  ```sql
+  show index from 表名;
+  ```
+
+- 删除索引
+
+  ```sql
+  drop index 索引名 on 表名;
+  ```
+
+```sql
+# 创建
+create index idx_emp_name on emp(name);
+
+# 查询
+show index from emp;
+
+# 删除
+drop index idx_emp_name on emp;
+```
+
+- 注意事项
+  - 主键字段，在建表时，会自动创建主键索引。主键索引性能最高
+  - 添加唯一约束时，数据库实际上会添加唯一索引
+
+## 4 Mybatis 入门
+
+MyBatis 是一款优秀的**持久层**框架，用于简化 JDBC 的开发
+
+### 4.1 快速入门
+
+![image-20230404175121531](assets/image-20230404175121531.png)
+
+### 4.2 JDBC介绍
+
+- JDBC：（**J**ava **D**ata**B**ase **C**onnectivity），就是使用 Java 语言操作关系型数据库的一套 API
+- sun 公司官方定义的一套操作所有关系型数据库的规范，即接口
+- 各个数据库厂商去实现这套接口，提供数据库驱动 jar 包
+- 我们可以使用这套接口（DBC）编程，真正执行的代码是驱动 jar 包中的实现类
+
+### 4.3 数据库连接池
+
+#### 4.3.1 简介
+
+- 数据库连接池是个容器，负责分配、管理数据库连接（Connection）
+- 它允许应用程序重复使用一个现有的数据库连接，而不是再重新建立一个
+- 释放空闲时间超过最大空闲时间的连接，来避免因为没有释放连接而引起的数据库连接遗漏
+
+- 优势
+  - 资源重用
+  - 提升系统响应速度
+  - 避免数据库连接遗漏
+
+- 标准接口：`DataSource`
+  - 官方（sun）提供的数据库连接池接口，由第三方组织实现此接口
+  - 功能：获取连接：`Connection getConnection() throwsSOLException;`
+- 常见产品
+  - C3P0
+  - DBCP
+  - Druid（德鲁伊）
+    - Druid 连接池是阿里巴巴开源的数据库连接池项目
+    - 功能强大，性能优秀，是 Java 语言最好的数据库连接池之一
+  - Hikari（追光者）
+    - Springboot 默认
+
+#### 4.3.2 切换数据库连接池
+
+- 官方地址: https://github,com/alibaba/druid/tree/master/druid-spring-boot-starter
+
+```xml
+<dependency>
+    <groupld>com.alibaba</groupld>
+    <artifactld>druid-spring-boot-starter</artifactld>
+    <version>1.2.8</version>
+</dependency>
+```
+
+```properties
+spring.datasource.driver-class-name=com.mysqlcj.jdbc.Driver
+spring.datasource.url=jdbc:mysgl://localhost:3306/mybatis
+spring.datasource.username=root
+spring.datasource.password=1234
+```
+
+### 4.4 lombok
+
+Lombok 是一个实用的 Java 类库，能通过注解的形式自动生成构造器、`getter`/`setter`、`equals`、`hashcode`、`toString`等方法，并可以自动化生成日志变量，简化 java 开发、提高效率。
+
+|           注解            |                             作用                             |
+| :-----------------------: | :----------------------------------------------------------: |
+|   `@Getter` / `@Setter`   |               为所有的属性提供`get`/`set`方法                |
+|        `@ToString`        |             会给类自动生成易阅读的`tostring`方法             |
+|   `@EqualsAndHashCode`    | 根据类所拥有的非静态字段自动重写`equals`方法和`hashCode`方法 |
+|        **`@Data`**        | 提供了更综合的生成代码功能：`@Getter`+`@Setter`+`@Totring`+`@EqualsAndHashCode` |
+| **`@NoArgsConstructor`**  |                 为实体类生成无参的构造器方法                 |
+| **`@AllArgsConstructor`** | 为实体类生成除了`static`修饰的字段之外带有各参数的构造器方法 |
+
+注意事项：Lombok 会在编译时，自动生成对应的 Java 代码。我们使用 lombok 时，还需要安装一个 lombok 的插件（idea 自带）。
+
+# day 10
+
+## 5 Mybatis 基础增删改查
+
+### 5.1 根据主键删除
+
+```sql
+// 根据 id 删除数据
+@Delete("delete from emp where id = #{id}")
+// public void delete(Integer id);
+public int delete(Integer id);
+```
+
+注意事项：如果`mapper`接口方法形参只有一个普通类型的参数，`#{}`里面的属性名可以随便写，如：`#{id}`、`#{value}`
+
+### 5.2 日志输出
+
+- 可以在`application.properties`中，打开`mybatis`的日志，并指定输出到控制台
+
+```sql
+# 指定 mybatis 输出日志的位置,输出控制台
+mybatis.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl
+```
+
+- 预编译 SQL
+
+  - 性能更高
+
+  - 更安全（防止 SQL 注入）
+
+    SQL 注入是通过操作输入的数据来修改事先定义好的 SQL 语句，以达到执行代码对服务器进行**攻击**的方法。
 
 
+
+
+
+
+
+## 6 Mybatis 动态 SQL
 
 
 
