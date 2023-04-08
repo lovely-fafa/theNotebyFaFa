@@ -2337,6 +2337,14 @@ Lombok 是一个实用的 Java 类库，能通过注解的形式自动生成构�
 
 注意事项：Lombok 会在编译时，自动生成对应的 Java 代码。我们使用 lombok 时，还需要安装一个 lombok 的插件（idea 自带）。
 
+解决报错：
+
+![image-20230405160105790](assets/image-20230405160105790.png)
+
+`-Djps.track.ap.dependencies=false`
+
+【File】-【Invalidate Caches】
+
 # day 10
 
 ## 5 Mybatis 基础增删改查
@@ -2357,25 +2365,670 @@ public int delete(Integer id);
 - 可以在`application.properties`中，打开`mybatis`的日志，并指定输出到控制台
 
 ```sql
-# 指定 mybatis 输出日志的位置,输出控制台
+# 指定 mybatis 输出日志的位置 输出控制台
 mybatis.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl
 ```
 
-- 预编译 SQL
+### 5.3 预编译 SQL
 
-  - 性能更高
+- 性能更高
 
-  - 更安全（防止 SQL 注入）
+- 更安全（防止 SQL 注入）
 
-    SQL 注入是通过操作输入的数据来修改事先定义好的 SQL 语句，以达到执行代码对服务器进行**攻击**的方法。
+  SQL 注入是通过操作输入的数据来修改事先定义好的 SQL 语句，以达到执行代码对服务器进行**攻击**的方法。
 
+  ```sql
+  ' or '1' = '1
+  ```
 
+- 参数占位符
 
+  - `#{...}`
+    - 执行SQL时，会将`#{...}`替换为`?`，生成预编译 SQL，会自动设置参数值
+    - 使用时机：参数传递，都使用`#{...}`
+  - `${...}`
+    - 拼接SQL时，直接将参数拼接在 SQL 语句中，存在SQL注入问题
+    - 使用时机：如果对表名、列表进行动态设置时使用
 
+### 5.4 新增
 
+#### 5.4.1 语法
 
+```java
+@Insert("insert into emp(username, name, gender, image, job, entrydate, dept_id, create_time, update_time) values (#{username}, #{name}, #{gender}, #{image}, #{job}, #{entryDate}, #{deptId}, #{createTime}, #{updateTime})")
+public void insert(Emp emp);
+```
+
+```java
+public void testInsert() {
+    Emp emp = new Emp();
+    emp.setUsername("Tom");
+    emp.setName("汤姆");
+    emp.setImage("1.jpg");
+    emp.setGender((short) 1);
+    emp.setJob((short) 1);
+    emp.setEntryDate(LocalDate.of(2000, 1, 1));
+    emp.setCreateTime(LocalDateTime.now());
+    emp.setUpdateTime(LocalDateTime.now());
+    emp.setDeptId(1);
+
+    empMapper.insert(emp);
+}
+```
+
+#### 5.4.2 主键返回
+
+描述：在数据添加成功后，需要获取插入数据库数据的主键。如：添加套餐数据时，还需要维护套餐菜品关系表数据。
+
+```java
+@Options(useGeneratedKeys = true,  // 要获取返回主键
+        keyProperty = "id")  // 赋值给 emp 的 id 属性
+@Insert("insert into emp(username, name, gender, image, job, entrydate, dept_id, create_time, update_time) values (#{username}, #{name}, #{gender}, #{image}, #{job}, #{entryDate}, #{deptId}, #{createTime}, #{updateTime})")
+public void insert(Emp emp);
+```
+
+### 5.5 更新
+
+```java
+@Update("update emp set username = #{username}, name = #{name}, gender = #{gender}, image = #{image}, job = #{job}, entrydate = #{entryDate}, dept_id = #{deptId} where id = #{id}")
+public void update(Emp emp);
+```
+
+```java
+@Test
+public void testUpdate() {
+    Emp emp = new Emp();
+    emp.setId(19);
+    emp.setUsername("Tom 2");
+    emp.setName("汤姆 2");
+    emp.setImage("1.jpg");
+    emp.setGender((short) 1);
+    emp.setJob((short) 1);
+    emp.setEntryDate(LocalDate.of(2000, 1, 1));
+    emp.setCreateTime(LocalDateTime.now());
+    emp.setUpdateTime(LocalDateTime.now());
+    emp.setDeptId(1);
+
+    empMapper.update(emp);
+}
+```
+
+### 5.6 查询（根据 ID 查询）
+
+#### 5.6.1 语法
+
+```java
+@Select("select * from emp where id = #{id}")
+public Emp getById(Integer id);
+```
+
+```java
+@Test
+public void testGetById() {
+    Emp emp = empMapper.getById(19);
+    System.out.println(emp);
+}
+```
+
+#### 5.6.2 数据封装
+
+- 实体类属性名和数据库表查询返回的字段名一致，mybatis 会自动封装
+- 如果实体类属性名和数据库表查询返回的字段名不一致，不能自动封装
+
+```java
+// 解决方法一：给字段起别名 让别名和实体类的属性一致
+@Select("select id, username, password, name, gender, image, job, entrydate, dept_id deptId, create_time crrateTime, update_time updateTime from emp where id = #{id}")
+public Emp getById(Integer id);
+
+// 解决方法二：通过 @Results 与 @Result 手动映射封装
+@Results({
+    @Result(column = "dept_id", property = "deptId"),
+    @Result(column = "create_time", property = "createTime"),
+    @Result(column = "update_time", property = "updateTime")
+})
+@Select("select * from emp where id = #{id}")
+public Emp getById(Integer id);
+
+// 解决方法三：开启 mybatis 的驼峰命名自动映射开关 --- a_column --> aColumn
+@Select("select * from emp where id = #{id}")
+public Emp getById(Integer id);
+```
+
+```properties
+# 开启驼峰命名自动映射，即从数据库字段名 a_column 映射到 Java 属性名 aColumn
+mybatis.configuration.map-underscore-to-camel-case=true
+```
+
+### 5.7 查询（条件查询）
+
+```java
+public void testList(){
+    List<Emp> list = empMapper.list("张", (short) 1, LocalDate.of(2010, 1, 1), LocalDate.of(2020, 1, 1));
+    list.stream().forEach(emp -> {
+        System.out.println(emp);
+    });
+}
+```
+
+```java
+// 根据条件查询
+// 此处使用 #{} 是写死到字符串里面的 是不对的 所以这个地方就使用了 ${} 进行字符串的拼接
+@Select("select * from emp where name like '%${name}%' and gender = #{gender} and entrydate between #{begin} and #{end} order by update_time desc")
+// 也可以使用 字符串 的拼接函数 concat
+@Select("select * from emp where name like concat('%', #{name} , '%') and gender = #{gender} and entrydate between #{begin} and #{end} order by update_time desc")
+public List<Emp> list(String name, short gender, LocalDate begin, LocalDate end);
+```
+
+注意：参数名说明。在 SpringBoot 的 1.x 版本或单独使用 mybatis，多个参数需要```@Param```
+
+```java
+@Select("select * from emp where name like concat('%',#(name),'g') and gender = #igender) and " +"entrydate between #{begin) and #lend) order by update time desc")
+public List<Emp> list(@Param("name")String name, @Param("gender") Short gender, @Param("begin") LocalDate begin, @Param("end") LocalDat end);
+```
+
+因为编译后的字节码文件中，参数形参的名称会变为`var1`、`var2`、...，所就需要```@Param```。
+
+## 6 XML 映射文件
+
+- XML 映射文件的名称与 Mapper 接口名称一致，并且将 XML 映射文件和 Mapper 接口放置在相同包下（同包同名）
+- XML 映射文件的 namespace 属性为 Mapper 接口全限定名一致
+- XML 映射文件中 sql 语句的 id 与 Mapper 接口中的方法名一致，并保持返回类型一致
+
+![image-20230405171008009](assets/image-20230405171008009.png)
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.mapper.EmpMapper">
+    
+</mapper>
+```
+
+```xml
+<!--  resultType 是单条记录的类型  -->
+<select id="list" resultType="com.itheima.pojo.Emp">
+    select * from emp where name like concat('%', #{name} , '%') and gender = #{gender} and entrydate between #{begin} and #{end} order by update_time desc
+</select>
+```
+
+使用 Mybatis 的注解，主要是来完成一些简单的增删改查功能。如果需要实现复杂的 SQL 功能，建议使用 XML 来配置映射语句。
+
+官方说明：https://mybatis.net.cn/getting-started.html
 
 ## 6 Mybatis 动态 SQL
+
+随着用户的输入或外部条件的变化而变化的 SQL 语句，我们称为**动态SQL**
+
+### 6.1 if
+
+- `<if>`：用于判断条件是否成立。使用`test`属性进行条件判断，如果条件为`true`，则拼接 SQL
+- `<where>` ：`<where>` 元素只会在子元素有内容的情况下才插入`where`子句。而且会自动去除子句的开头的`AND`或`OR`
+
+```xml
+<select id="list" resultType="com.itheima.pojo.Emp">
+    select *
+    from emp
+    <!--  作用一：根据条件决定是否有 where  -->
+    <!--  作用二：根据情况 条件之间 and 拼接  -->
+    <where>
+        <if test="name != null">
+            name like concat('%', #{name}, '%')
+        </if>
+        <if test="gender != null">
+            and gender = #{gender}
+        </if>
+        <if test="begin != null and end != null">
+            and entrydate between #{begin} and #{end}
+        </if>
+    </where>
+    order by update_time desc
+</select>
+```
+
+- `<set>`：动态地在行首插入`SET`关键字，并会删掉额外的逗号。 （用在`update`语句中）
+
+```xml
+<!--  动态更新 数据  -->
+<update id="update2">
+    update emp
+    <set>
+        <if test="username != null">
+            username = #{username},
+        </if>
+        <if test="name != null">
+            name = #{name},
+        </if>
+        <if test="gender != null">
+            gender = #{gender},
+        </if>
+        <if test="image != null">
+            image = #{image},
+        </if>
+        <if test="job != null">
+            job = #{job},
+        </if>
+        <if test="entryDate != null">
+            entrydate = #{entryDate},
+        </if>
+        <if test="deptId != null">
+            dept_id = #{deptId},
+        </if>
+    </set>
+    where id = #{id}
+</update>
+```
+
+### 6.2 foreach
+
+```xml
+<!--  批量删除员工  -->
+<!--
+  collection: 遍历的集合
+  item: 遍历出来的元素
+  separator:分隔符
+  open: 遍历开始前拼接的SQL片段
+  close: 遍历结束后拼接的SQL片段
+  -->
+<delete id="deleteByIds">
+    delete from emp where id in
+    <foreach collection="ids" item="id" separator="," open="(" close=")">
+        #{id}
+    </foreach>
+</delete>
+```
+
+### 6.3 sql...incline
+
+- `<sql>`：定义可重用的 SQL 片段
+- `<include>`：通过属性`refid`，指定包含的 SQL 片段
+
+```xml
+<!--  抽取  -->
+<sql id="commonSelect">
+    select id,
+           username,
+           password,
+           name,
+           gender,
+           image,
+           job,
+           entrydate,
+           dept_id,
+           create_time,
+           update_time
+    from emp
+</sql>
+
+<!--  引用  -->
+<select id="list" resultType="com.itheima.pojo.Emp">
+    <include refid="commonSelect" />
+    <!--  作用一：根据条件决定是否有 where  -->
+    <!--  作用二：根据情况 条件之间 and 拼接  -->
+    <where>
+        <if test="name != null">
+            name like concat('%', #{name}, '%')
+        </if>
+        <if test="gender != null">
+            and gender = #{gender}
+        </if>
+        <if test="begin != null and end != null">
+            and entrydate between #{begin} and #{end}
+        </if>
+    </where>
+    order by update_time desc
+</select>
+```
+
+
+
+
+
+![image-20230405204605452](assets/image-20230405204605452.png)
+
+# day 11-12 小项目捏
+
+## 1 开发规范 - Restful
+
+REST（**RE**presentational **S**tate **T**ransfer），表述性状态转换，它是一种软件架构风格
+
+- REST 接口
+
+  - http://localhost:8080/users/1
+
+    GET：查询`id`为`1`的用户
+
+  - http://localhost:8080/users
+
+    POST：新增用户
+
+  - http://localhost:8080/users
+
+    PUT：修改用户
+
+  - http://localhost:8080/users/1
+
+    DELETE：删除`id`为`1`的用户
+
+- 注意事项
+
+  - REST 是风格，是约定方式，约定不是规定，可以打破
+  - 描述模块的功能通常使用复数，也就是加`s`的格式来描述，表示此类资源，而非单个资源。如：`users`、`emps`、`books`
+
+## 2 开发流程
+
+- 查看页面原型明确需求
+- 阅读接口文档
+- 思路分析
+- 接口开发
+- 接口测试
+- 前后端联调
+
+## 3 分页查询
+
+### 3.1 原生代码
+
+```java
+public PageBean page(Integer page, Integer pageSize) {
+    // 1. 获取 总记录数
+    Long count = empMapper.count();
+
+    // 2. 获取 分页查询的结果
+    List<Emp> empList = empMapper.page((page - 1) * pageSize, pageSize);
+
+    // 3. 封装并返回 PageBean
+    return new PageBean(count, empList);
+}
+```
+
+```java
+/**
+ * 查询总记录数
+ * @return
+ */
+@Select("select count(*) from emp")
+public Long count();
+
+/**
+ * 分页查询
+ * @return
+ */
+@Select("select * from emp limit #{start}, #{pageSize}")
+public List<Emp> page(Integer start, Integer pageSize);
+```
+
+### 3.2PageHelper 插件
+
+```java
+// 1. 设置分页参数
+PageHelper.startPage(page, pageSize);
+
+// 2. 执行查询
+List<Emp> empList = empMapper.list();
+Page<Emp> p = (Page<Emp>) empList;
+
+// 3. 封装并返回 PageBean
+return new PageBean(p.getTotal(), p.getResult());
+```
+
+## 4 文件上传
+
+### 4.1 简介
+
+- 文件上传，是指将本地图片、视频、音频等文件上传到服务器，供其他用户浏览或下载的过程
+- 文件上传在项目中应用非常广泛，我们经常发微博、发微信朋友圈都用到了文件上传功能
+
+### 4.2 前端
+
+- 要素一：`from`表单与`<input type="file" ...`
+- 要素二：`POST`请求：`method="post"`
+- 要素三：`enctype="multipart/form-data"`。普通默认的编码格式，不支持较大的二进制文件。
+
+```html
+<form action="/upload" method="post" enctype="multipart/form-data">
+    姓名: <input type="text" name="username"><br>
+    年龄: <input type="text" name="age"><br>
+    头像: <input type="file" name="image"><br>
+    <input type="submit" value="提交">
+</form>
+```
+
+### 4.3 后端
+
+```java
+@PostMapping("/upload")
+public Result upload(String username, Integer age, MultipartFile image) throws IOException {
+    log.info("文件上传：{}，{}，{}", username, age, image);
+    String originalFilename = image.getOriginalFilename();
+    int index = originalFilename.lastIndexOf(".");
+
+    String newFilename =  UUID.randomUUID().toString() + originalFilename.substring(index);
+    image.transferTo(new File("E:\\学习java的\\" + newFilename));
+
+    return Result.success();
+}
+```
+
+### 4.4 本地存储
+
+在服务端，接收到上传上来的文件之后，将文件存储在本地服务器磁盘中。
+
+在SpringBoot中，文件上传，默认单个文件允许最大大小为 1M。如果需要上传大文件，可以进行如下配置:
+
+```properties
+# 配置单个文件最大上传大小
+spring.servlet.multipart.max-file-size=10MB
+# 配置单个诗求最大上传大小(一次请求可以上传多个文件)
+spring.servletmultipart.max-request-size=100MB
+```
+
+- `String getOriginalFilename();`：获取原始文件名
+- `void transferTo(File dest);`：将接收的文件转存到磁盘文件中
+- `long getSize();`：获取文件的大小，单位：字节
+- `[bytel] getBytes();`：获取文件内容的字节数组
+- `InputStream getInputStream();`：获取热收到的文件内容的输入流
+
+### 4.5 阿里云 OSS
+
+阿里云对象存储OSS（**O**biect **S**torae **S**ervice），是一款海量、安全、低成本、高可靠的云存储服务。使用 OSS，您可以通过网络随时存储和调用包括文本、图片、音频和视频等在内的各种文件。
+
+## 5 配置文件
+
+### 5.1 参数配置化
+
+- `@Value`注解通常用于外部配置的属性注入，具体用法为：`@Value("${配置文件中的key}")`
+
+```properties
+# 阿里云 oss 配置
+aliyun.oss.endpoint =
+aliyun.oss.accessKeyId = 
+aliyun.oss.accessKeySecret =
+aliyun.oss.bucketName = 
+```
+
+```java
+public class AliOSSUtils {
+    @Value("${aliyun.oss.endpoint}")
+    private String endpoint ;
+    @Value("${aliyun.oss.accessKeyId}")
+    private String accessKeyId ;
+    @Value("${aliyun.oss.accessKeySecret}")
+    private String accessKeySecret ;
+    @Value("${aliyun.oss.bucketName}")
+    private String bucketName ;
+    ...
+}
+```
+
+### 5.2 yml 配置文件
+
+#### 5.2.1 常见的配置文件
+
+- XML
+
+  ```xml
+  <server>
+  	<port>8080</port>
+      <address>127.0.0.1</address>
+  </server>
+  ```
+
+- properties
+
+  ```properties
+  server.port=8080
+  serveraddress=127.0.0.1
+  ```
+
+- yml / yaml（推荐）
+
+  ```yaml
+  server:
+    port: 9000
+    address: 127.0.0.1
+  ```
+
+#### 5.2.2 yml
+
+- 基本语法
+
+  - 大小写敏感
+  - 数值前边必须有空格，作为分隔符
+  - 使用缩进表示层级关系，缩进时，不允许使用`Tab`键，只能用空格（idea 中会自动将`Tab`转换为空格）
+  - 缩进的空格数目不重要，只要相同层级的元素左侧对齐即可
+  - `#`表示注释，从这个字符一直到行尾，都会被解析器忽略
+
+- 数据格式
+
+  ```yml
+  # 定义对象 / Map 集合
+  user:
+    name: Tom
+    age: 20
+    address: beijing
+  
+  # 定义 数组 / List / Set
+  hobby:
+    - java
+    - C
+    - game
+    - sport
+  ```
+
+### 5.3 @ConfigurationProperties
+
+#### 5.3.1 语法
+
+```java
+@Data
+@Component
+@ConfigurationProperties(prefix = "aliyun.oss")
+public class AliOSSProperties {
+    private String endpoint;
+    private String accessKeyId;
+    private String accessKeySecret;
+    private String bucketName;
+}
+```
+
+```java
+@Autowired
+private AliOSSProperties aliOSSProperties;
+```
+
+#### 5.3.2 与 @Value 的区别
+
+- 相同点
+  - 都是用来注入外部配置的属性的
+- 不同点
+  - `@Value`注解只能一个一个的进行外部属性的注入
+  - `@ConfigurationProperties`可以批量的将外部的属性配置注入到`bean`对象的属性中
+
+# day 13 登录认证
+
+## 1 登录功能
+
+```java
+@PostMapping
+public Result login(@RequestBody Emp emp){
+    log.info("员工登录：{}", emp);
+    Emp e = empService.login(emp);
+    return e != null ? Result.success() : Result.error("用户名或密码错误");
+}
+```
+
+```java
+@Override
+public Emp login(Emp emp) {
+    return empMapper.geyByUsernameAndPassword(emp);
+}
+```
+
+```java
+@Select("select * from emp where username = #{username} and password = #{password}")
+Emp geyByUsernameAndPassword(Emp emp);
+```
+
+## 2 登录校验（重点）
+
+### 2.1 会话技术
+
+#### 2.1.2 简介
+
+- 会话：用户打开浏览器，访问 web 服务器的资源，会话建立，直到有一方断开连接，会话结束。在一次会话中可以包含多次请求和响应。
+- 会话跟踪：一种维护浏览器状态的方法，服务器需要识别多次请求是否来自于同一浏览器，以便在同一次会话的多次请求间共享数据。
+- 会话跟踪方案
+  - 客户端会话跟踪技术：Cookie
+  - 服务端会话跟踪技术：Session
+  - 令牌技术
+
+#### 2.1.2 Cookie
+
+![image-20230408234613892](assets/image-20230408234613892.png)
+
+```java
+@GetMapping("/c1")
+public Result cookie1(HttpServletResponse response) {
+    response.addCookie(new Cookie("login_username", "itheima"));
+    return Result.success();
+}
+
+@GetMapping("/c2")
+public Result cookie2(HttpServletRequest request) {
+    Cookie[] cookies = request.getCookies();
+    for (Cookie cookie : cookies) {
+        System.out.println(cookie.getName() + " --- " + cookie.getValue());
+    }
+    return Result.success();
+}
+```
+
+- 优点：HTTP 协议中支持的技术
+- 缺点
+  - 移动端 APP 无法使用 Cookie 不安全，用户可以自己禁用 Cookie
+  - Cookie 不能跨域
+    - 跨域区分三个维度：协议、IP / 域名、端口
+
+
+
+
+
+### 2.2 JWT 令牌
+
+### 2.3 过滤器 Filter
+
+### 2.4 拦截器 Interceptor
+
+
+
+## 3 异常处理
+
+
+
+
+
+
 
 
 

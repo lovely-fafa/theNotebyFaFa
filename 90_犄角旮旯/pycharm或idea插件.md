@@ -68,3 +68,17 @@
 
   ![image-20230209171900017](assets/image-20230209171900017.png)
 
+# 3 idea 设置备忘录
+
+## 1 XML 背景屎黄色
+
+第一步：
+
+- 【Editor】-【Inspections】
+- 检索 `No data sources configured`和 `SQL dialect detection`，取消勾选
+
+第二步：
+
+- 取消勾选
+
+![image-20230407151433421](assets/image-20230407151433421.png)
