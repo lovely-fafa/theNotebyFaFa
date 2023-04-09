@@ -2974,7 +2974,7 @@ Emp geyByUsernameAndPassword(Emp emp);
 
 ### 2.1 会话技术
 
-#### 2.1.2 简介
+#### 2.1.1 简介
 
 - 会话：用户打开浏览器，访问 web 服务器的资源，会话建立，直到有一方断开连接，会话结束。在一次会话中可以包含多次请求和响应。
 - 会话跟踪：一种维护浏览器状态的方法，服务器需要识别多次请求是否来自于同一浏览器，以便在同一次会话的多次请求间共享数据。
@@ -2988,12 +2988,14 @@ Emp geyByUsernameAndPassword(Emp emp);
 ![image-20230408234613892](assets/image-20230408234613892.png)
 
 ```java
+// 设置 cookie
 @GetMapping("/c1")
 public Result cookie1(HttpServletResponse response) {
     response.addCookie(new Cookie("login_username", "itheima"));
     return Result.success();
 }
 
+// 获取 cookie
 @GetMapping("/c2")
 public Result cookie2(HttpServletRequest request) {
     Cookie[] cookies = request.getCookies();
@@ -3010,15 +3012,332 @@ public Result cookie2(HttpServletRequest request) {
   - Cookie 不能跨域
     - 跨域区分三个维度：协议、IP / 域名、端口
 
+#### 2.1.3 Session
 
+```java
+// 获取 session 方法一 与 设置 session
+@GetMapping("/s1")
+public Result session1(HttpSession session) {
+    log.info("HttpSession-s1: {}", session.hashCode());
+    session.setAttribute("loginUser", "tom");
+    return Result.success();
+}
 
+// 获取 session 方法二
+@GetMapping("/s2")
+public Result session2(HttpServletRequest request) {
+    HttpSession session = request.getSession();
+    log.info("HttpSession-s2: {}", session.hashCode());
 
+    Object loginUser = session.getAttribute("loginUser");
+    log.info("loginUser: {}", loginUser);
+    return Result.success(loginUser);
+}
+```
+
+- 优点：存储在服务端，安全
+- 缺点
+  - 服务器集群环境下无法直接使用 Session
+  - Cookie 的缺点
+
+#### 2.1.4 令牌技术
+
+- 优点
+  - 支持 PC 端、移动端
+  - 解决集群环境下的认证问题
+  - 减轻服务器端存储压力
+- 缺点
+  - 需要自己实现
 
 ### 2.2 JWT 令牌
 
+#### 2.2.1 简介
+
+- 全称：**J**SON **W**eb Token（https://jwt.io/）
+- 定义了一种简洁的、自包含的格式，用于在通信双方以 json 数据格式安全的传输信息。由于数字签名的存在，这些信息是可靠的。
+- 组成
+  - 第一部分：Header（头），记录令牌类型、签名算法等。例如：`{"alg":"HS256","type":"JWT"}`
+  - 第二部分：Payload（有效载荷），携带一些自定义信息、默认信息等。例如：`{"id":"1","username":"Tom"}`
+  - 第三部分：Signature（签名），防止 Token 被篡改、确保安全性。将 header、payload，并加入指定秘钥，通过指定签名算法计算而来
+- Base64：是一种基于64个可打印字符（A-Z、a-z、0-9、+、/、补位的 =）来表示二进制数据的编码方式
+
+![image-20230409153158517](assets/image-20230409153158517.png)
+
+#### 2.2.2 场景——登录认证
+
+- 登录成功后，生成令牌
+- 后续每个请求，都要携带 JWT 令牌，系统在每次请求处理之前，先校验令牌，通过后，再处理
+
+#### 2.2.3 生成 JWT
+
+```java
+@Test
+void testGetJWT() {
+    Map<String, Object> claims = new HashMap<>();
+    claims.put("id", 10);
+    claims.put("name", "fafa");
+
+    String jwt = Jwts.builder()
+            .signWith(SignatureAlgorithm.HS256, "fafa")
+            .setClaims(claims)
+            .setExpiration(new Date(System.currentTimeMillis() + 3600 * 1000))
+            .compact();
+    System.out.println(jwt);
+}
+
+@Test
+public void testParseJWT() {
+    Claims claims = Jwts.parser()
+            .setSigningKey("fafa")
+            .parseClaimsJws("eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiZmFmYSIsImlkIjoxMCwiZXhwIjoxNjgxMDMwNDY4fQ.BlhhSmLsTdEhRDs7CSOt_AlrSQvTHKowiH1skp-Lpf4")
+            .getBody();
+    System.out.println(claims);
+}
+```
+
+- 注意事项
+  - JWT 校验时使用的签名秘钥，必须和生成 JWT 令牌时使用的秘钥是配套的
+  - 如果 JWT 令牌解析校验时报错，则说明 JWT 令牌被篡改或失效了，令牌非法
+
+```java
+@PostMapping
+public Result login(@RequestBody Emp emp){
+    log.info("员工登录：{}", emp);
+    Emp e = empService.login(emp);
+    if (e != null) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("id", e.getId());
+        claims.put("name", e.getName());
+        claims.put("username", e.getUsername());
+
+        String str = JwtUtils.generateJwt(claims);
+        return Result.success(str);
+    }
+
+    return Result.error("用户名或密码错误");
+}
+```
+
 ### 2.3 过滤器 Filter
 
+#### 2.3.1 概述
+
+- 概念：Filter 过滤器，是 JavaWeb 三大组件（Servlet、Filter、Listener）之一
+- 过滤器可以把对资源的请求拦截下来，从而实现一些特殊的功能
+- 过滤器一般完成上些通用的操作，比如：登录校验、统一编码处理、敏感字符处理等
+
+![image-20230409165504917](assets/image-20230409165504917.png)
+
+#### 2.3.2 快速入门
+
+1. 定义 Filter：定义一个类，实现 Filter 接口，并重写其所有方法
+2. 配置 Filter：Filter类上加`@WebFilter`注解，配置拦截资源的路径。引导类上加`@ServletComponentScan`开启 Servlet 组件支持
+
+```java
+@WebFilter(urlPatterns = "/*")
+public class DemoFilter implements Filter {
+    // 初始化方法 只调用一次 几乎不用
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+        Filter.super.init(filterConfig);
+        System.out.println("init 初始化方法执行了");
+    }
+
+    // 拦截到了请求后调用 调用多次
+    @Override
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+        System.out.println("拦截到了请求");
+
+        // 放行
+        filterChain.doFilter(servletRequest, servletResponse);
+    }
+
+    // 销毁方法 只调用一次 几乎不用
+    @Override
+    public void destroy() {
+        Filter.super.destroy();
+        System.out.println("destroy 销毁方法执行了");
+    }
+}
+```
+
+#### 2.3.3 详解：执行流程、拦截路径、过滤器链
+
+- 执行流程
+
+  - 放行后访问对应资源，资源访问完成后，还会回到 Filter 中吗？
+
+    会
+
+  - 如果回到 Filter 中，是重新执行还是执行放行后的逻辑呢？
+
+    执行放行后逻辑
+
+- 拦截路径
+
+  |   拦截路径   | urlPatterns值 |                含义                 |
+  | :----------: | :-----------: | :---------------------------------: |
+  | 拦截具体路径 |   `/login`    | 只有访问`/login`路径时，才会被拦截  |
+  |   目录拦截   |   `/emps/*`   | 访问`/emps`下的所有资源，都会被拦截 |
+  |   拦截所有   |     `/*`      |      访问所有资源，都会被拦截       |
+
+- 过滤器链
+
+  ![image-20230409172451714](assets/image-20230409172451714.png)
+
+  - 介绍：一个 web 应用中，可以配置多个过滤器，这多个过滤器就形成了一个过滤器链
+  - 顺序：注解配置的 Filter，优先级是按照过滤器类名（字符串）的自然排序
+
+#### 2.3.4 登录校验 Filter
+
+```java
+package com.itheima.filter;
+
+import com.alibaba.fastjson.JSONObject;
+import com.itheima.pojo.Result;
+import com.itheima.utils.JwtUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.StringUtils;
+
+import javax.servlet.*;
+import javax.servlet.annotation.WebFilter;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+@Slf4j
+@WebFilter("/*")
+public class LoginCheckFilter implements Filter {
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
+        HttpServletRequest req = (HttpServletRequest) request;
+        HttpServletResponse resp = (HttpServletResponse) response;
+
+        // 1. 获取 url
+        String url = req.getRequestURI();
+        log.info("请求的 url {}", url);
+
+        // 2. 判断是否包含 login
+        if (url.contains("login")) {
+            log.info("登录操作，放行...");
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        // 3. 获取令牌
+        String jwt = req.getHeader("token");
+
+        // 4. 令牌不存在
+        if (!StringUtils.hasLength(jwt)) {
+            log.info("请求头为空...");
+            Result error = Result.error("NOT_LOGIN");
+
+            // 手动把 对象 转 json ：阿里巴巴的 fastJson
+            String notLogin = JSONObject.toJSONString(error);
+            resp.getWriter().write(notLogin);
+            return;
+        }
+
+        // 5. 令牌存在 校验合法性
+        try {
+            JwtUtils.parseJWT(jwt);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.info("解析令牌失败 返回账号未登录...");
+            Result error = Result.error("NOT_LOGIN");
+
+            // 手动把 对象 转 json ：阿里巴巴的 fastJson
+            String notLogin = JSONObject.toJSONString(error);
+            resp.getWriter().write(notLogin);
+            return;
+        }
+
+        // 6. 放行
+        log.info("令牌合法，放行...");
+        filterChain.doFilter(request, response);
+    }
+}
+```
+
 ### 2.4 拦截器 Interceptor
+
+#### 2.4.1 简介
+
+- 概念：是一种动态拦截方法调用的机制，类似于过滤器。Spring 框架中提供的，用来动态拦截控制器方法的执行。
+- 作用：拦截请求，在指定的方法调用前后，根据业务需要执行预先设定的代码。
+
+#### 2.4.2 快速入门
+
+- 定义拦截器，实现 Handlerlnterceptor 接口，并重写其所有方法
+
+  ```java
+  @Component
+  public class LoginCheckInterceptor implements HandlerInterceptor {
+      // 目标资源方法运行前运行 true：放行 false：不放行
+      @Override
+      public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+          System.out.println("preHandle 运行了");
+          return false;
+      }
+  
+      // 目标资源方法运行后运行
+      @Override
+      public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+          System.out.println("postHandle 运行了...");
+          HandlerInterceptor.super.postHandle(request, response, handler, modelAndView);
+      }
+  
+      // 视图渲染完毕后 最后运行
+      @Override
+      public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+          System.out.println("afterCompletion 运行了...");
+          HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
+      }
+  }
+  ```
+
+- 注册拦截器
+
+  ```java
+  @Configuration
+  public class WebConfig implements WebMvcConfigurer {
+  
+      @Autowired
+      private LoginCheckInterceptor loginCheckInterceptor;
+  
+      @Override
+      public void addInterceptors(InterceptorRegistry registry) {
+          registry.addInterceptor(loginCheckInterceptor).addPathPatterns("/**");
+      }
+  }
+  ```
+
+#### 2.4.3 详解
+
+- 拦截路径
+
+  |  拦截路径   |          含义          |                          举个栗子                           |
+  | :---------: | :--------------------: | :---------------------------------------------------------: |
+  |    `/*`     |        一级路径        |    能匹配`/depts`、`/emps`、`/login，不能匹配`/depts/1`     |
+  |    `/**`    |       任意级路径       |          能匹配`/depts`、`/depts/1`、`/depts/1/2`           |
+  | `/depts/*`  |  `/depts`下的一级路径  |      能匹配`/depts/1`，不能匹配`/depts/1/2`、`/depts`       |
+  | `/depts/**` | `/depts`下的任意级路径 | 能匹配`/depts`、`/depts/1`、`/depts/1/2`，不能匹配`/emps/1` |
+
+  ```java
+  registry.addInterceptor(loginCheckInterceptor)
+          .addPathPatterns("/**")  // 拦截 所有路径
+          .excludePathPatterns("/login");  // 除了 login
+  ```
+
+- 执行流程
+
+
+
+
+
+#### 2.4.4登录校验 Interceptor
+
+
 
 
 
