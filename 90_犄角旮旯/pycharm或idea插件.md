@@ -68,6 +68,12 @@
 
   ![image-20230209171900017](assets/image-20230209171900017.png)
 
+## 2.8 控制台高亮插件
+
+- 插件名：`Grep console`
+- Grep, tail, filter, highlight... everything you need for a console (JS/NPM/GoLand/... Terminals are not supported - IDEA-216442
+  ). Also can highlight the editor... 
+
 # 3 idea 设置备忘录
 
 ## 1 XML 背景屎黄色

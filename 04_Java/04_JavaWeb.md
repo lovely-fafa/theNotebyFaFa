@@ -1639,7 +1639,7 @@ delete from tb_emp;
   1. `DELETE`语句的条件可以有，也可以没有，如果没有条件，则会删除整张表的所有数据
   2. `DELETE`语句不能删除某一个字段的值（如果要操作，可以使用`UPDATE`，将该字段的值置为`NULL`）
 
-# day 08 数据库（中）
+# day 07 数据库（中）
 
 ## 1 数据库操作 - DQL
 
@@ -1958,7 +1958,7 @@ alter table 表名 add constraint 外键名称 foreign key(外键字段名) refe
 
 ### 2.5 案例
 
-# day 09 数据库（下）
+# day 08 数据库（下）
 
 ## 1 多表查询
 
@@ -2144,7 +2144,7 @@ from dish as d
 where d.price < (select avg(d.price) from dish d);
 ```
 
-## 2 实务
+## 2 事务
 
 ### 2.1 概念
 
@@ -2345,7 +2345,7 @@ Lombok 是一个实用的 Java 类库，能通过注解的形式自动生成构�
 
 【File】-【Invalidate Caches】
 
-# day 10
+# day 09
 
 ## 5 Mybatis 基础增删改查
 
@@ -2687,7 +2687,7 @@ public List<Emp> list(@Param("name")String name, @Param("gender") Short gender, 
 
 ![image-20230405204605452](assets/image-20230405204605452.png)
 
-# day 11-12 小项目捏
+# day 10-11 小项目捏
 
 ## 1 开发规范 - Restful
 
@@ -2945,7 +2945,7 @@ private AliOSSProperties aliOSSProperties;
   - `@Value`注解只能一个一个的进行外部属性的注入
   - `@ConfigurationProperties`可以批量的将外部的属性配置注入到`bean`对象的属性中
 
-# day 13 登录认证
+# day 12 登录认证
 
 ## 1 登录功能
 
@@ -3331,23 +3331,276 @@ public class LoginCheckFilter implements Filter {
 
 - 执行流程
 
+  ![image-20230410115126129](assets/image-20230410115126129.png)
 
+- 两者区别
 
-
+  - 接口规范不同：过滤器需要实现 Filter 接口，而拦截器需要实现 Handlerlnterceptor 接口
+  - 拦截范围不同：过滤器 Filter 会拦截所有的资源，而 intereptor 只会拦截 Spring 环境中的资源
 
 #### 2.4.4登录校验 Interceptor
 
+```java
+@Slf4j
+@Component
+public class LoginCheckInterceptor implements HandlerInterceptor {
+    // 目标资源方法运行前运行 true：放行 false：不放行
+    @Override
+    public boolean preHandle(HttpServletRequest req, HttpServletResponse resp, Object handler) throws Exception {
+        // 1. 获取 url
+        String url = req.getRequestURI();
+        log.info("请求的 url {}", url);
 
+        // 2. 判断是否包含 login
+        if (url.contains("login")) {
+            log.info("登录操作，放行...");
+            return true;
+        }
 
+        // 3. 获取令牌
+        String jwt = req.getHeader("token");
 
+        // 4. 令牌不存在
+        if (!StringUtils.hasLength(jwt)) {
+            log.info("请求头为空...");
+            Result error = Result.error("NOT_LOGIN");
+
+            // 手动把 对象 转 json ：阿里巴巴的 fastJson
+            String notLogin = JSONObject.toJSONString(error);
+            resp.getWriter().write(notLogin);
+            return false;
+        }
+
+        // 5. 令牌存在 校验合法性
+        try {
+            JwtUtils.parseJWT(jwt);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.info("解析令牌失败 返回账号未登录...");
+            Result error = Result.error("NOT_LOGIN");
+
+            // 手动把 对象 转 json ：阿里巴巴的 fastJson
+            String notLogin = JSONObject.toJSONString(error);
+            resp.getWriter().write(notLogin);
+            return false;
+        }
+
+        // 6. 放行
+        log.info("令牌合法，放行...");
+        return true;
+    }
+
+    // 目标资源方法运行后运行
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+        System.out.println("postHandle 运行了...");
+        HandlerInterceptor.super.postHandle(request, response, handler, modelAndView);
+    }
+
+    // 视图渲染完毕后 最后运行
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        System.out.println("afterCompletion 运行了...");
+        HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
+    }
+}
+```
 
 ## 3 异常处理
 
+- 程序开发过程中不可避免的会遇到异常现象
+
+#### 3.1 全局异常处理器
+
+```java
+@RestControllerAdvice
+public class GlobalExceptionHandle {
+
+    @ExceptionHandler(Exception.class)  // 所有的异常
+    public Result ex(Exception ex) {
+        ex.printStackTrace();
+        return Result.error("操作异常，请联系管理员...");
+    }
+
+}
+```
+
+# day 13 事务管理 & AOP
+
+## 1 事务管理
+
+### 1.1 简介
+
+**事务**是一组操作的集合，它是一个不可分割的工作单位，这些操作**要么同时成功**，**要么同时失败**。
+
+- 开启事务：`start transaction;`或 `begin ;`
+- 提交事务：`commit;`
+- 回滚事务：`rollback;`
+
+### 1.2 Spring 事务管理
+
+- 注解：`@Transactional`
+- 位置：业务（service）层的方法上、类上、接口上
+- 作用：将当前方法交给 Spring 进行事务管理，方法执行前，开启事务，成功执行完毕，提交事务；出现异常，回滚事务
+
+```yml
+#spring事务管理日志
+logging:
+  level:
+    org.springframework.jdbc.support.JdbcTransactionManager: debug
+```
+
+### 1.3 事务进阶
+
+#### 1.3.1 rollbackFor 属性
+
+- 默认情况下，只有出现 RuntimeException 才回滚异常。rollbackFor 属性用于控制出现何种异常类型，回滚事务
+
+```java
+@Transactional(rollbackFor = Exception.class)
+```
+
+#### 1.3.2 propagation 属性
+
+事务传播行为指的就是，当一个事务方法被另一个事务方法调用时，这个事务方法应该如何进行事务控制。
+
+|      属性值`       |                             含义                             |
+| :----------------: | :----------------------------------------------------------: |
+|   **`REQUIRED`**   |         [默认值] 需要事务，有则加入，无则创建新事务          |
+| **`REQUIRES_NEW`** |             需要新事务，无论有无，总是创建新事务             |
+|     `SUPPORTS`     |          支持事务，有则加入，无则在无事务状态中运行          |
+|  `NOT_SUPPORTED`   | 不支持事务，在无事务状态下运行,如果当前存在已有事务,则挂起当前事务 |
+|    `MANDATORY`     |                    必须有事务，否则抛异常                    |
+|      `NEVER`       |                    必须没事务，否则抛异常                    |
+|        ...         |                                                              |
+
+举个例子，要解散部门时记录日志，无论是否解散都要记录日志。所以就放到`final`里面了。
+
+```java
+@Transactional(rollbackFor = Exception.class)
+@Override
+public void delete(Integer id) {
+    try {
+        deptMapper.deleteById(id);  // 删除 部门
+
+        int i = 1 / 0;
+
+        empMapper.deleteByDeptId(id);  // 删除 员工
+    } finally {
+        DeptLog deptLog = new DeptLog();
+        deptLog.setCreateTime(LocalDateTime.now());
+        deptLog.setDescription("执行了解散部门的操作，此次解散的是" + id + "号部门");
+        deptLogService.insert(deptLog);
+    }
+}
+```
+
+但是事务的传播行为默认`REQUIRED`：需要事务，有则加入，无则创建新事务。只要出现异常，就会回滚，写日志就不会保存到数据库，所以我们在写日志的方法上加了`@Transactional(propagation = Propagation.REQUIRES_NEW)`。
+
+```java
+@Transactional(propagation = Propagation.REQUIRES_NEW)
+@Override
+public void insert(DeptLog deptLog) {
+    deptLogMapper.insert(deptLog);
+}
+```
+
+- 小总结
+  - `REQUIRED`：大部分情况下都是用该传播行为即可
+  - `REQUIRES NEW`：当我们不希望事务之间相互影响时，可以使用该传播行为。比如：下订单前需要记录日志，不论订单保存成功与否，都需要保证日志记录能够记录成功
+
+## 2 AOP 基础
+
+### 2.1 AOP概述
+
+- AOP：**A**spect **O**riented **P**rogramming（面向切面编程、面向方面编程），其实就是面向特定方法编程
+
+- 实现
+
+  动态代理是面向切面编程最主流的实现。而 SpringAOP 是 Spring 框架的高级技术，旨在管理 bean 对象的过程中，主要通过底层的动态代理机制，对特定的方法进行编程。
+
+### 2.2 AOP快速入门
+
+- 导入依赖
+
+  ```xml
+  <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-aop</artifactId>
+  </dependency>
+  ```
+
+- 写代码
+
+  ```java
+  @Slf4j
+  @Component
+  @Aspect
+  public class TimeAspect {
+      @Around("execution(* com.itheima.service.*.*(..))")  // 切入点表达式
+      public Object recordTime(ProceedingJoinPoint joinPoint) throws Throwable {
+          // 1. 记录开始时间
+          long begin = System.currentTimeMillis();
+  
+          // 2. 调用原始方法运行
+          Object result = joinPoint.proceed();
+  
+          // 3. 记录结束时间
+          long end = System.currentTimeMillis();
+          log.info(joinPoint.getSignature() + " 方法执行时耗时 {}ms", end - begin);
+  
+          return result;
+      }
+  }
+  ```
+
+- 场景
+
+  - 操作日志
+  - 权限控制
+  - 事务管理
+  - ...
+
+- 优势
+
+  - 代码无侵入
+  - 减少重复代码
+  - 提高开发效率
+  - 维护方便
+
+### 2.3 AOP核心概念
+
+- 连接点：JoinPoint，可以被 AOP 控制的方法（暗含方法执行时的相关信息）
+- 通知：Advice，指哪些重复的逻辑，也就是共性功能（最终体现为一个方法）
+- 切入点：PointCut，匹配连接点的条件，通知仅会在切入点方法执行时被应用
+- 切面：Aspect，描述通知与切入点的对应关系（通知 + 切入点）
+- 目标对象：Target，通知所应用的对象
+
+![image-20230410221707977](assets/image-20230410221707977.png)
+
+![image-20230410221654049](assets/image-20230410221654049.png)
+
+- 执行流程
+
+  - 一旦进行了 AOP 程序开发，那么我们运行的不再是原始的目标对象，而是基于目标对象生成的代理对象
+
+  ![image-20230410222426467](assets/image-20230410222426467.png)
+
+## 3 AOP 进阶
+
+### 3.1 通知类型
+
+### 3.2 通知顺序
+
+### 3.3 切入点表达式
+
+### 3.4 连接点
 
 
 
 
 
+## 4 AOP 案例
 
 
 
