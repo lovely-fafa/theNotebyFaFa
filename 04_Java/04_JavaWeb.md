@@ -3590,17 +3590,343 @@ public void insert(DeptLog deptLog) {
 
 ### 3.1 通知类型
 
+- `@Around`：环绕通知，此注解标注的通知方法在目标方法前、后都被执行
+- `@Before`：前置通知，此注解标注的通知方法在目标方法前被执行
+- `@After`：后置通知，此注解标注的通知方法在目标方法后被执行，无论是否有异常都会执行
+- `@AfterReturning`：返回后通知，此注解标注的通知方法在目标方法后被执行，有异常不会执行
+- `@AfterThrowing`：异常后通知，此注解标注的通知方法发生异常后执行
+
+```java
+@Slf4j
+@Component
+@Aspect
+public class MyAspect {
+
+    @Before("execution(* com.itheima.service.impl.DeptServiceImpl.*(..))")
+    public void before() {
+        log.info("before ...");
+    }
+
+    @Around("execution(* com.itheima.service.impl.DeptServiceImpl.*(..))")
+    public Object around(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+        log.info("around before ...");
+
+        // 调用目标对象的原始方法执行
+        Object result = proceedingJoinPoint.proceed();
+
+        log.info("around after ...");
+        return result;
+    }
+
+    @After("execution(* com.itheima.service.impl.DeptServiceImpl.*(..))")
+    public void after() {
+        log.info("around ...");
+    }
+
+    @AfterReturning("execution(* com.itheima.service.impl.DeptServiceImpl.*(..))")
+    public void afterReturning() {
+        log.info("afterReturning ...");
+    }
+
+    @AfterThrowing("execution(* com.itheima.service.impl.DeptServiceImpl.*(..))")
+    public void afterThrowing() {
+        log.info("afterThrowing ...");
+    }
+}
+```
+
+- 注意事项
+  - `@Around`环绕通知，需要自己调用`ProceedingJoinPointproceed()`来让原始方法执行，其他通知不需要考虑目标方法执行
+  - `@Around`环绕通知方法的返回值，必须指定为`Object`，来接收原始方法的返回值
+
+- 切入点表达式抽取：`@Pointcut`
+
+  权限修饰符改为`public`后，其他切面类也可以使用该切入点表达式
+
+  ```java
+  @Slf4j
+  @Component
+  @Aspect
+  public class MyAspect {
+  
+      // 抽取切入点表达式
+      @Pointcut("execution(* com.itheima.service.impl.DeptServiceImpl.*(..))")
+      private void pt(){}
+  
+      @Before("pt()")
+      public void before() {
+          log.info("before ...");
+      }
+  
+      @Around("pt()")
+      public Object around(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+          log.info("around before ...");
+  
+          // 调用目标对象的原始方法执行
+          Object result = proceedingJoinPoint.proceed();
+  
+          log.info("around after ...");
+          return result;
+      }
+  ...
+  }
+  ```
+
 ### 3.2 通知顺序
+
+当有多个切面的切入点都匹配到了目标方法，目标方法运行时，多个通知方法都会被执行。
+
+- 执行顺序
+  - 不同切面类中，默认按照切面类的**类名字母排序**
+    - 目标方法前的通知方法：字母排名靠前的先执行
+    - 目标方法后的通知方法：字母排名靠前的后执行
+  - 用`@Order(数字)`加在切面类上来控制顺序
+    - 目标方法前的通知方法：数字小的先执行
+    - 目标方法后的通知方法：数字小的后执行
+
+```java
+@Order(2)
+@Slf4j
+@Component
+@Aspect
+public class MyAspect {
+
+    // 抽取切入点表达式
+    @Pointcut("execution(* com.itheima.service.impl.DeptServiceImpl.*(..))")
+    private void pt(){}
+
+    @Before("pt()")
+    public void before() {
+        log.info("before ...");
+    }
+    ...
+}
+```
 
 ### 3.3 切入点表达式
 
+- 切入点表达式：描述切入点方法的一种表达式
+- 作用：主要用来决定项目中的哪些方法需要加入通知
+- 常见形式
+  - `execution(...)`：根据方法的签名来匹配
+  - `@annotation(...)`：根据注解匹配
+
+#### 3.3.1 execution
+
+`execution`主要根据方法的返回值、包名、类名、方法名、方法参数等信息来匹配，语法为`execution(访问修饰符? 返回值 包名.类名.?方法名(方法参数) throws 异常?)`
+
+- 其中带`?`的表示可以省略的部分
+  - 访问修饰符：可省略（比如：`public`、`protected`）
+  - 包名.类名：可省略，但不建议
+  - `throws`异常：可省略（注意是方法上声明抛出的异常，不是实际抛出的异常）
+
+既可以接口，也可以接口的实现类
+
+```java
+@Pointcut("execution(public void com.itheima.service.impl.DeptServiceImpl.delete(java.lang.Integer))'
+```
+
+- 可以使用通配符描述切入点
+
+  - `*`：单个独立的任意符号，可以通配任意返回值、包名、类名、方法名、任意类型的一个参数，也可以通配包、类、方法名的一部分
+
+    `execution(* com.*.service.*.update*(*))`
+
+  - `..`：多个连续的任意符号，可以通配任意层级的包，或任意类型、任意个数的参数
+
+    `execution(* com.itheima..DeptService.*(..))`
+
+- 注意事项
+
+  根据业务需要，可以使用且（`&&`）、或（`||`）、非（`!`）来组合比较复杂的切入点表达式
+
+  ```java
+  // 举个栗子：可以用 || 匹配多个切入点
+  @Pointcut("execution(* com.itheima.service.DeptService.list()) || execution(* com.itheima.service.DeptService.delete(java.lang.Integer))")
+  ```
+
+- 书写建议
+
+  - 所有业务**方法名**在命名时尽量**规范**，方便切入点表达式快速匹配。如：查询类方法都是`find`开头，更新类方法都是`update`开头
+  - 描述切入点方法通常**基于接口描述**，而不是直接描述实现类，**增强拓展性**。
+  - 在满足业务需要的前提下，**尽量缩小切入点的匹配范围**。如：包名匹配尽量不使用`..`，使用`*`匹配单个包。
+
+#### 3.3.2 @annotation 
+
+`@annotation`切入点表达式，用于匹配标识有特定注解的方法。举个栗子：`@annotation(com.itheima.anno.Log)`
+
+```java
+@Before("@annotation(com.itheima.anno .Log)")
+public void before () {
+    log.info("before ....");
+}
+```
+
+- 定义一个注解
+
+```java
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface MyLog {
+}
+```
+
+- 使用这个注解 把注解和通知扯上关系
+
+```java
+public class MyAspect {
+
+    // 抽取切入点表达式
+    // @Pointcut("execution(* com.itheima.service.impl.DeptServiceImpl.*(..))")
+    @Pointcut("@annotation(com.itheima.aop.MyLog)")
+    private void pt(){}
+
+    @Before("pt()")
+    public void before() {
+        log.info("before ...");
+    }
+```
+
+- 在方法上加入注解
+
+```java
+@MyLog
+@Override
+public List<Dept> list() {
+    return deptMapper.list();
+}
+```
+
 ### 3.4 连接点
 
+- 在 Spring 中用`JoinPoint`抽象了连接点，用它可以获得方法执行时的相关信息，如目标类名、方法名、方法参数等。
+  - 对于`@Around`通知，获取连接点信息只能使用`ProceedingJoinPoint`
+  - 对于其他四种通知，获取连接点信息只能使用`JoinPoint`，它是`ProceedingJoinPoint`的父类型
 
+```java
+@Slf4j
+@Component
+@Aspect
+public class MyAspect8 {
 
+    @Pointcut("execution(* com.itheima.service.DeptService.*(..))")
+    private void pt(){}
 
+    @Before("pt()")
+    public void before(JoinPoint joinPoint) {
+        log.info("MyAspect8 ... before");
+    }
+
+    @Around("pt()")
+    public Object around(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+        log.info("MyAspect8 around before");
+
+        // 1. 获取 目标对象的类名
+        String className = proceedingJoinPoint.getTarget().getClass().getName();
+        log.info("目标对象的类名：{}", className);
+
+        // 2. 获取 目标对象的方法名
+        String methodName = proceedingJoinPoint.getSignature().getName();
+        log.info("目标对象的方法名：{}", methodName);
+
+        // 3. 获取 目标对象传入的参数
+        Object[] args = proceedingJoinPoint.getArgs();
+        log.info("目标对象传入的参数：{}", Arrays.toString(args));
+
+        // 4. 放行 目标方法执行结果
+        Object result = proceedingJoinPoint.proceed();
+
+        // 5. 获取 目标方法执行结果
+        log.info("目标方法的执行结果：{}", result);
+
+        log.info("MyAspect8 around after");
+        return result;
+    }
+}
+```
 
 ## 4 AOP 案例
+
+将案例中增、删、改、查相关接口的操作日志记录到数据库表中。日志信息包含：操作人，操作时间、执行方法的全类名、执行方法名、方法运行时参数、返回值、方法执行时长。
+
+- 注解
+
+```java
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface Log {
+}
+```
+
+- 切面类
+
+```java
+@Slf4j
+@Aspect
+@Component
+public class LogAspect {
+
+    // 自动交给 IOC 容器管理 所以可以自动注入
+    @Autowired
+    private HttpServletRequest httpServletRequest;
+
+    @Autowired
+    private OperateLogMapper operateLogMapper;
+
+    @Around("@annotation(com.itheima.anno.Log)")
+    public Object recordLog(ProceedingJoinPoint joinPoint) throws Throwable {
+
+        // 操作人
+        String jwc = httpServletRequest.getHeader("token");
+        Claims claims = JwtUtils.parseJWT(jwc);
+        Integer operateUser = (Integer) claims.get("id");
+
+        // 操作时间
+        LocalDateTime now = LocalDateTime.now();
+
+        // 操作类名
+        String className = joinPoint.getTarget().getClass().getName();
+
+        // 操作方法名
+        String methodName = joinPoint.getSignature().getName();
+
+        // 操作方法参数
+        Object[] args = joinPoint.getArgs();
+        String argsName = Arrays.toString(args);
+
+        // 方法返回值
+        long begin = System.currentTimeMillis();
+        // 调用原始目标方法
+        Object result = joinPoint.proceed();
+        String resultStr = JSONObject.toJSONString(result);
+
+        // 耗时
+        long end = System.currentTimeMillis();
+        long costTime = end - begin;
+
+        // 纪录日志
+        OperateLog operateLog = new OperateLog(null, operateUser, now, className, methodName, argsName, resultStr, costTime);
+        operateLogMapper.insert(operateLog);
+        log.info("AOP 记录日志：{}", operateLog);
+
+        return result;
+    }
+}
+```
+
+获取当前登录用户：获取`request`对象从请求头中获取到 jwt 令牌，解析令牌获取出当前用户的`id`
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
