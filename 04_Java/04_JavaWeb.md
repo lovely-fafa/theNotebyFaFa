@@ -3916,19 +3916,230 @@ public class LogAspect {
 
 获取当前登录用户：获取`request`对象从请求头中获取到 jwt 令牌，解析令牌获取出当前用户的`id`
 
+# day 14 原理篇
 
+## 1 配置优先级
 
+- 三种格式配置文件的优先级：`properties`>`yml`>`yaml`
 
+- SpringBoot 除了支持配置文件属性配置，还支持**Java系统属性**和**命令行参数**的方式进行属性配置。
 
+  命令行参数 > Java 系统属性
 
+  - Java系统属性
 
+    `-Dserver.port=9000`
 
+  - 命令行参数
 
+    `--server.port=10010`
 
+  - 命令行执行 Java 指令，运行 jar 包
 
+    `java -Dserver.port=9000 -jar tlias-web-management-0.0.1-SNAPSHOT.jar--server.port=10910`
 
+    注意事项：Springboot 项目进行打包时，需要引入插件 spring-boot-maven-plugin（基于官网骨架创建项目，会自动添加该插件）
 
+综上所述，命令行参数 > Java 系统属性 >`properties`>`yml`>`yaml`
 
+## 2 Bean 管理
+
+### 2.1 获取 bean
+
+- 默认情况下，Spring 项目启动时，会把 bean 都创建好放在 IOC 容器中，如果想要主动获取这些 bean，可以通过如下方式
+  - 根据 name 获取 bean：`Obiect getBean(strina name)`
+  - 根据类型获取 bean：`<I> T getBean(Class<T> requiredType)`
+  - 根据 name 获取 bean（带类型转换）：`<T> T getBean(String name， Class<T> requiredType)`
+
+```java
+//根据bean的名称获取
+DeptController bean1 = (DeptController) applicationContext.getBean("deptController");
+System.out.println(bean1);  // com.itheima.controller.DeptController@5583098b
+
+//根据bean的类型获取
+DeptController bean2 = applicationContext.getBean(DeptController.class);
+System.out.println(bean2);  // com.itheima.controller.DeptController@5583098b
+
+//根据bean的名称 及 类型获取
+DeptController bean3 = applicationContext.getBean("deptController", DeptController.class);
+System.out.println(bean3);  // com.itheima.controller.DeptController@5583098b
+```
+
+注意事项：【上述所说的 Spring 项目启动时，会把其中的 bean 都创建好】还会受到作用域及延迟初始化影响，这里主要针对于 默认的单例 非延迟加载的bean而言。
+
+### 2.2 bean 作用域
+
+Spring 支持五种作用域，后三种在 web 环境才生效
+
+|     作用域      |                       说明                        |
+| :-------------: | :-----------------------------------------------: |
+| **`singleton`** | 容器内同 名称的 bean 只有一个实例（单例）（默认） |
+| **`prototype`** |    每次使用该 bean 时会创建新的实例（非单例）     |
+|    `request`    |  每个请求范围内会创建新的实例（web环境中，了解）  |
+|    `session`    |  每个会话范围内会创建新的实例（web环境中，了解）  |
+|  `application`  |  每个应用范围内会创建新的实例（web环境中，了解）  |
+
+可以通过`@Scpe`注解来进行配置作用域
+
+```java
+@Scope("prototype")
+@RestController
+@RequestMapping("/depts")
+public class DeptController {
+    
+}
+```
+
+- 注意事项
+  - 默认`singleton`的 bean，在容器启动时被创建，可以使用`@Lazy`注解来延迟初始化（延迟到第一次使用时）
+  - `prototype`的 bean，每一次使用该 bean 的时候都会创建一个新的实例
+  - 实际开发当中，绝大部分的 Bean 是单例的，也就是说绝大部分 Bean 不需要配置`scope`属性
+
+### 2.3 第三方 bean
+
+- 如果要管理的 bean 对象来自于第三方（不是自定义的），是无法用`@Component`及衍生注解声明 bean 的，就需要用到`@Bean`注解
+
+  ```java
+  @SpringBootApplication
+  public class SpringbootWebConfig2Application {
+  
+      public static void main(String[] args) {
+          SpringApplication.run(SpringbootWebConfig2Application.class, args);
+      }
+  
+      // 声明第三方 bean
+      @Bean  // 将当前方法的返回值对象交给 IOC 容器管理，成为 IOC 器 bean
+      public SAXReader saxReader() {
+          return new SAXReader();
+      }
+  
+  }
+  ```
+
+- 若要管理的第三方 bean 对象，建议对这些 bean 进行集中分类配置，可以通过`@Configuration`注解声明一个配置类
+
+  ```java
+  @Configuration
+  public class CommonConfig {
+      // 声明第三方 bean
+      // 我们可以使用 @bean 的 name 或 value 属性指定名称 未设置则默认是方法名
+      @Bean  // 将当前方法的返回值对象交给 IOC 容器管理，成为 IOC 器 bean
+      public SAXReader reader(DeptService deptService) {
+          System.out.println(deptService);
+          return new SAXReader();
+      }
+  }
+  ```
+
+- 注意事项
+  - 通过`@Bean`注解的`name`或`value`属性可以声明 bean 的名称，如果不指定，默认 bean 的名称就是方法名
+  - 如果第三方 bean 需要依赖其它 bean 对象，直接在 bean 定义方法中设置形参即可，容器会根据类型自动装配
+
+## 3 SpingBoot 原理
+
+### 3.1 起步依赖
+
+依赖传递。A依赖B，B依赖C，C依赖D...，那么引入A后，B、C、D...都会自动传入。
+
+### 3.2 自动配置
+
+SpringBoot 的自动配置就是当 spring 容器启动后，一些配置类、bean 对象就自动存入到了 IOC 容器中，不需要我们手动去声明，从而简化了开发，省去了繁琐的配置操作。
+
+#### 3.2.1 自动配置原理：解决方案
+
+- 方案一：`@ComponentScan`组件扫描（过于繁琐）
+
+```java
+@ComponentScan({"com.example", "com.itheima"})
+@SpringBootApplication
+public class SpringbootWebConfig2Application {
+
+    public static void main(String[] args) {
+        SpringApplication.run(SpringbootWebConfig2Application.class, args);
+    }
+}
+```
+
+- 方案二：`@Import`导入。使用`@Import`导入的类会被 Spring 加载到 IOC 容器中，导入形式主要有以下几种
+  - 导入 普通类
+  - 导入 配置类
+  - 导入`ImportSelector`接口实现类
+  - `@EnableXxxx`注解，封装`@Import`注解（推荐）
+
+```java
+//@ComponentScan({"com.example", "com.itheima"})
+//@Import({TokenParser.class})  // 导入普通类
+//@Import({HeaderConfig.class})  // 导入配置类
+//@Import({MyImportSelector.class})  // 导入 ImportSelector 的实现类
+@SpringBootApplication
+public class SpringbootWebConfig2Application {
+    public static void main(String[] args) {
+        SpringApplication.run(SpringbootWebConfig2Application.class, args);
+    }
+}
+```
+
+```java
+@EnableHeaderConfig
+@SpringBootTest
+public class AutoConfigurationTests {
+
+    @Autowired
+    private ApplicationContext applicationContext;
+
+    @Test
+    public void testHeaderGenerator() {
+        System.out.println(applicationContext.getBean(HeaderGenerator.class));
+    }
+    ...
+}
+```
+
+#### 3.2.2 自动配置原理：源码
+
+![image-20230412211925201](assets/image-20230412211925201.png)
+
+![image-20230412211927884](assets/image-20230412211927884.png)
+
+#### 3.2.3 自动配置原理：@Conditional
+
+- 作用：按照一定的条件进行判断，在满足给定条件后才会注册对应的 bean 对象到 Spring IOC 容器中
+- 位置：方法、类
+- `@Conditional`本身是一个父注解，派生出大量的子注解
+  - `@ConditionalOnClass`：判断环境中是否有对应字节码文件，才注册 bean 到 IOC  容器
+  - `@ConditionalOnMissingBean`：判断环境中没有对应的 bean（类型或名称），才注册 bean 到 IOC 容器
+  - `@ConditionalOnProperty`：判断配置文件中有对应属性和值，才注册 bean 到 IOC 容器
+
+```java
+@Bean
+@ConditionalOnClass(name = "io.jsonwebtoken.Jwts")  // 环境中存在指定的这个类，才会将该 bean 加入 IOC 容器中
+@ConditionalOnMissingBean  // 不存在该类型的 bean 才会将该 bean 加入 IOC 容器中 --- 指定类型（value） 或 名称（name）
+@ConditionalOnProperty(name = "name", havingValue = "itheima")  // 配置文件中存在指定的属性与值，才会将该 bean 加入 IOC 容器中
+public HeaderParser headerParser(){
+    return new HeaderParser();
+}
+```
+
+### 3.3 案例：自定义 starter
+
+在实际开发中，经常会定义一些公共组件，提供给各个项目团队使用。而在 SpringBoot 的项目中，一般会将这些公共组件封装为
+ SpringBoot 的 starter。
+
+- 需求
+
+  - 需求：自定义 aliyun-oss-spring-boot-starter，完成阿里云 OSS 操作工具类 AliyunOSSUtils 的自动配置
+  - 目标：引入起步依赖引入之后，要想使用阿里云 OSS，注入 AliyunOSSUtils 直接使用即可
+
+- 步骤
+
+  - 创建 aliyun-oss-spring-boot-starter 模块
+  - 创建 aliyun-oss-spring-boot-autoconfigure 模块，在 starter 中引入该模块
+  - 在 aliyun-oss-spring-boot-autoconfiqure 模块中的定义自动配置功能，并定义自动配置文件 META-INF/spring/xxxx.imports
+
+  |                 名称                 |     功能     |
+  | :----------------------------------: | :----------: |
+  |    aliyun-oss-spring-boot-starter    | 依赖管理功能 |
+  | aliyun-oss-spring-boot-autoconfiqure | 自动配置功能 |
 
 
 
