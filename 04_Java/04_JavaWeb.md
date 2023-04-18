@@ -4141,9 +4141,29 @@ public HeaderParser headerParser(){
   |    aliyun-oss-spring-boot-starter    | 依赖管理功能 |
   | aliyun-oss-spring-boot-autoconfiqure | 自动配置功能 |
 
+... 看不懂了...
 
+![image-20230418142225672](assets/image-20230418142225672.png)
 
+# day 15 Maven 高级
 
+## 1 分模块设计与开发
+
+1. 什么是分模块设计？
+
+   将项目按照功能拆分成若千个子模块
+
+2. 为什么要分模块设计？
+
+   方便项目的管理维护、扩展，也方便模块间的相互调用，资源共享
+
+3. 注意事项？
+
+   分模块设计需要先针对模块功能进行设计，再进行编码。不会先将工程开发完毕，然后进行拆分
+
+## 2 继承与聚合
+
+## 3 私服
 
 
 
