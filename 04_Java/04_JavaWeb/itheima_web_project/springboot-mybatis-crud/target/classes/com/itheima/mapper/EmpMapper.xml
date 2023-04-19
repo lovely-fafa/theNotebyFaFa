@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.itheima.mapper.EmpMapper">
+
+    <!--  resultType 是单条记录的类型  -->
+    <select id="list1" resultType="com.itheima.pojo.Emp">
+        select *
+        from emp
+        where name like concat('%', #{name}, '%')
+          and gender = #{gender}
+          and entrydate between #{begin} and #{end}
+        order by update_time desc
+    </select>
+
+    <select id="list" resultType="com.itheima.pojo.Emp">
+        <include refid="commonSelect" />
+        <!--  作用一：根据条件决定是否有 where  -->
+        <!--  作用二：根据情况 条件之间 and 拼接  -->
+        <where>
+            <if test="name != null">
+                name like concat('%', #{name}, '%')
+            </if>
+            <if test="gender != null">
+                and gender = #{gender}
+            </if>
+            <if test="begin != null and end != null">
+                and entrydate between #{begin} and #{end}
+            </if>
+        </where>
+        order by update_time desc
+    </select>
+
+    <!--  动态更新 数据  -->
+    <update id="update2">
+        update emp
+        <set>
+            <if test="username != null">
+                username = #{username},
+            </if>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="gender != null">
+                gender = #{gender},
+            </if>
+            <if test="image != null">
+                image = #{image},
+            </if>
+            <if test="job != null">
+                job = #{job},
+            </if>
+            <if test="entryDate != null">
+                entrydate = #{entryDate},
+            </if>
+            <if test="deptId != null">
+                dept_id = #{deptId},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--  批量删除员工  -->
+    <!--
+      collection: 遍历的集合
+      item: 遍历出来的元素
+      separator:分隔符
+      open: 遍历开始前拼接的SQL片段
+      close: 遍历结束后拼接的SQL片段
+      -->
+    <delete id="deleteByIds">
+        delete from emp where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--  抽取  -->
+    <sql id="commonSelect">
+        select id,
+               username,
+               password,
+               name,
+               gender,
+               image,
+               job,
+               entrydate,
+               dept_id,
+               create_time,
+               update_time
+        from emp
+    </sql>
+    <!--  引用  -->
+
+
+
+</mapper>

@@ -4163,7 +4163,133 @@ public HeaderParser headerParser(){
 
 ## 2 继承与聚合
 
+### 2.1 继承
+
+#### 2.1.1 简介
+
+- 概念：继承描述的是两个工程间的关系，与 java 中的继承相似，子工程可以继承父工程中的配置信息，常见于依赖
+  关系的继承。
+- 作用： 简化依赖配置、统一管理依赖
+- 实现：`<parent>...</parent>`
+
+#### 2.1.2 继承关系
+
+- 操作步骤
+  - 创建 maven 模块 tlias-parent，该工程为**父工程**，设置**打包方式 pom**（默认iar）
+    - jar：普通模块打包，springboot 项目基本都是 jar 包（内嵌 tomcat 运行）
+    - war：普通web程序打包，需要部署在外部的 tomcat 服务器中运行
+    - pom：父工程或聚合工程，该模块不写代码，仅进行依赖管理
+  - 在子工程的 pom.xml 文件中，配置继承关系
+  - 在父工程中配置各个工程共有的依赖（子工程会自动继承父工程的依赖）
+- 注意事项
+  - 在子工程中，配置了继承关系之后，坐标中的 groupId 是可以省略的，因为会自动继承父工程的
+  - relativePath 指定父工程的 pom 文件的相对位置（如果不指定，将从本地仓库 / 远程仓库查找该工程）
+  - 若父子工程都配置了同一个依赖的不同版本，以子工程的为准
+
+#### 2.1.3 版本锁定
+
+- 在 maven 中，可以在父工程的 pom 文件中通过`<dependencyManagement>`来统一管理依赖版本
+- 子工程引入依赖时，无需指`<version>`版本号，父工程统一管理。变更依赖版本，只需在父工程中统一变更
+
+父工程
+
+```xml
+<dependencyManagement>
+    <dependencies>
+		<!--JWT令牌-->
+		<dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.9.1</bersion>
+		</dependency>
+    </dependencies>
+</dependencyManagement>
+```
+
+子工程
+
+```xml
+<dependencies>
+    <dependency>
+    	<groupId>io.jsonwebtoken</groupId>
+        <artifactId>jjwt</artifactId>
+    </dependency>
+</dependencies>
+```
+
+#### 2.1.4 自定义属性
+
+![image-20230419134916895](assets/image-20230419134916895.png)
+
+#### 2.4.5 面试题：`<dependencyManagement>` 与`<dependencies>`的区别是什么?
+
+- `<dependencies>`是直接依赖，在父工程配置了依赖,子工程会直接继承下来
+- `<dependencyManagement>`是统一管理依赖版本，不会直接依赖，还需要在子工程中引入所需依赖（无需指定版本）
+
+### 2.2 聚合
+
+- 聚合
+
+  将多个模块组织成一个整体，同时进行项目的构建。
+
+- 聚合工程
+
+  一个不具有业务功能的“空”工程（有且仅有一个 pom 文件）
+
+```xml
+<modules>
+    <module>../tilas-pojo</module>
+    <module>../tilas-utils</module>
+    <module>../tlias-web-management</module>
+</modules>
+```
+
+- maven 中可以通过`<modules>`设置当前聚合工程所包含的子模块名称
+- 聚合工程中所包含的模块，在构建时，会自动根据模块间的依赖关系设置构建顺序，与聚合工程中模块的配置书写位置无关
+
+### 2.3 两者区别
+
+- 作用
+  - 聚合用于快速构建项目
+  - 继承用于简化依赖配置、统一管理依赖
+- 相同点
+  - 聚合与继承的 pom.xml 文件打包方式均为 pom，可以将两种关系制作到同一个 pom 文件中
+  - 聚合与继承均属于设计型模块，并无实际的模块内容
+- 不同点
+  - 聚合是在聚合工程中配置关系，聚合可以感知到参与聚合的模块有哪些
+  - 继承是在子模块中配置关系，父模块无法感知哪些子模块继承了自己
+
 ## 3 私服
+
+### 3.1 介绍
+
+- 私服是一种特殊的远程仓库，它是架设在局域网内的仓库服务，用来代理位于外部的中央仓库，用于解决团队内部的资源共享与资源同步问题。
+- 依赖查找顺序
+  - 本地仓库
+  - 私服
+  - 中尖仓库
+
+### 3.2 资源上传与下载
+
+#### 3.2.1 简介
+
+![image-20230419172629922](assets/image-20230419172629922.png)
+
+- 项目版本
+  - RELEASE（发行版本）：功能趋于稳定、当前更新停止，可以用于发行的版本，存储在私服中的 RELEASE 仓库中
+  - SNAPSHOT（快照版本）：功能不稳定、尚处于开发中的版本，即快照版本，存储在私服的 SNAPSHOT 仓库中
+
+#### 3.2.2 配置
+
+看资料捏...
+
+![image-20230419175440417](assets/image-20230419175440417.png)
+
+![image-20230419182152353](assets/image-20230419182152353.png)
+
+恭喜发发在2023年4月19日17:55学完咯
+
+
 
 
 
