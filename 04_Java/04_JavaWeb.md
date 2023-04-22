@@ -622,6 +622,12 @@ function getData() {
 </dependencies>
 ```
 
+- cmd 安装依赖
+
+  ```cmd
+  mvn install:install-file -DgroupId=com.itheima -DartifactId=ojdbc8 -Dversion=12.1.0.1 -Dpackaging=jar -Dfile=ojdbc8.jar
+  ```
+
 #### 1.3.2 依赖传递
 
 - 依赖具有传递性

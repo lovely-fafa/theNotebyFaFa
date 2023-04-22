@@ -8,6 +8,8 @@
 - Mybatis-Plus的配置
 - 条件构造器
 
+# day 01
+
 # 1 了解 Mybatis-Plus
 
 ## 1.1 Mybatis-Plus 介绍
@@ -635,6 +637,736 @@ public void testSelectOne() {
     log.info("查询到一条结果为：{}", user);
 }
 ```
+
+### 3.4.4 计数
+
+```java
+/**
+* 根据 Wrapper 条件，查询总记录数
+*
+* @param queryWrapper 实体对象封装操作类（可以为 null）
+*/
+Integer selectCount(@Param(Constants.WRAPPER) Wrapper<T> queryWrapper);
+```
+
+```java
+@Test
+public void testSelectCount() {
+    QueryWrapper<User> wrapper = new QueryWrapper<>();
+    // 条件 age 大于 20 的用户
+    wrapper.gt("age", 20);
+    Integer count = userMapper.selectCount(wrapper);
+    log.info("查询到 {} 条数据", count);
+}
+```
+
+### 3.4.5 selectList
+
+```java
+/**
+* 根据 entity 条件，查询全部记录
+*
+* @param queryWrapper 实体对象封装操作类（可以为 null）
+*/
+List<T> selectList(@Param(Constants.WRAPPER) Wrapper<T> queryWrapper);
+```
+
+```java
+@Test
+public void testSelectList() {
+    QueryWrapper<User> wrapper = new QueryWrapper<>();
+    wrapper.like("email", "@163.com");
+    List<User> users = userMapper.selectList(wrapper);
+    for (User user : users) {
+        System.out.println(user);
+    }
+}
+```
+
+### 3.4.6 selectPage 分页查询
+
+```java
+/**
+* 根据 entity 条件，查询全部记录（并翻页）
+*
+* @param page 分页查询条件（可以为 RowBounds.DEFAULT）
+* @param queryWrapper 实体对象封装操作类（可以为 null）
+*/
+IPage<T> selectPage(IPage<T> page, @Param(Constants.WRAPPER) Wrapper<T> queryWrapper);
+```
+
+- 配置分页插件
+
+```java
+import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
+import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@MapperScan("com.itheima.mapper")
+@Configuration
+public class MybatisPlusConfig {
+
+    // 配置分页插件
+    @Bean
+    public PaginationInterceptor paginationInterceptor() {
+        return new PaginationInterceptor();
+    }
+}
+```
+
+- 分页代码
+
+```java
+@Test
+public void testSelectPage() {
+    Page<User> page = new Page<>(1, 1);  // 查询第一页 查询 2 条数据
+    QueryWrapper<User> wrapper = new QueryWrapper<>();
+    wrapper.like("email", "@163.com");
+
+    Page<User> iPager = userMapper.selectPage(page, wrapper);
+
+    log.info("数据总条数：{}", iPager.getTotal());
+    log.info("数据总页数：{}", iPager.getPages());
+    log.info("当前页：{}", iPager.getCurrent());
+
+    List<User> records = iPager.getRecords();
+    for (User record : records) {
+        log.info("{}", record);
+    }
+}
+```
+
+## 3.5 SQL 注入原理
+
+前面我们已经知道，MP 在启动后会将`BaseMapper`中的一系列的方法注册到`meppedStatements`中，那么究竟是如何注入的呢？流程又是怎么样的？下面我们将一起来分析下。
+
+在 MP 中，`ISqlInjector`负责 SQL 的注入工作，它是一个接口，`AbstractSqlInjector`是它的实现类，实现关系如下：
+
+![image-20230422112129149](assets/image-20230422112129149.png)
+
+在`AbstractSqlInjector`中，主要是由`inspectInject()`方法进行注入的，如下：
+
+```java
+@Override
+public void inspectInject(MapperBuilderAssistant builderAssistant, Class<?> mapperClass) {
+    Class<?> modelClass = extractModelClass(mapperClass);
+    if (modelClass != null) {
+        String className = mapperClass.toString();
+        Set<String> mapperRegistryCache = GlobalConfigUtils.getMapperRegistryCache(builderAssistant.getConfiguration());
+        if (!mapperRegistryCache.contains(className)) {
+        	List<AbstractMethod> methodList = this.getMethodList();
+            if (CollectionUtils.isNotEmpty(methodList)) {
+                TableInfo tableInfo = TableInfoHelper.initTableInfo(builderAssistant, modelClass);
+                // 循环注入自定义方法
+                methodList.forEach(m -> m.inject(builderAssistant, mapperClass, modelClass, tableInfo));
+            } else {
+                logger.debug(mapperClass.toString() + ", No effective injection method was found.");
+            }
+        	mapperRegistryCache.add(className);
+        }
+    }
+}
+```
+
+在实现方法中， `methodList.forEach(m -> m.inject(builderAssistant, mapperClass, modelClass, tableInfo));` 是关键，循环遍历方法，进行注入。
+
+最终调用抽象方法`injectMappedStatement`进行真正的注入：
+
+```java
+/**
+* 注入自定义 MappedStatement
+*
+* @param mapperClass mapper 接口
+* @param modelClass mapper 泛型
+* @param tableInfo 数据库表反射信息
+* @return MappedStatement
+*/
+public abstract MappedStatement injectMappedStatement(Class<?> mapperClass, Class<?> modelClass, TableInfo tableInfo);
+```
+
+该方法的实现有很多，以`SelectById`为例查看：
+
+```java
+public class SelectById extends AbstractMethod {
+    @Override
+    public MappedStatement injectMappedStatement(Class<?> mapperClass, Class<?> modelClass, TableInfo tableInfo) {
+        SqlMethod sqlMethod = SqlMethod.LOGIC_SELECT_BY_ID;
+        SqlSource sqlSource = new RawSqlSource(configuration,
+        String.format(sqlMethod.getSql(),sqlSelectColumns(tableInfo, false),tableInfo.getTableName(), tableInfo.getKeyColumn(),tableInfo.getKeyProperty(),tableInfo.getLogicDeleteSql(true, false)), Object.class);
+        return this.addSelectMappedStatement(mapperClass, sqlMethod.getMethod(), sqlSource, modelClass, tableInfo);
+    }
+}
+```
+
+可以看到，生成了`SqlSource`对象，再将SQL通过`addSelectMappedStatement`方法添加到`meppedStatements`中。
+
+# 4 配置
+
+在 MP 中有大量的配置，其中有一部分是 Mybatis 原生的配置，另一部分是 MP 的配置，详情：https://mybatis.plus/config/
+
+## 4.1 基本配置
+
+### 4.1.1 configLocation
+
+MyBatis 配置文件位置，如果您有单独的 MyBatis 配置，请将其路径配置到 configLocation 中。 MyBatis Configuration 的具体内容请参考 MyBatis 官方文档
+
+- Spring Boot
+
+  ```properties
+  mybatis-plus.config-location = classpath:mybatis-config.xml
+  ```
+
+- Spring MVC
+
+  ```xml
+  <bean id="sqlSessionFactory" class="com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean">
+  	<property name="configLocation" value="classpath:mybatis-config.xml"/>
+  </bean>
+  ```
+
+### 4.1.2 mapperLocations
+
+MyBatis Mapper 所对应的 XML 文件位置，如果您在 Mapper 中有自定义方法（XML 中有自定义实现），需要进行该配置，告诉 Mapper 所对应的 XML 文件位置。
+
+- Spring Boot
+
+  ```properties
+  mybatis-plus.mapper-locations = classpath*: mybatis/*.xml
+  ```
+
+- Spring MVC
+
+  ```xml
+  <bean id="sqlSessionFactory" class="com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean">
+  	<property name="mapperLocations" value="classpath*:mybatis/*.xml"/>
+  </bean>
+  ```
+
+### 4.1.3 typeAliasesPackage
+
+MyBaits 别名包扫描路径，通过该属性可以给包中的类注册别名，注册后在 Mapper 对应的 XML 文件中可以直接使用类名，而不用使用全限定的类名（即 XML 中调用的时候不用包含包名）。
+
+- Spring Boot
+
+  ```properties
+  mybatis-plus.type-aliases-package = cn.itcast.mp.pojo
+  ```
+
+- Spring MVC
+
+  ```xml
+  <bean id="sqlSessionFactory" class="com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean">
+      <property name="typeAliasesPackage" value="com.baomidou.mybatisplus.samples.quickstart.entity"/>
+  </bean>
+  ```
+
+## 4.2 进阶配置
+
+本部分（Configuration）的配置大都为 MyBatis 原生支持的配置，这意味着您可以通过 MyBatis XML 配置文件的形
+式进行配置。
+
+### 4.2.1 mapUnderscoreToCamelCase
+
+- 类型：`boolean`
+- 默认值：`true`
+
+是否开启自动驼峰命名规则（camel case）映射，即从经典数据库列名 A_COLUMN（下划线命名）到经典 Java 属性名`aColumn`（驼峰命名） 的类似映射。
+
+> 注意：此属性在 MyBatis 中原默认值为`false`，在 MyBatis-Plus 中，此属性也将用于生成最终的 SQL 的`select body`如果您的数据库命名符合规则无需使用`@TableField`注解指定数据库字段名
+
+SpringBoot
+
+```properties
+#关闭自动驼峰映射，该参数不能和 mybatis-plus.config-location 同时存在
+mybatis-plus.configuration.map-underscore-to-camel-case=false
+```
+
+### 4.2.2 cacheEnabled
+
+- 类型：`boolean`
+- 默认值：`true`
+
+全局地开启或关闭配置文件中的所有映射器已经配置的任何缓存，默认为`true`。
+
+```properties
+mybatis-plus.configuration.cache-enabled = false
+```
+
+## 4.3 DB 策略配置
+
+### 4.3.1 idType
+
+- 类型：`com.baomidou.mybatisplus.annotation.IdType`
+- 默认值：`ID_WORKER`
+
+全局默认主键类型，设置后，即可省略实体对象中的`@TableId(type = IdType.AUTO)`配置。
+
+- SpringBoot
+
+  ```properties
+  mybatis-plus.global-config.db-config.id-type = auto
+  ```
+
+- SpringMVC
+
+  ```xml
+  <!--这里使用MP提供的sqlSessionFactory，完成了Spring与MP的整合-->
+  <bean id="sqlSessionFactory" class="com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean">
+      <property name="dataSource" ref="dataSource"/>
+      <property name="globalConfig">
+          <bean class="com.baomidou.mybatisplus.core.config.GlobalConfig">
+              <property name="dbConfig">
+                  <bean class="com.baomidou.mybatisplus.core.config.GlobalConfig$DbConfig">
+               	   <property name="idType" value="AUTO"/>
+                  </bean>
+              </property>
+          </bean>
+      </property>
+  </bean>
+  ```
+
+### 4.3.2 tablePrefix
+
+- 类型：`String`
+- 默认值：`null`
+
+MP 默认是类名首字母小写，去数据库里面查。如果查不到，则需要`@TableName()`进行手动的映射。如果是表名前缀，全局配置后则可省略`@TableName()`配置。
+
+- SpringBoot
+
+  ```properties
+  # 指定表名前缀为 tb_
+  mybatis-plus.global-config.db-config.table-prefix = tb_
+  ```
+
+- SpringMVC
+
+  ```xml
+  <bean id="sqlSessionFactory" class="com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean">
+      <property name="dataSource" ref="dataSource"/>
+      <property name="globalConfig">
+          <bean class="com.baomidou.mybatisplus.core.config.GlobalConfig">
+              <property name="dbConfig">
+                  <bean class="com.baomidou.mybatisplus.core.config.GlobalConfig$DbConfig">
+                      <property name="idType" value="AUTO"/>
+                      <property name="tablePrefix" value="tb_"/>
+                  </bean>
+              </property>
+          </bean>
+      </property>
+  </bean>
+  ```
+
+# 5 条件构造器
+
+在 MP 中，Wrapper接口的实现类关系如下 :
+
+![image-20230422173116747](assets/image-20230422173116747.png)
+
+可以看到，`AbstractWrapper`和`AbstractChainWrapper`是重点实现，接下来我们重点学习`AbstractWrapper`以及其子类。
+
+> 说明：`QueryWrapper`（`LambdaQueryWrappe`）和`UpdateWrapper`（`LambdaUpdateWrapper`）的父类，用于生成 SQL 的 where 条件，`entity`属性也用于生成 SQL 的`where`条件。注意：`entity`生成的`where`条件与使用各个 api 生成的 where 条件没有任何关联行为。
+>
+> 官网文档地址：https://mybatis.plus/guide/wrapper.html
+
+
+
+## 5.1 allEq
+
+### 5.1.1 说明
+
+```java
+allEq(Map<R, V> params)
+allEq(Map<R, V> params, boolean null2IsNull)
+allEq(boolean condition, Map<R, V> params, boolean null2IsNull)
+```
+
+- 参数说明
+
+  - `params`：`key`为数据库字段名，`value`为字段值
+
+  - `null2IsNull`：为`true`则在`map`的`value`为`null`时调用`isNull`方法，为`false`时则忽略`value`为`null`的
+
+    - 例1
+
+      ```java
+      allEq({id:1, name: "老王", age: null})
+      ```
+
+      ```sql
+      id = 1 and name = '老王' and age is null
+      ```
+
+    - 例2
+
+      ```java
+      allEq({id: 1, name: "老王", age: null}, false)
+      ```
+
+      ```sql
+      id = 1 and name = '老王'
+      ```
+
+  - `filter` 过滤函数，是否允许字段传入比对条件中`params`与`null2IsNull`
+
+    - 例1
+
+      ```java
+      allEq((k,v) -> k.indexOf("a") > 0, {id: 1, name: "老王", age: null})
+      ```
+
+      ```sql
+      name = '老王' and age is null
+      ```
+
+    - 例2
+
+      ```java
+      allEq((k,v) -> k.indexOf("a") > 0, {id: 1, name: "老王", age: null}, false)
+      ```
+
+      ```sql
+      name ='老王'
+      ```
+
+### 5.1.2 代码
+
+```java
+@Test
+public void testAllEq() {
+    Map<String, Object> map = new HashMap<>();
+    map.put("user_name", "fafa");
+    map.put("email", "136.com");
+    map.put("password", null);
+
+    QueryWrapper<User> wrapper = new QueryWrapper<>();
+    // 用法一
+    wrapper.allEq(map);
+
+    // 用法二
+    // false: null 值不作为条件 is null
+    wrapper.allEq(map, false);
+
+    // 用法
+    // map 中的键值对 是否作为条件 取决于箭头函数返回的结果是 true 还是 false
+    wrapper.allEq((k, v) -> (k.equals("age") || k.equals("id")), map);
+
+    List<User> users = userMapper.selectList(wrapper);
+    for (User user : users) {
+        System.out.println(user);
+    }
+}
+```
+
+## 5.2 基本比较操作
+
+|     符号     |                    含义                     |
+| :----------: | :-----------------------------------------: |
+|     `eq`     |                   等于`=`                   |
+|     `ne`     |                 不等于`<>`                  |
+|     `gt`     |                   大于`>`                   |
+|     `ge`     |                大于等于`>=`                 |
+|     `lt`     |                   小于`<`                   |
+|     `le`     |                小于等于`<=`                 |
+|  `between`   |            `BETWEEN 值1 AND 值2`            |
+| `notBetween` |          `NOT BETWEEN 值1 AND 值2`          |
+|     `in`     | `字段 IN (value.get(0), value.get(1), ...)` |
+
+```java
+@Test
+public void testEq() {
+    QueryWrapper<User> wrapper = new QueryWrapper<>();
+    wrapper.eq("password", "123456")
+            .gt("age", 18)
+            .in("name", "张三", "发发");
+    List<User> users = userMapper.selectList(wrapper);
+    for (User user : users) {
+        System.out.println(user);
+    }
+}
+```
+
+## 5.3 模糊查询
+
+|    符号     |       含义        |         举个栗子          |       SQL 代码       |
+| :---------: | :---------------: | :-----------------------: | :------------------: |
+|   `like`    |   `LIKE '%值%'`   |   `like("name", "王")`    |  `name like '%王%'`  |
+|  `notLike`  | `NOT LIKE '%值%'` |   notLike("name", "王")   | name not like '%王%' |
+| `likeLeft`  |   `LIKE '%值'`    |  likeLeft("name", "王")   |   name like '%王'    |
+| `likeRight` |   `LIKE '值%'`    | `likeRight("name", "王")` |   name like '王%'    |
+
+```java
+@Test
+public void testLike() {
+    QueryWrapper<User> wrapper = new QueryWrapper<>();
+    wrapper.like("password", "345")
+            .likeRight("name", "张");
+    List<User> users = userMapper.selectList(wrapper);
+    for (User user : users) {
+        System.out.println(user);
+    }
+}
+```
+
+## 5.4 排序
+
+|     符号      |           含义            |              举个栗子               |           SQL 代码           |
+| :-----------: | :-----------------------: | :---------------------------------: | :--------------------------: |
+|   `orderBy`   |   `ORDER BY 字段, ...`    | `orderBy(true, true, "id", "name")` | `order by id ASC, name ASC`  |
+| `orderByAsc`  | `ORDER BY 字段, ... ASC`  |     `orderByAsc("id", "name")`      |  `order by id ASC,name ASC`  |
+| `orderByDesc` | `ORDER BY 字段, ... DESC` |     `orderByDesc("id", "name")`     | `order by id DESC,name DESC` |
+
+```java
+@Test
+public void testOrderByAgeDesc() {
+    QueryWrapper<User> wrapper = new QueryWrapper<>();
+    wrapper.orderByDesc("age");
+    List<User> users = userMapper.selectList(wrapper);
+    for (User user : users) {
+        System.out.println(user);
+    }
+}
+```
+
+## 5.5 逻辑查询
+
+| 符号  |   含义    |                           举个栗子                           |
+| :---: | :-------: | :----------------------------------------------------------: |
+| `or`  | 拼接`OR`  | 主动调用`or`，表示紧接着下一个方法不是用`and`连接（不调用`or`则默认为使用`and`连接） |
+| `and` | `AND`嵌套 | `and(i -> i.eq("name", "李白").ne("status", "活着"))` 的 SQL 为 `and(name = '李白' and status <> '活着')` |
+
+```java
+@Test
+public void testOr(){
+    QueryWrapper<User> wrapper = new QueryWrapper<>();
+    wrapper.eq("name", "fafa")
+            .or().eq("age", 20);
+    List<User> users = userMapper.selectList(wrapper);
+    for (User user : users) {
+        log.info("{}", user);
+    }
+}
+```
+
+## 5.6 select
+
+在 MP 查询中，默认查询所有的字段，如果有需要也可以通过`select`方法进行指定字段
+
+```java
+@Test
+public void testSelect() {
+    QueryWrapper<User> wrapper = new QueryWrapper<>();
+    wrapper.eq("name", "fafa")
+            .or()
+            .eq("age", 20)
+            .likeLeft("email", "@163.com")
+            .select("id", "password", "age");
+    List<User> users = userMapper.selectList(wrapper);
+    for (User user : users) {
+        log.info("{}", user);
+    }
+}
+```
+
+# day02
+
+# 1 ActiveRecord
+
+ActiveRecord（简称AR）一直广受动态语言（PHP、Ruby 等）的喜爱，而 Java 作为准静态语言，对于 ActiveRecord 往往只能感叹其优雅，所以我们也在 AR 道路上进行了一定的探索，喜欢大家能够喜欢。
+
+- 什么是ActiveRecord？
+
+  ActiveRecord 也属于 ORM（对象关系映射）层，由 Rails 最早提出，遵循标准的 ORM 模型：表映射到记录，记录映射到对象，字段映射到对象属性。配合遵循的命名和配置惯例，能够很大程度的快速实现模型的操作，而且简洁易懂。
+
+- ActiveRecord 的主要思想
+
+  - 每一个数据库表对应创建一个类，类的每一个对象实例对应于数据库中表的一行记录；通常表的每个字段在类中都有相应的Field；
+  - ActiveRecord 同时负责把自己持久化，在 ActiveRecord 中封装了对数据库的访问，即 CURD；
+  - ActiveRecord 是一种领域模型（Domain Model），封装了部分业务逻辑
+
+## 1.1 开启 AR 之旅
+
+在 MP 中，开启 AR 非常简单，只需要将实体对象继承`Model`即可
+
+```java
+public class User extends Model<User> {
+    private Long id;
+    private String userName;
+    ...
+}
+```
+
+## 1.2 根据主键查询
+
+```java
+@Test
+public void testSelectById() {
+    User user = new User();
+    user.setId(4L);
+    User user1 = user.selectById();
+    log.info("{}", user1);
+}
+```
+
+## 1.3 插入数据
+
+```java
+
+@Test
+public void testInsert() {
+    User user = new User();
+    user.setName("fafa");
+    user.setUserName("fafafafa");
+    user.setAge(20);
+    user.setPassword("555555s");
+    user.setMail("54321@163.com");
+
+    boolean bool = user.insert();
+    log.info("插入数据 {}，是否成功 {}", user, bool);
+}
+```
+
+## 1.4 更新数据
+
+```java
+@Test
+public void testUpdate(){
+    User user = new User();
+    user.setId(4L);
+    user.setAge(100);
+    boolean bool = user.updateById();
+    log.info("更新数据 {}，结果为 {}", user, bool);
+}
+```
+
+## 1.5 删除数据
+
+```java
+@Test
+public void testDelete() {
+    User user = new User();
+    user.setId(4L);
+    boolean bool = user.deleteById();
+    log.info("删除数据：{}，结果为 {}", user, bool);
+}
+```
+
+## 1.6 查询数据
+
+```java
+@Test
+public void testSelect() {
+    User user = new User();
+    QueryWrapper<User> wrapper = new QueryWrapper<>();
+    wrapper.ge("id", 100);
+    List<User> users = user.selectList(wrapper);
+
+    for (User user1 : users) {
+        log.info("{}", user1);
+    }
+}
+```
+
+# 2 Oracle 主键 Sequence
+
+在 mysql 中，主键往往是自增长的，这样使用起来是比较方便的，如果使用的是 Oracle 数据库，那么就不能使用自增长了，就得使用Sequence 序列生成 id 值了。
+
+## 2.1 部署 Oracle 环境
+
+为了简化环境部署，这里使用 Docker 环境进行部署安装 Oracle
+
+```dockerfile
+#拉取镜像
+docker pull sath89/oracle-12c
+
+#创建容器
+docker create --name oracle -p 1521:1521 sath89/oracle-12c
+
+#启动
+docker start oracle && docker logs -f oracle
+
+#下面是启动过程
+Database not initialized. Initializing database.
+Starting tnslsnr
+Look at the log file "/u01/app/oracle/cfgtoollogs/dbca/xe/xe.log" for further details.
+Configuring Apex console
+Database initialized. Please visit http://#containeer:8080/em
+http://#containeer:8080/apex for extra configuration if needed
+Starting web management console
+PL/SQL procedure successfully completed.
+Starting import from '/docker-entrypoint-initdb.d':
+ls: cannot access /docker-entrypoint-initdb.d/*: No such file or directory
+Import finished
+Database ready to use. Enjoy! ;)
+
+#通过用户名密码即可登录
+用户名和密码为： system/oracle
+```
+
+## 2.2 创建表以及序列
+
+```mysql
+--创建表，表名以及字段名都要大写
+CREATE TABLE "TB_USER" (
+    "ID" NUMBER(20) VISIBLE NOT NULL ,
+    "USER_NAME" VARCHAR2(255 BYTE) VISIBLE ,
+    "PASSWORD" VARCHAR2(255 BYTE) VISIBLE ,
+    "NAME" VARCHAR2(255 BYTE) VISIBLE ,
+    "AGE" NUMBER(10) VISIBLE ,
+    "EMAIL" VARCHAR2(255 BYTE) VISIBLE
+)
+
+--创建序列
+CREATE SEQUENCE SEQ_USER START WITH 1 INCREMENT BY 1
+```
+
+## 2.3 jdbc 驱动包
+
+由于版权原因，我们不能直接通过 maven 的中央仓库下载 oracle 数据库的jdbc驱动包，所以我们需要将驱动包安装到本地仓库。
+
+```java
+# ojdbc8.jar文件在资料中可以找到
+mvn install:install-file -DgroupId=com.oracle -DartifactId=ojdbc8 -Dversion=12.1.0.1 -Dpackaging=jar -Dfile=ojdbc8.jar
+```
+
+安装完成后的坐标
+
+```xml
+<dependency>
+    <groupId>com.oracle</groupId>
+    <artifactId>ojdbc8</artifactId>
+    <version>12.1.0.1</version>
+</dependency>
+```
+
+## 2.4 修改 application.properties
+
+对于 application.properties 的修改，需要修改2个位置，分别是：
+
+```properties
+# 数据库连接配置
+spring.datasource.driver-class-name=oracle.jdbc.OracleDriver
+spring.datasource.url=jdbc:oracle:thin:@192.168.31.81:1521:xe
+spring.datasource.username=system
+spring.datasource.password=oracle
+# id生成策略
+mybatis-plus.global-config.db-config.id-type=input
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
