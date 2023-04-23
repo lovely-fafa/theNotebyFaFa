@@ -1354,9 +1354,383 @@ spring.datasource.password=oracle
 mybatis-plus.global-config.db-config.id-type=input
 ```
 
+## 2.5 配置序列
+
+使用 Oracle 的序列需要做2件事情
+
+第一，需要配置 MP 的序列生成器到 Spring 容器
+
+```java
+package cn.itcast.mp;
+import com.baomidou.mybatisplus.extension.incrementer.OracleKeyGenerator;
+import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
+import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+@MapperScan("cn.itcast.mp.mapper") //设置mapper接口的扫描包
+public class MybatisPlusConfig {
+    /**
+    * 分页插件
+    */
+    @Bean
+    public PaginationInterceptor paginationInterceptor() {
+    	return new PaginationInterceptor();
+    }
+    
+    /**
+    * 序列生成器
+    */
+    @Bean
+    public OracleKeyGenerator oracleKeyGenerator(){
+    	return new OracleKeyGenerator();
+    }
+}
+```
+
+第二，在实体对象中指定序列的名称：
+
+```java
+@KeySequence(value = "SEQ_USER", clazz = Long.class)
+public class User{
+    ...
+}
+```
+
+## 2.6 测试
+
+```java
+package cn.itcast.mp;
+import cn.itcast.mp.mapper.UserMapper;
+import cn.itcast.mp.pojo.User;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+import java.util.List;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class UserMapperTest {
+    
+    @Autowired
+    private UserMapper userMapper;
+    
+    @Test
+    public void testInsert(){
+        User user = new User();
+        user.setAge(20);
+        user.setEmail("test@itcast.cn");
+        user.setName("曹操");
+        user.setUserName("caocao");
+        user.setPassword("123456");
+        int result = this.userMapper.insert(user); //返回的result是受影响的行数，并不是自增
+        后的id
+        System.out.println("result = " + result);
+        System.out.println(user.getId()); //自增后的id会回填到对象中
+    }
+    
+    @Test
+    public void testSelectById(){
+        User user = this.userMapper.selectById(8L);
+        System.out.println(user);
+    }
+}
+```
+
+# 3 插件
+
+## 3.1 mybatis的插件机制
+
+MyBatis 允许你在已映射语句执行过程中的某一点进行拦截调用。默认情况下，MyBatis 允许使用插件来拦截的方法调用包括
+
+1. Executor (update, query, flushStatements, commit, rollback, getTransaction, close, isClosed)
+2. ParameterHandler (getParameterObject, setParameters)
+3. ResultSetHandler (handleResultSets, handleOutputParameters)
+4. StatementHandler (prepare, parameterize, batch, update, query)
+
+我们看到了可以拦截 Executor 接口的部分方法，比如 update，query，commit，rollback 等方法，还有其他接口的一些方法等。总体概括为：
+
+1. 拦截执行器的方法
+2. 拦截参数的处理
+3. 拦截结果集的处理
+4. 拦截 Sql 语法构建的处理
+
+- 拦截器示例：
+
+```java
+import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.plugin.Interceptor;
+import org.apache.ibatis.plugin.Intercepts;
+import org.apache.ibatis.plugin.Invocation;
+import org.apache.ibatis.plugin.Signature;
+
+import java.util.Properties;
+import java.util.concurrent.Executor;
+
+@Intercepts({@Signature(
+        type = Executor.class,  // 拦截的类型
+        method = "update",  // 拦截 Executor 的 update 方法
+        args = {
+                MappedStatement.class,
+                Object.class
+        }
+)})
+public class MyInterceptor implements Interceptor {
+    @Override
+    public Object intercept(Invocation invocation) throws Throwable {
+        // 拦截方法，具体的逻辑编写位置
+        return null;
+    }
+
+    @Override
+    public Object plugin(Object target) {
+        // 创建 target 对象的代理对象，目的是将当前拦截器加入到该对象中
+        return Interceptor.super.plugin(target);
+    }
+
+    @Override
+    public void setProperties(Properties properties) {
+        // 属性设置
+        Interceptor.super.setProperties(properties);
+    }
+}
+```
+
+- 注入到 Spring 容器
+
+```java
+/**
+* 自定义拦截器
+*/
+@Bean
+public MyInterceptor myInterceptor(){
+	return new MyInterceptor();
+}
+```
+
+- 或者通过 xml 配置，mybatis-config.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <plugins>
+	    <plugin interceptor="cn.itcast.mp.plugins.MyInterceptor"></plugin>
+    </plugins>
+</configuration>
+```
+
+## 3.2 执行分析插件
+
+在 MP 中提供了对 SQL 执行的分析的插件，可用作阻断全表更新、删除的操作，注意：该插件仅适用于开发环境，不适用于生产环境。
+
+SpringBoot 配置
+
+```java
+@Bean
+public SqlExplainInterceptor sqlExplainInterceptor() {
+
+    SqlExplainInterceptor sqlExplainInterceptor = new SqlExplainInterceptor();
+
+    List<ISqlParser> list = new ArrayList<>();
+    // 添加了一个 全表删除更新的阻断器
+    list.add(new BlockAttackSqlParser());
+    sqlExplainInterceptor.setSqlParserList(list);
+
+    return sqlExplainInterceptor;
+}
+```
+
+```java
+@Test
+public void testUpdateAll() {
+    User user = new User();
+    user.setAge(105);
+
+    boolean bool = user.update(null);  // 全表更新
+    log.info("{}", bool);
+}
+```
+
+可以看到，当执行全表更新时，会抛出异常，这样有效防止了一些误操作。
+
+## 3.3 性能分析插件
+
+性能分析拦截器，用于输出每条 SQL 语句及其执行时间，可以设置最大执行时间，超过时间会抛出异常。该插件只用于开发环境，不建议生产环境使用。
+
+### 3.3.1 已被移出
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <plugins>
+        <!-- SQL 执行性能分析，开发环境使用，线上不推荐。 -->
+        <plugin interceptor="com.baomidou.mybatisplus.extension.plugins.PerformanceInterceptor">
+            <!-- maxTime 指的是 sql 最大执行时长 此处为 100 毫秒 -->
+            <property name="maxTime" value="100" />
+            <!--SQL 是否格式化 默认 false -->
+            <property name="format" value="true" />
+        </plugin>
+    </plugins>
+</configuration>
+```
+
+### 3.3.1 使用 p6spy
+
+- 依赖配置
+
+```xml
+<dependency>
+    <groupId>p6spy</groupId>
+    <artifactId>p6spy</artifactId>
+    <version>3.9.0</version>
+</dependency>
+```
+
+- 配置文件
+
+```properties
+spring.datasource.driver-class-name=com.p6spy.engine.spy.P6SpyDriver
+spring.datasource.url=jdbc:p6spy:mysql://localhost:3306/mp
+```
+
+- spy.properties 配置文件
+
+```properties
+# 3.2.1 以上使用
+modulelist=com.baomidou.mybatisplus.extension.p6spy.MybatisPlusLogFactory,com.p6spy.engine.outage.P6OutageFactory
+
+# 3.2.1 以下使用
+modulelist=com.p6spy.engine.logging.P6LogFactory,com.p6spy.engine.outage.P6OutageFactory
+
+# 自定义日志打印
+logMessageFormat=com.baomidou.mybatisplus.extension.p6spy.P6SpyLogger
+#日志输出到控制台
+appender=com.baomidou.mybatisplus.extension.p6spy.StdoutLogger
+# 使用日志系统记录 sql
+#appender=com.p6spy.engine.spy.appender.Slf4JLogger
+# 设置 p6spy driver 代理
+deregisterdrivers=true
+# 取消JDBC URL前缀
+useprefix=true
+# 配置记录 Log 例外,可去掉的结果集有error,info,batch,debug,statement,commit,rollback,result,resultset.
+excludecategories=info,debug,result,commit,resultset
+# 日期格式
+dateformat=yyyy-MM-dd HH:mm:ss
+# 实际驱动可多个
+# driverlist=org.h2.Driver
+# 是否开启慢SQL记录
+outagedetection=true
+# 慢SQL记录标准 2 秒
+outagedetectioninterval=2
+```
+
+## 3.4 乐观锁插件
+### 3.4.1 主要适用场景
+
+意图：当要更新一条记录的时候，希望这条记录没有被别人更新
+
+乐观锁实现方式：
+
+- 取出记录时，获取当前`version`
+- 更新时，带上这个`version`
+- 执行更新时， `set version = newVersion where version = oldVersion`
+- 如果`version`不对，就更新失败
+
+### 3.4.2 插件配置
+
+- spring  xml
+
+```xml
+<bean class="com.baomidou.mybatisplus.extension.plugins.OptimisticLockerInterceptor"/>
+```
+
+- spring boot
+
+```java
+@Bean
+public OptimisticLockerInterceptor optimisticLockerInterceptor() {
+	return new OptimisticLockerInterceptor();
+}
+```
+
+### 3.4.3 注解实体字段
+
+需要为实体字段添加`@Version`注解。
+
+- 第一步，为表添加`version`字段，并且设置初始值为1
+
+```sql
+ALTER TABLE `tb_user`
+ADD COLUMN `version` int(10) NULL AFTER `email`;
+UPDATE `tb_user` SET `version`='1';
+```
+
+- 第二步，为`User`实体对象添加`version`字段，并且添加`@Version`注解
+
+```java
+public class User extends Model<User> {
+
+	...
+
+    // 乐观锁版本字段
+    @Version
+    private Integer version;
+}
+```
+
+### 3.4.4 测试
+
+```java
+@Test
+public void testUpdateVersion(){
+    User user = new User();
+    user.setId(5L);
+    // 先查版本
+    User userVersion = user.selectById();
+    // 修改数据
+    user.setAge(80);
+    user.setVersion(userVersion.getVersion());  // 读到当前版本
+    // UPDATE tb_user SET age=80, version=2 WHERE id=5 AND version=1
+    // 这个 更新的 2 就是插件自增的
+    boolean bool = user.updateById();
+    log.info("更新数据 {}，结果为 {}", user, bool);
+}
+```
+
+可以看到，更新的条件中有`version`条件，并且更新的`version`为2。如果再次执行，更新则不成功。这样就避免了多人同时更新时导致数据的不一致。
+
+### 3.4.5 特别说明
+
+- 支持的数据类型只有：`int`、`Integer`、`long`、`Long`、`Date`、`Timestamp`、`LocalDateTime`
+- 整数类型下`newVersion = oldVersion + 1`
+- `newVersion`会回写到`entity`中
+- 仅支持`updateById(id)`与`update(entity, wrapper)`方法
+- 在`update(entity, wrapper)`方法下，`wrapper`**不能复用**！！！
+
+# 4 Sql 注入器
+
+我们已经知道，在 MP 中，通过`AbstractSqlInjector`将`BaseMapper`中的方法注入到了 Mybatis 容器，这样这些方法才可以正常执行。
+
+那么，如果我们需要扩充`BaseMapper`中的方法，又该如何实现呢？下面我们以扩展`findAll`方法为例进行学习。
+
+## 4.1 编写 MyBaseMapper
 
 
 
+
+
+
+
+所以，其他的`Mapper`都可以继承该我们的`MyBaseMapper`，而我们的`MyBaseMapper`继承了 MP 的`BaseMapper`，这样实现了统一的扩展。
 
 
 
