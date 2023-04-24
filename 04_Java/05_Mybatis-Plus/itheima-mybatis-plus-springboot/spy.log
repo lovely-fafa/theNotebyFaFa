@@ -1,0 +1,1 @@
+1682232194832|3|statement|connection 0|url jdbc:p6spy:mysql://localhost:3306/mp|UPDATE tb_user  SET age=?  WHERE id=?|UPDATE tb_user  SET age=100  WHERE id=1

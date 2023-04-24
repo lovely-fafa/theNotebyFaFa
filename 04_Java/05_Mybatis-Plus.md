@@ -1724,31 +1724,490 @@ public void testUpdateVersion(){
 
 ## 4.1 编写 MyBaseMapper
 
-
-
-
-
-
+```java
+public interface MyBaseMapper<T> extends BaseMapper<T> {
+    List<T> findAll();
+}
+```
 
 所以，其他的`Mapper`都可以继承该我们的`MyBaseMapper`，而我们的`MyBaseMapper`继承了 MP 的`BaseMapper`，这样实现了统一的扩展。
 
+```java
+@Component
+public interface UserMapper extends MyBaseMapper<User> {
+
+    User findById(Long id);
+}
+```
+
+## 4.2 编写 MySqlInjector
+
+如果直接继承`AbstractSqlInjector`的话，原有的`BaseMapper`中的方法将失效，所以我们选择继承`DefaultSqlInjector`进行扩展。
+
+```java
+public class MySqlInjector extends DefaultSqlInjector {
+    @Override
+    public List<AbstractMethod> getMethodList(Class<?> mapperClass) {
+
+        // 获取父类 即 DefaultSqlInjector 中返回的 List<AbstractMethod>
+        List<AbstractMethod> list = super.getMethodList(mapperClass);
+
+        // 添加我们自定义的
+        list.add(new FindAll());
+        return list;
+    }
+}
+```
+
+## 4.3 编写FindAll
+
+可以参考比如说`selectById`
+
+```java
+public class FindAll extends AbstractMethod {
+    @Override
+    public MappedStatement injectMappedStatement(Class<?> mapperClass, Class<?> modelClass, TableInfo tableInfo) {
+        String sql = "select * from " + tableInfo.getTableName();
+        SqlSource sqlSource = languageDriver.createSqlSource(configuration, sql, modelClass);
+        return this.addSelectMappedStatementForTable(mapperClass, "findAll", sqlSource, tableInfo);
+    }
+}
+```
+
+## 4.4 注册到Spring容器
+
+```java
+@Bean
+public MySqlInjector mySqlInjector() {
+    return new MySqlInjector();
+}
+```
+
+## 4.5 测试
+
+```java
+/**
+ * 测试 自定义的 sql 注入器
+ */
+@Test
+public void testFindAll() {
+    List<User> users = userMapper.findAll();
+    for (User user : users) {
+        log.info("{}", user);
+    }
+}
+```
+
+至此，我们实现了全局扩展SQL注入器。
+# 5 自动填充功能
+
+有些时候我们可能会有这样的需求，插入或者更新数据时，希望有些字段可以自动填充数据，比如密码、`version`等。在 MP 中提供了这样的功能，可以实现自动填充。
+## 5.1 添加 @TableField 注解
+
+为`password`添加自动填充功能，在新增数据时有效
+
+```java
+@TableField(
+        select = false,  // 查询时不查该值
+        fill = FieldFill.INSERT  // 插入数据是填充
+)
+private String password;
+```
+
+`FieldFill`提供了多种模式选择
+
+```java
+public enum FieldFill {
+    /**
+    * 默认不处理
+    */
+    DEFAULT,
+    /**
+    * 插入时填充字段
+    */
+    INSERT,
+    /**
+    * 更新时填充字段
+    */
+    UPDATE,
+    /**
+    * 插入和更新时填充字段
+    */
+    INSERT_UPDATE
+}
+```
+
+## 5.2 编写 MyMetaObjectHandler
+
+```java
+@Component
+public class MyMetaObjectHandler implements MetaObjectHandler {
+    // 插入数据时填充
+    @Override
+    public void insertFill(MetaObject metaObject) {
+        // 获取到 password 的值
+        Object password = getFieldValByName("password", metaObject);
+
+        if (null == password) {
+        // 如果为空 填充
+            setFieldValByName("password", "888888", metaObject);
+        }
+    }
+
+    // 更新数据时填充
+    @Override
+    public void updateFill(MetaObject metaObject) {
+
+    }
+}
+```
+
+# 6 逻辑删除
+
+开发系统时，有时候在实现功能时，删除操作需要实现逻辑删除，所谓逻辑删除就是将数据标记为删除，而并非真正的物理删除（非`DELETE`操作），查询时需要携带状态条件，确保被标记的数据不被查询到。这样做的目的就是避免数据被真正的删除。
+
+MP 就提供了这样的功能，方便我们使用，接下来我们一起学习下。
+## 6.1 修改表结构
+
+为`tb_user`表增加`deleted`字段，用于表示数据是否被删除，1代表删除，0代表未删除。
+
+```sql
+ALTER TABLE `tb_user`
+ADD COLUMN `deleted` int(1) NULL DEFAULT 0 COMMENT '1代表删除，0代表未删除' AFTER `version`;
+```
+
+同时，也修改`User`实体，增加`deleted`属性并且添加`@TableLogic`注解
+
+```java
+// 逻辑删除 1 删除 0 未删除
+@TableLogic
+private Integer deleted;
+```
+
+## 6.2 配置
+
+application.properties
+
+```properties
+# 删除状态的值为 1
+mybatis-plus.global-config.db-config.logic-delete-value=1
+# 未删除状态的值为 0
+mybatis-plus.global-config.db-config.logic-not-delete-value=0
+```
+
+# 7 通用枚举
+
+解决了繁琐的配置，让 mybatis 优雅的使用枚举属性！
+
+## 7.1 修改表结构
+
+```sql
+ALTER TABLE `tb_user`
+ADD COLUMN `sex` int(1) NULL DEFAULT 1 COMMENT '1-男，2-女' AFTER `deleted`;
+```
+
+## 7.2 定义枚举
+
+```java
+public enum SexEnum implements IEnum<Integer> {
+    MAN(1, "男"),
+    WOMAN(2, "女");
+
+    private int values;
+    private String desc;
+
+    SexEnum(int values, String desc) {
+        this.values = values;
+        this.desc = desc;
+    }
+
+    @Override
+    public Integer getValue() {
+        return values;
+    }
+
+    @Override
+    public String toString() {
+        return desc;
+    }
+}
+```
+
+## 7.3 配置
+
+```properties
+# 枚举包扫描
+mybatis-plus.type-enums-package=com.itheima.enums
+```
+
+## 7.4 修改实体
+
+```java
+// 性别 枚举类
+private SexEnum sex;
+```
+
+从测试可以看出，可以很方便的使用枚举了。查询条件时也是有效的。也可以由枚举类别对应的值，进行大小比较的查询。
+
+# 8 代码生成器
+
+- https://juejin.cn/post/7075598068233535495
+
+AutoGenerator 是 MyBatis-Plus 的代码生成器，通过 AutoGenerator 可以快速生成`Entity`、`Mapper`、`Mapper`、`XML`、`Service`、`Controller` 等各个模块的代码，极大的提升了开发效率。
+
+```java
+package com.itheima.mp.generator;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
+import com.baomidou.mybatisplus.core.toolkit.StringPool;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.generator.AutoGenerator;
+import com.baomidou.mybatisplus.generator.InjectionConfig;
+import com.baomidou.mybatisplus.generator.config.DataSourceConfig;
+import com.baomidou.mybatisplus.generator.config.FileOutConfig;
+import com.baomidou.mybatisplus.generator.config.GlobalConfig;
+import com.baomidou.mybatisplus.generator.config.PackageConfig;
+import com.baomidou.mybatisplus.generator.config.StrategyConfig;
+import com.baomidou.mybatisplus.generator.config.TemplateConfig;
+import com.baomidou.mybatisplus.generator.config.po.TableInfo;
+import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
+import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
+
+/**
+ * <p>
+ * mysql 代码生成器演示例子
+ * </p>
+ */
+public class MysqlGenerator {
+
+    /**
+     * <p>
+     * 读取控制台内容
+     * </p>
+     */
+    public static String scanner(String tip) {
+        Scanner scanner = new Scanner(System.in);
+        StringBuilder help = new StringBuilder();
+        help.append("请输入" + tip + "：");
+        System.out.println(help.toString());
+        if (scanner.hasNext()) {
+            String ipt = scanner.next();
+            if (StringUtils.isNotEmpty(ipt)) {
+                return ipt;
+            }
+        }
+        throw new MybatisPlusException("请输入正确的" + tip + "！");
+    }
+
+    /**
+     * RUN THIS
+     */
+    public static void main(String[] args) {
+        // 代码生成器
+        AutoGenerator mpg = new AutoGenerator();
+
+        // 全局配置
+        GlobalConfig gc = new GlobalConfig();
+        String projectPath = System.getProperty("user.dir");
+        gc.setOutputDir(projectPath + "/src/main/java");
+        gc.setAuthor("itcast");
+        gc.setOpen(false);
+        mpg.setGlobalConfig(gc);
+
+        // 数据源配置
+        DataSourceConfig dsc = new DataSourceConfig();
+        dsc.setUrl("jdbc:mysql://127.0.0.1:3306/mp?useUnicode=true&useSSL=false&characterEncoding=utf8");
+        // dsc.setSchemaName("public");
+        dsc.setDriverName("com.mysql.jdbc.Driver");
+        dsc.setUsername("root");
+        dsc.setPassword("555555s");
+        mpg.setDataSource(dsc);
+
+        // 包配置
+        PackageConfig pc = new PackageConfig();
+        pc.setModuleName(scanner("模块名"));
+        pc.setParent("cn.itcast.mp.generator");
+        mpg.setPackageInfo(pc);
+
+        // 自定义配置
+        InjectionConfig cfg = new InjectionConfig() {
+            @Override
+            public void initMap() {
+                // to do nothing
+            }
+        };
+        List<FileOutConfig> focList = new ArrayList<>();
+        focList.add(new FileOutConfig("/templates/mapper.xml.ftl") {
+            @Override
+            public String outputFile(TableInfo tableInfo) {
+                // 自定义输入文件名称
+                return projectPath + "/itcast-mp-generator/src/main/resources/mapper/" + pc.getModuleName()
+                        + "/" + tableInfo.getEntityName() + "Mapper" + StringPool.DOT_XML;
+            }
+        });
+        cfg.setFileOutConfigList(focList);
+        mpg.setCfg(cfg);
+        mpg.setTemplate(new TemplateConfig().setXml(null));
+
+        // 策略配置
+        StrategyConfig strategy = new StrategyConfig();
+        strategy.setNaming(NamingStrategy.underline_to_camel);
+        strategy.setColumnNaming(NamingStrategy.underline_to_camel);
+//        strategy.setSuperEntityClass("com.baomidou.mybatisplus.samples.generator.common.BaseEntity");
+        strategy.setEntityLombokModel(true);
+//        strategy.setSuperControllerClass("com.baomidou.mybatisplus.samples.generator.common.BaseController");
+        strategy.setInclude(scanner("表名"));
+        strategy.setSuperEntityColumns("id");
+        strategy.setControllerMappingHyphenStyle(true);
+        strategy.setTablePrefix(pc.getModuleName() + "_");
+        mpg.setStrategy(strategy);
+        // 选择 freemarker 引擎需要指定如下加，注意 pom 依赖必须有！
+        mpg.setTemplateEngine(new FreemarkerTemplateEngine());
+        mpg.execute();
+    }
+}
+```
+
+# 9 MybatisX 快速开发插件
+
+- MybatisX 是一款基于 IDEA 的快速开发插件，为效率而生。
+- 安装方法：打开 IDEA，进入 File -> Settings -> Plugins -> Browse Repositories，输入 mybatisx 搜索并安装。
+- 功能
+  - Java 与 XML 调回跳转
+  - Mapper 方法自动生成 XML
+
+# itheima-mybatis-plus
 
 
+```
+文件夹 PATH 列表
+卷序列号为 9B70-56F8
+E:.
++---itheima-mybatis-plus-simple
+|   |   pom.xml
+|   |
+|   \---src
+|       +---main
+|       |   +---java
+|       |   |   \---com
+|       |   |       \---itheima
+|       |   |           \---mp
+|       |   |               \---simple
+|       |   |                   +---mapper
+|       |   |                   |       UserMapper.java
+|       |   |                   |
+|       |   |                   \---pojo
+|       |   |                           User.java
+|       |   |
+|       |   \---resources
+|       |           log4f.properties
+|       |           mybatis-config.xml
+|       |           UserMapper.xml
+|       |
+|       \---test
+|           \---java
+|               \---com
+|                   \---itheima
+|                       \---mp
+|                           \---simple
+|                                   TestMybatis.java
+|                                   TestMybatisPlus.java
+|
+\---itheima-mybatis-plus-spring
+    |   pom.xml
+    |
+    \---src
+        +---main
+        |   +---java
+        |   |   \---com
+        |   |       \---itheima
+        |   |           \---mp
+        |   |               \---simple
+        |   |                   +---mapper
+        |   |                   |       UserMapper.java
+        |   |                   |
+        |   |                   \---pojo
+        |   |                           User.java
+        |   |
+        |   \---resources
+        |           applicationContext.xml
+        |           jdbc.properties
+        |
+        \---test
+            +---java
+            |   \---com
+            |       \---itheima
+            |           \---mp
+            |               \---simple
+            |                       TestMybatisSpring.java
+            |
+            \---resources
+                    applicationContext.xml
+                    jdbc.properties
+```
 
+# itheima-mybatis-plus-springboot
 
+```
+文件夹 PATH 列表
+卷序列号为 9B70-56F8
+E:.
+|   pom.xml
+|   spy.log
+|
+\---src
+    +---main
+    |   +---java
+    |   |   \---com
+    |   |       \---itheima
+    |   |           |   ItheimaMybatisPlusSpringbootApplication.java
+    |   |           |   MybatisPlusConfig.java
+    |   |           |
+    |   |           +---enums
+    |   |           |       SexEnum.java
+    |   |           |
+    |   |           +---handler
+    |   |           |       MyMetaObjectHandler.java
+    |   |           |
+    |   |           +---injectors
+    |   |           |       FindAll.java
+    |   |           |       MySqlInjector.java
+    |   |           |
+    |   |           +---mapper
+    |   |           |       MyBaseMapper.java
+    |   |           |       UserMapper.java
+    |   |           |
+    |   |           +---plugins
+    |   |           |       MyInterceptor.java
+    |   |           |
+    |   |           \---pojo
+    |   |                   User.java
+    |   |
+    |   \---resources
+    |       |   application.properties
+    |       |   mybatis-config.xml
+    |       |   spy.properties
+    |       |
+    |       +---mybatis
+    |       |       UserMapper.xml
+    |       |
+    |       +---static
+    |       \---templates
+    \---test
+        \---java
+            \---com
+                \---itheima
+                        ItheimaMybatisPlusSpringbootApplicationTests.java
+                        MyInterceptor.java
+                        TestUserMapper.java
+                        TestUserMapperAR.java
+                        unirun.java
+```
 
+恭喜发发在 2023年4月24日19:10 学完咯
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+![image-20230424191058815](assets/image-20230424191058815.png)
