@@ -3261,7 +3261,7 @@ public class Student implements Comparable<Student>{
         System.out.println("o:" + o);
         System.out.println("--------------");
         return this.getAge() - o.getAge();
-}
+    }
 }
 
 ```

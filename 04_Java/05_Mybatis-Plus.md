@@ -970,7 +970,16 @@ MP 默认是类名首字母小写，去数据库里面查。如果查不到，�
 >
 > 官网文档地址：https://mybatis.plus/guide/wrapper.html
 
+## 5.0 LambdaQueryWrapper
 
+```java
+/*
+wrapper.eq("userName", employee.getUserName())
+        .eq("password", employee.getPassword());
+ */
+LambdaQueryWrapper<Employee> queryWrapper = new LambdaQueryWrapper<>();
+queryWrapper.eq(Employee::getUserName, employee.getPassword());
+```
 
 ## 5.1 allEq
 
