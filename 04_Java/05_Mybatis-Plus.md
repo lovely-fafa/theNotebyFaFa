@@ -972,14 +972,36 @@ MP 默认是类名首字母小写，去数据库里面查。如果查不到，�
 
 ## 5.0 LambdaQueryWrapper
 
-```java
-/*
-wrapper.eq("userName", employee.getUserName())
-        .eq("password", employee.getPassword());
- */
-LambdaQueryWrapper<Employee> queryWrapper = new LambdaQueryWrapper<>();
-queryWrapper.eq(Employee::getUserName, employee.getPassword());
-```
+- 正常情况下是：
+
+  ```java
+  QueryWrapper<User> wrapper = new QueryWrapper<>();
+  wrapper.eq("password", "123456");
+  List<User> users = userMapper.selectList(wrapper);
+  ```
+
+- 可以使用`lambda`：
+
+  ```java
+  QueryWrapper<User> wrapper = new QueryWrapper<>().lambda();
+  // 没有把 password 硬编码
+  wrapper.eq(Employee::getPassword,, "123456");
+  List<User> users = userMapper.selectList(wrapper);
+  ```
+
+  ```java
+  QueryWrapper<User> wrapper = new QueryWrapper<>();
+  // 没有把 password 硬编码
+  wrapper.lambda().eq(Employee::getPassword,, "123456");
+  List<User> users = userMapper.selectList(wrapper);
+  ```
+
+- 或者直接这样，用`LambdaQueryWrapper`：
+
+  ```java
+  LambdaQueryWrapper<Employee> queryWrapper = new LambdaQueryWrapper<>();
+  queryWrapper.eq(Employee::getUserName, employee.getPassword());
+  ```
 
 ## 5.1 allEq
 
