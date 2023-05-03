@@ -3431,6 +3431,41 @@ public class GlobalExceptionHandle {
 }
 ```
 
+```java
+package com.itheima.reggie.common;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+import java.sql.SQLIntegrityConstraintViolationException;
+
+/**
+ * 全局异常处理器
+ */
+@ControllerAdvice(annotations = {RestController.class, Controller.class})  // 捕获加了这些注解的类所抛出的异常
+@ResponseBody
+@Slf4j
+public class GlobalExceptionHandle {
+
+    /**
+     * 异常处理方法 该方法处理的是 sql 的 SQLIntegrityConstraintViolationException 异常
+     * @return
+     */
+    @ExceptionHandler(java.sql.SQLIntegrityConstraintViolationException.class)
+    public Result<String> exceptHandler(SQLIntegrityConstraintViolationException ex) {
+        String exMessage = ex.getMessage();
+        errorMsg = "具体的逻辑";
+        return Result.error(errorMsg);
+        }
+
+        return Result.error("未知错误...");
+    }
+}
+```
+
+
+
 # day 13 事务管理 & AOP
 
 ## 1 事务管理
