@@ -1871,6 +1871,9 @@ public enum FieldFill {
 ## 5.2 编写 MyMetaObjectHandler
 
 ```java
+/**
+ * 自定义元数据处理器
+ */
 @Component
 public class MyMetaObjectHandler implements MetaObjectHandler {
     // 插入数据时填充
