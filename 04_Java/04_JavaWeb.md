@@ -1008,6 +1008,9 @@ Tomcat 部署项目：将项目放置到 webapps 目录下，即部署完成
 
 - 集合参数：请求参数名与形参集合名称相同且请求参数为多个，`@RequestParam`绑定参数关系
 
+  - `http://127.0.0.1:8080/listParam?hobby=java&hobby=python`
+  - `http://localhost:8080/setmeal?ids=1654810636447649793,1654810235883241474,1654809554346618881,1415580119015145474`
+  
   ```java
   @RequestMapping("/listParam")
   public String listParam(@RequestParam List<String> hobby) {
@@ -1015,8 +1018,9 @@ Tomcat 部署项目：将项目放置到 webapps 目录下，即部署完成
       return "Ok";
   }
   ```
-
-  `http://127.0.0.1:8080/listParam?hobby=java&hobby=python`
+  
+  
+  
 
 ### 1.5 日期参数
 
