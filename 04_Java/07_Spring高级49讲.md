@@ -107,7 +107,461 @@ System.out.println(context.getEnvironment().getProperty("server.port"));
 
 #### 2.4 事件发布与监听，实现组件之间的解耦
 
-> 事件发布还可以异步，这个视频中没有展示，请自行查阅`@EnableAsync`，`@Async`的用法
+> - 事件发布还可以异步，这个视频中没有展示，请自行查阅`@EnableAsync`，`@Async`的用法
+> - 这也是设计模式中 发布-订阅模式、观察者模式的一种实现。
+> - 观察者模式：简单的来讲就是你在做事情的时候身边有人在盯着你，当你做的某一件事情是旁边观察的人感兴趣的事情的时候，他会根据这个事情做一些其他的事，但是盯着你看的人必须要到你这里来登记，否则你无法通知到他（或者说他没有资格来盯着你做事情）。
+
+- 比如说，我们先定义一个事件
+
+```java
+import org.springframework.context.ApplicationEvent;
+
+// 继承事件
+public class UserRegisteredEvent extends ApplicationEvent {
+    public UserRegisteredEvent(Object source) {
+        super(source);
+    }
+}
+```
+
+- 定义一个监视器
+
+  自己定义的监听器需要实现ApplicationListener，同时泛型参数要加上自己要监听的事件Class名，在重写的方法onApplicationEvent中，添加自己的业务处理：
+
+```java
+@Component
+public class MyNoAnnotationListener implements ApplicationListener<MyTestEvent> {
+
+    @Override
+    public void onApplicationEvent(MyTestEvent event) {
+        System.out.println("非注解监听器：" + event.getMsg());
+    }
+}
+
+```
+
+- 也可以用注解`@EventListener`
+
+```java
+@Component
+public class Component2 {
+
+    private static final Logger log = LoggerFactory.getLogger(Component2.class);
+
+    // 监听事件
+    @EventListener
+    public void aaa(UserRegisteredEvent event) {
+        log.debug("监听到事件：{}", event);
+        log.debug("发送短信");
+    }
+
+}
+```
+
+- 事件发布
+
+  有了事件，有了事件监听者，那么什么时候触发这个事件呢？每次想让监听器收到事件通知的时候，就可以调用一下事件发布的操作。首先在类里自动注入了`ApplicationEventPublisher`，这个也就是我们的`ApplicationContext`，它实现了这个接口。
+
+```java
+@Component
+public class MyTestEventPubLisher {
+    
+    @Autowired
+    private ApplicationEventPublisher applicationEventPublisher;
+
+    /**
+     *  事件发布方法
+      */
+    public void pushListener(String msg) {
+        applicationEventPublisher.publishEvent(new MyTestEvent(this, msg));
+    }
+}
+```
+
+- 举个例子
+
+  我们想用户注册后，继续执行一部分逻辑，但是这部分逻辑是不定的，不能直接写死，所以需要解耦
+
+```java
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
+
+@Component
+public class Component1 {
+
+    private static final Logger log = LoggerFactory.getLogger(Component1.class);
+
+    @Autowired
+    private ApplicationContext context;
+
+    public void register() {
+        log.debug("用户注册");
+        // 用户注册后 后续逻辑不确定 所以不能定死了 因此可以发一个事件
+        context.publishEvent(new UserRegisteredEvent(this));
+    }
+
+}
+```
+
+## 第二讲 容器实现
+
+### 1 BeanFactory实现的特点
+
+* beanFactory 可以通过 registerBeanDefinition 注册一个 bean definition 对象
+  * 我们平时使用的配置类、xml、组件扫描等方式都是生成 bean definition 对象注册到 beanFactory 当中
+  * bean definition 描述了这个 bean 的创建蓝图：scope 是什么、用构造还是工厂创建、初始化销毁方法是什么，等等
+* beanFactory 需要手动调用 beanFactory 后处理器对它做增强
+  * 例如通过解析 @Bean、@ComponentScan 等注解，来补充一些 bean definition
+* beanFactory 需要手动添加 bean 后处理器，以便对后续 bean 的创建过程提供增强
+  * 例如 @Autowired，@Resource 等注解的解析都是 bean 后处理器完成的
+  * bean 后处理的添加顺序会对解析结果有影响，见视频中同时加 @Autowired，@Resource 的例子
+* beanFactory 需要手动调用方法来初始化单例
+* beanFactory 需要额外设置才能解析 ${} 与 #{}
+
+```java
+package com.itheima.a02;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
+import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.beans.factory.support.AbstractBeanDefinition;
+import org.springframework.beans.factory.support.BeanDefinitionBuilder;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.context.annotation.AnnotationConfigUtils;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
+
+public class TestBeanFactory {
+
+    public static void main(String[] args) {
+        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+
+        // 描述 bean 的定义（class, scope, 初始化, 销毁）
+        AbstractBeanDefinition beanDefinition = BeanDefinitionBuilder
+                .genericBeanDefinition(Config.class)  // 通过 class
+                .setScope("singleton")  // 单例还是多例
+                .getBeanDefinition();  // 最后得到 BeanDefinition
+        // 注册 这个时候 beanFactory 就有了一个名字叫 config 的单例，类型是 Config
+        beanFactory.registerBeanDefinition("config", beanDefinition);  // 第一个是名字
+        // 验证一下 看看是不是有
+        for (String name : beanFactory.getBeanDefinitionNames()) {
+            System.out.println(name);
+        }
+        // 但是但是 这个地方只输出了刚刚添加的 config
+        // 而没有解析里面的注解
+        System.out.println("*********************************");
+
+        // 给 BeanFactory 添加一些常用的后处理器
+        // 添加了 后处理器到 bean 工厂里面 注意只是添加了
+        AnnotationConfigUtils.registerAnnotationConfigProcessors(beanFactory);
+        // 验证一下 看看是不是有
+        for (String name : beanFactory.getBeanDefinitionNames()) {
+            System.out.println(name);
+        }
+        /*
+            输出了这些
+            config
+            org.springframework.context.annotation.internalConfigurationAnnotationProcessor
+            org.springframework.context.annotation.internalAutowiredAnnotationProcessor
+            org.springframework.context.annotation.internalCommonAnnotationProcessor
+            org.springframework.context.event.internalEventListenerProcessor
+            org.springframework.context.event.internalEventListenerFactory
+         */
+        System.out.println("*********************************");
+
+        // 所以我们把 bean 工厂里面的后处理器取出来 去执行他们
+        // BeanFactory 后处理器主要功能，补充了一些 bean 定义
+        beanFactory.getBeansOfType(BeanFactoryPostProcessor.class)
+                .values()  // 返回的 map 集合 我们只需要集合的值
+                .forEach(beanFactoryPostProcessor -> {
+                    beanFactoryPostProcessor.postProcessBeanFactory(beanFactory);
+                });
+        // 验证一下 看看是不是有
+        for (String name : beanFactory.getBeanDefinitionNames()) {
+            System.out.println(name);
+        }
+        /*
+            config
+            org.springframework.context.annotation.internalConfigurationAnnotationProcessor
+            org.springframework.context.annotation.internalAutowiredAnnotationProcessor
+            org.springframework.context.annotation.internalCommonAnnotationProcessor
+            org.springframework.context.event.internalEventListenerProcessor
+            org.springframework.context.event.internalEventListenerFactory
+            bean1
+            bean2
+            bean3
+            bean4
+         */
+        System.out.println("*********************************");
+
+        // 虽然 bean1 放进去了 但是 bean1 中 @Autowired 的 bean2 没有放进去
+        System.out.println(beanFactory.getBean(Bean1.class).getBean2());
+        // [DEBUG] 16:30:50.256 [main] c.itheima.a02.TestBeanFactory$Bean1 - 构造 Bean1()
+        // null
+
+        // Bean 后处理器, 针对 bean 的生命周期的各个阶段提供扩展, 例如 @Autowired @Resource ...
+        // addBeanPostProcessor: 建立 后处理器 和 bean 工厂的联系
+        beanFactory.getBeansOfType(BeanPostProcessor.class).values().forEach(beanFactory::addBeanPostProcessor);
+        System.out.println("+++++++++++" + beanFactory.getBean(Bean1.class).getBean2());
 
 
+        for (String name : beanFactory.getBeanDefinitionNames()) {
+            System.out.println(name);
+        }
+
+        beanFactory.preInstantiateSingletons(); // 准备好所有单例 否则只有用的时候 才会去创造 即延迟创建
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
+        System.out.println(beanFactory.getBean(Bean1.class).getBean2());
+        System.out.println(beanFactory.getBean(Bean1.class).getInter());
+
+        System.out.println("Common:" + (Ordered.LOWEST_PRECEDENCE - 3));
+        System.out.println("Autowired:" + (Ordered.LOWEST_PRECEDENCE - 2));
+    }
+
+    @Configuration
+    static class Config {
+        @Bean
+        public Bean1 bean1() {
+            return new Bean1();
+        }
+
+        @Bean
+        public Bean2 bean2() {
+            return new Bean2();
+        }
+
+        @Bean
+        public Bean3 bean3() {
+            return new Bean3();
+        }
+
+        @Bean
+        public Bean4 bean4() {
+            return new Bean4();
+        }
+    }
+
+    interface Inter {
+
+    }
+
+    static class Bean3 implements Inter {
+
+    }
+
+    static class Bean4 implements Inter {
+
+    }
+
+    @Component
+    static class Bean1 {
+        private static final Logger log = LoggerFactory.getLogger(Bean1.class);
+
+        public Bean1() {
+            log.debug("构造 Bean1()");
+        }
+
+        @Autowired
+        private Bean2 bean2;
+
+        public Bean2 getBean2() {
+            return bean2;
+        }
+
+        @Autowired
+        @Resource(name = "bean4")
+        private Inter bean3;
+
+        public Inter getInter() {
+            return bean3;
+        }
+    }
+
+    static class Bean2 {
+        private static final Logger log = LoggerFactory.getLogger(Bean2.class);
+
+        public Bean2() {
+            log.debug("构造 Bean2()");
+        }
+    }
+}
+```
+
+### 2 ApplicationContext 的常见实现和用法
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="bean1" class="com.itheima.a02.A02.Bean1"/>
+    <bean id="bean2" class="com.itheima.a02.A02.Bean2">
+        <property name="bean1" ref="bean1"/>
+    </bean>
+
+</beans>
+```
+
+```java
+// ⬇️较为经典的容器, 基于 classpath 下 xml 格式的配置文件来创建
+private static void testClassPathXmlApplicationContext() {
+    ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("b01.xml");
+
+    for (String name : context.getBeanDefinitionNames()) {
+        System.out.println(name);
+    }
+    // 可以看到 xml 文件中的 bean 成功注入了
+    // bean1
+    // bean2
+
+    System.out.println(context.getBean(Bean2.class).getBean1());  // com.itheima.a02.A02$Bean1@209da20d
+}
+
+// ⬇️基于磁盘路径下 xml 格式的配置文件来创建
+private static void testFileSystemXmlApplicationContext() {
+    String configLocation = "E:\\程序员\\4、Spring高级四十九讲\\代码\\show\\src\\main\\resources\\b01.xml";
+    FileSystemXmlApplicationContext context = new FileSystemXmlApplicationContext(configLocation);
+
+    for (String name : context.getBeanDefinitionNames()) {
+        System.out.println(name);
+    }
+
+    System.out.println(context.getBean(Bean2.class).getBean1());
+}
+```
+
+```java
+// ⬇️较为经典的容器, 基于 java 配置类来创建
+private static void testAnnotationConfigApplicationContext() {
+    AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
+
+    for (String name : context.getBeanDefinitionNames()) {
+        System.out.println(name);
+    }
+
+    System.out.println(context.getBean(Bean2.class).getBean1());
+}
+
+@Configuration
+static class Config {
+    @Bean
+    public Bean1 bean1() {
+        return new Bean1();
+    }
+
+    @Bean
+    public Bean2 bean2(Bean1 bean1) {
+        Bean2 bean2 = new Bean2();
+        bean2.setBean1(bean1);
+        return bean2;
+    }
+}
+
+static class Bean1 {
+}
+
+static class Bean2 {
+
+    private Bean1 bean1;
+
+    public void setBean1(Bean1 bean1) {
+        this.bean1 = bean1;
+    }
+
+    public Bean1 getBean1() {
+        return bean1;
+    }
+}
+```
+
+之前是这个样子的
+
+```java
+private static void test() {
+    DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+    System.out.println("读取之前的 bean ");
+    for (String beanDefinitionName : beanFactory.getBeanDefinitionNames()) {
+        System.out.println(beanDefinitionName);
+    }
+
+    System.out.println("读取之后的 bean ");
+    XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(beanFactory);
+    reader.loadBeanDefinitions(new ClassPathResource("b01.xml"));
+    for (String beanDefinitionName : beanFactory.getBeanDefinitionNames()) {
+        System.out.println(beanDefinitionName);
+    }
+}
+```
+
+### 3 内嵌容器、注册 DispatcherServlet
+
+```java
+// ⬇️较为经典的容器, 基于 java 配置类来创建, 用于 web 环境
+private static void testAnnotationConfigServletWebServerApplicationContext() {
+    AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(WebConfig.class);
+
+    for (String name : context.getBeanDefinitionNames()) {
+        System.out.println(name);
+    }
+}
+
+@Configuration
+static class WebConfig {
+    @Bean
+    public ServletWebServerFactory servletWebServerFactory(){
+        return new TomcatServletWebServerFactory();
+    }
+    @Bean
+    public DispatcherServlet dispatcherServlet() {
+        return new DispatcherServlet();
+    }
+    @Bean
+    public DispatcherServletRegistrationBean registrationBean(DispatcherServlet dispatcherServlet) {
+        // 把 DispatcherServlet 注册到 TomcatServletWebServerFactory
+        return new DispatcherServletRegistrationBean(dispatcherServlet, "/");
+    }
+    @Bean("/hello")
+    public Controller controller1() {
+        return (request, response) -> {
+            response.getWriter().print("hello");
+            return null;
+        };
+    }
+}
+```
+
+## 第三讲
+
+### 1 Spring bean 生命周期各个阶段
+
+```mermaid
+graph LR
+
+创建 --> 依赖注入
+依赖注入 --> 初始化
+初始化 --> 可用
+可用 --> 销毁
+```
+
+- 类的初始化
+
+  是完成程序执行前的准备工作。在这个阶段，**静态的**（变量，方法，代码块）会被执行。同时在会开辟一块存储空间用来存放静态的数据。初始化只在类加载的时候执行一次
+
+- 类的实例化（实例化对象）
+
+  是指创建一个对象的过程。这个过程中会在堆中开辟内存，将一些**非静态**的方法，变量存放在里面。在程序执行的过程中，可以创建多个对象，既多次实例化。每次实例化都会开辟一块新的内存。（就是调用构造函数）
+
+
+
+### 2 模板设计模式
 
