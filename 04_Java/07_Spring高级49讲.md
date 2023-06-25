@@ -561,7 +561,181 @@ graph LR
 
   是指创建一个对象的过程。这个过程中会在堆中开辟内存，将一些**非静态**的方法，变量存放在里面。在程序执行的过程中，可以创建多个对象，既多次实例化。每次实例化都会开辟一块新的内存。（就是调用构造函数）
 
+```java
+@Component
+public class LifeCycleBean {
+    private static final Logger log = LoggerFactory.getLogger(LifeCycleBean.class);
 
+    // 构造方法
+    public LifeCycleBean() {
+    log.debug("构造");
+    }
+
+    // 依赖注入的方法
+    @Autowired
+    public void autowire(@Value("${JAVA_HOME}") String home) {
+    log.debug("依赖注入: {}", home);
+    }
+
+    // 初始化方法
+    @PostConstruct
+    public void init() {
+    log.debug("初始化");
+    }
+
+    // 销毁的方法
+    @PreDestroy
+    public void destroy() {
+    log.debug("销毁");
+    }
+}
+```
+
+- 创建前后的增强
+
+  * postProcessBeforeInstantiation
+    * 这里返回的对象若不为 null 会替换掉原本的 bean，并且仅会走 postProcessAfterInitialization 流程
+
+  * postProcessAfterInstantiation
+    * 这里如果返回 false 会跳过依赖注入阶段
+
+- 依赖注入前的增强
+
+  * postProcessProperties
+    * 如 @Autowired、@Value、@Resource 
+
+- 初始化前后的增强
+
+  * postProcessBeforeInitialization
+    * 这里返回的对象会替换掉原本的 bean
+    * 如 @PostConstruct、@ConfigurationProperties
+
+  * postProcessAfterInitialization 
+    * 这里返回的对象会替换掉原本的 bean
+    * 如代理增强
+
+- 销毁之前的增强
+
+  * postProcessBeforeDestruction
+    * 如 @PreDestroy 
+
+```java
+@Component
+public class MyBeanPostProcessor implements InstantiationAwareBeanPostProcessor, DestructionAwareBeanPostProcessor {
+
+    private static final Logger log = LoggerFactory.getLogger(MyBeanPostProcessor.class);
+
+    @Override
+    public void postProcessBeforeDestruction(Object bean, String beanName) throws BeansException {
+        if (beanName.equals("lifeCycleBean"))
+            log.debug("<<<<<< 销毁之前执行, 如 @PreDestroy");
+    }
+
+    @Override
+    public Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) throws BeansException {
+        if (beanName.equals("lifeCycleBean"))
+            log.debug("<<<<<< 实例化之前（还没有调用构造方法）执行, 这里返回的对象会替换掉原本的 bean");
+        return null;
+    }
+
+    @Override
+    public boolean postProcessAfterInstantiation(Object bean, String beanName) throws BeansException {
+        if (beanName.equals("lifeCycleBean")) {
+            log.debug("<<<<<< 实例化之后执行, 这里如果返回 false 会跳过依赖注入阶段");
+//            return false;
+        }
+        return true;  // 还会执行后续依赖注入的阶段
+    }
+
+    @Override
+    public PropertyValues postProcessProperties(PropertyValues pvs, Object bean, String beanName) throws BeansException {
+        if (beanName.equals("lifeCycleBean"))
+            log.debug("<<<<<< 依赖注入阶段执行, 如 @Autowired、@Value、@Resource");
+        return pvs;
+    }
+
+    @Override
+    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+        if (beanName.equals("lifeCycleBean"))
+            log.debug("<<<<<< 初始化之前执行, 这里返回的对象会替换掉原本的 bean, 如 @PostConstruct、@ConfigurationProperties");
+        return bean;
+    }
+
+    @Override
+    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+        if (beanName.equals("lifeCycleBean"))
+            log.debug("<<<<<< 初始化之后执行, 这里返回的对象会替换掉原本的 bean, 如代理增强");
+        return bean;
+    }
+}
+```
 
 ### 2 模板设计模式
+
+- 模板模式
+
+  模板模式（Template Pattern），定义一个操作中算法的骨架，而将一些步骤延迟到子类中，模板方法使得子类可以不改变算法的结构，只是重定义该算法的某些特定步骤。这种类型的设计模式属于行为型模式。
+
+- 模板模式解决的问
+
+  一些方法通用，却在每一个子类都重新写了这一方法，带来大量重复的代码的问题。相同的部分父类给出统一的模板，不同的部分，子类进行重写。
+
+```java
+public class TestMethodTemplate {
+
+    public static void main(String[] args) {
+        MyBeanFactory beanFactory = new MyBeanFactory();
+        // 添加后处理器
+        beanFactory.addBeanPostProcessor(bean -> System.out.println("解析 @Autowired"));
+        beanFactory.addBeanPostProcessor(bean -> System.out.println("解析 @Resource"));
+        beanFactory.getBean();
+    }
+
+    // 模板方法  Template Method Pattern
+    static class MyBeanFactory {
+        public Object getBean() {
+            Object bean = new Object();
+            System.out.println("构造 " + bean);
+            System.out.println("依赖注入 " + bean); // @Autowired, @Resource
+
+            // 循环 执行所有的后处理器
+            for (BeanPostProcessor processor : processors) {
+                processor.inject(bean);
+            }
+
+            System.out.println("初始化 " + bean);
+            return bean;
+        }
+
+        // 后处理器集合
+        private List<BeanPostProcessor> processors = new ArrayList<>();
+        // 都添加进去
+        public void addBeanPostProcessor(BeanPostProcessor processor) {
+            processors.add(processor);
+        }
+    }
+
+    static interface BeanPostProcessor {
+        public void inject(Object bean); // 对依赖注入阶段的扩展
+    }
+}
+```
+
+## 第四讲 Bean 后处理器
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
