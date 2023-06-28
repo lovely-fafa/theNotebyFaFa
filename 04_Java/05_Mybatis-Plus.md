@@ -970,6 +970,16 @@ MP 默认是类名首字母小写，去数据库里面查。如果查不到，�
 >
 > 官网文档地址：https://mybatis.plus/guide/wrapper.html
 
+![image-20230628214716927](assets/image-20230628214716927.png)
+
+- Wrapper ： 条件构造抽象类，最顶端父类
+  - AbstractWrapper ： 用于查询条件封装，生成 sql 的 where 条件
+  - QueryWrapper ： Entity 对象封装操作类，不是用lambda语法
+  - UpdateWrapper ： Update 条件封装，用于Entity对象更新操作
+- AbstractLambdaWrapper ： Lambda 语法使用 Wrapper统一处理解析 lambda 获取 column。
+  - LambdaQueryWrapper ：看名称也能明白就是用于Lambda语法使用的查询Wrapper
+  - LambdaUpdateWrapper ： Lambda 更新封装Wrapper
+
 ## 5.0 LambdaQueryWrapper
 
 - 正常情况下是：
@@ -992,7 +1002,7 @@ MP 默认是类名首字母小写，去数据库里面查。如果查不到，�
   ```java
   QueryWrapper<User> wrapper = new QueryWrapper<>();
   // 没有把 password 硬编码
-  wrapper.lambda().eq(Employee::getPassword,, "123456");
+  wrapper.lambda().eq(Employee::getPassword, "123456");
   List<User> users = userMapper.selectList(wrapper);
   ```
 
@@ -1198,6 +1208,61 @@ public void testSelect() {
         log.info("{}", user);
     }
 }
+```
+
+## 5.7 MyBatis-Plus 封装 service 层
+
+我们可以看到，上面的代码都是对`dao`层进行了封装即：
+
+```java
+package com.atguigu.auth.mapper;
+
+import com.atguigu.model.system.SysRole;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
+
+@Mapper
+public interface SysRoleMapper extends BaseMapper<SysRole> {
+}
+```
+
+然后只需要在`servers`层自动注入`SysRoleMapper`即可，但是，我们也可以用mp在`service`层进行封装，即先写一个接口
+
+```java
+package com.atguigu.auth.service;
+
+import com.atguigu.model.system.SysRole;
+import com.baomidou.mybatisplus.extension.service.IService;
+
+public interface SysRoleService extends IService<SysRole> {
+}
+```
+
+然后实现
+
+```java
+package com.atguigu.auth.service.Impl;
+
+import com.atguigu.auth.mapper.SysRoleMapper;
+import com.atguigu.auth.service.SysRoleService;
+import com.atguigu.model.system.SysRole;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+
+public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> implements SysRoleService {
+}
+```
+
+便可直接在`controller`层注入`SysRoleService`即可。
+
+```shell
++---mapper
+|       SysRoleMapper.java
+|
+\---service
+    |   SysRoleService.java
+    |
+    \---Impl
+            SysRoleServiceImpl.java
 ```
 
 # day02

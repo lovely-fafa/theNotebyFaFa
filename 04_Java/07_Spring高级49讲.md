@@ -723,9 +723,158 @@ public class TestMethodTemplate {
 
 ## 第四讲 Bean 后处理器
 
+### 1 后处理器作用
 
+1. @Autowired 等注解的解析属于 bean 生命周期阶段（依赖注入, 初始化）的扩展功能，这些扩展功能由 bean 后处理器来完成
+2. 每个后处理器各自增强什么功能
+   * AutowiredAnnotationBeanPostProcessor 解析 @Autowired 与 @Value
+   * CommonAnnotationBeanPostProcessor 解析 @Resource、@PostConstruct、@PreDestroy
+   * ConfigurationPropertiesBindingPostProcessor 解析 @ConfigurationProperties
+3. 另外 ContextAnnotationAutowireCandidateResolver 负责获取 @Value 的值，解析 @Qualifier、泛型、@Lazy 等
 
+```java
+public class A04 {
+    public static void main(String[] args) {
+        // ⬇️GenericApplicationContext 是一个【干净】的容器
+        GenericApplicationContext context = new GenericApplicationContext();
 
+        // ⬇️用原始方法注册三个 bean
+        context.registerBean("bean1", Bean1.class);
+        context.registerBean("bean2", Bean2.class);
+        context.registerBean("bean3", Bean3.class);
+        context.registerBean("bean4", Bean4.class);
+
+        context.getDefaultListableBeanFactory().setAutowireCandidateResolver(new ContextAnnotationAutowireCandidateResolver());
+        // 注册 解析 @Autowired @Value 注解的后处理器
+        context.registerBean(AutowiredAnnotationBeanPostProcessor.class);
+        // 注册 解析 @Resource @PostConstruct（初始化前解析的） @PreDestroy 注解的后处理器
+        context.registerBean(CommonAnnotationBeanPostProcessor.class);
+        // 注册 解析 @ConfigurationProperties（初始化前解析的） 注解的后处理器
+        ConfigurationPropertiesBindingPostProcessor.register(context.getDefaultListableBeanFactory());  // Bean4{home='E:\jdk17', version='17.0.5'}
+
+        // ⬇️初始化容器
+        context.refresh(); // 执行beanFactory后处理器, 添加bean后处理器, 初始化所有单例
+
+        System.out.println(context.getBean(Bean4.class));
+
+        // ⬇️销毁容器
+        context.close();
+    }
+}
+```
+
+```java
+public class Bean1 {
+    private static final Logger log = LoggerFactory.getLogger(Bean1.class);
+
+    private Bean2 bean2;
+
+    @Autowired
+    public void setBean2(Bean2 bean2) {
+        log.debug("@Autowired 生效: {}", bean2);
+        this.bean2 = bean2;
+    }
+
+    @Autowired
+    private Bean3 bean3;
+
+    @Resource
+    public void setBean3(Bean3 bean3) {
+        log.debug("@Resource 生效: {}", bean3);
+        this.bean3 = bean3;
+    }
+
+    private String home;
+
+    @Autowired
+    public void setHome(@Value("${JAVA_HOME}") String home) {
+        log.debug("@Value 生效: {}", home);
+        this.home = home;
+    }
+
+    @PostConstruct
+    public void init() {
+        log.debug("@PostConstruct 生效");
+    }
+
+    @PreDestroy
+    public void destroy() {
+        log.debug("@PreDestroy 生效");
+    }
+
+    @Override
+    public String toString() {
+        return "Bean1{" +
+               "bean2=" + bean2 +
+               ", bean3=" + bean3 +
+               ", home='" + home + '\'' +
+               '}';
+    }
+}
+```
+
+### 2 模拟解析 @ComponentScan
+
+1. AutowiredAnnotationBeanPostProcessor.findAutowiringMetadata 用来获取某个 bean 上加了 @Value @Autowired 的成员变量，方法参数的信息，表示为 InjectionMetadata
+2. InjectionMetadata 可以完成依赖注入
+3. InjectionMetadata 内部根据成员变量，方法参数封装为 DependencyDescriptor 类型
+4. 有了 DependencyDescriptor，就可以利用 beanFactory.doResolveDependency 方法进行基于类型的查找
+
+```java
+public class DigInAutowired {
+    public static void main(String[] args) throws Throwable {
+        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+        beanFactory.registerSingleton("bean2", new Bean2()); // 创建过程,依赖注入,初始化
+        beanFactory.registerSingleton("bean3", new Bean3());
+        // 获取 @Value 的值
+        beanFactory.setAutowireCandidateResolver(new ContextAnnotationAutowireCandidateResolver());
+        beanFactory.addEmbeddedValueResolver(new StandardEnvironment()::resolvePlaceholders); // ${} 的解析器
+
+        // 1. 查找哪些属性、方法加了 @Autowired, 这称之为 InjectionMetadata
+        AutowiredAnnotationBeanPostProcessor processor = new AutowiredAnnotationBeanPostProcessor();
+        processor.setBeanFactory(beanFactory);
+
+        Bean1 bean1 = new Bean1();
+        System.out.println(bean1);  // Bean1{bean2=null, bean3=null, home='null'}
+        // 执行依赖注入 解析 @Autowired @Value 注解
+        processor.postProcessProperties(null, bean1, "bean1");
+        System.out.println(bean1);  // Bean1{bean2=com.itheima.a04.Bean2@1bb5a082, bean3=com.itheima.a04.Bean3@3754a4bf, home='D:\install\jdk8'}
+
+        /*
+            processor.postProcessProperties 去解析了第二个参数中的 @autowired 注解
+            主要是调用了 findAutowiringMetadata 方法
+                private InjectionMetadata findAutowiringMetadata(String beanName, Class<?> clazz, @Nullable PropertyValues pvs)
+            接下来通过反射看看这个方法的返回值
+         */
+        Method findAutowiringMetadata = AutowiredAnnotationBeanPostProcessor.class.getDeclaredMethod("findAutowiringMetadata", String.class, Class.class, PropertyValues.class);
+        findAutowiringMetadata.setAccessible(true);
+        // 获取 Bean1 上加了 @Value @Autowired 的成员变量，方法参数信息
+        InjectionMetadata metadata = (InjectionMetadata) findAutowiringMetadata.invoke(processor, "bean1", Bean1.class, null);
+        System.out.println(metadata);
+
+        // 2. 调用 InjectionMetadata 来进行依赖注入, 注入时按类型查找值
+        metadata.inject(bean1, "bean1", null);
+        System.out.println(bean1);
+
+        // 3. 如何按类型查找值
+        Field bean3 = Bean1.class.getDeclaredField("bean3");
+        DependencyDescriptor dd1 = new DependencyDescriptor(bean3, false);
+        Object o = beanFactory.doResolveDependency(dd1, null, null, null);
+        System.out.println(o);
+
+        Method setBean2 = Bean1.class.getDeclaredMethod("setBean2", Bean2.class);
+        DependencyDescriptor dd2 =
+                new DependencyDescriptor(new MethodParameter(setBean2, 0), true);
+        Object o1 = beanFactory.doResolveDependency(dd2, null, null, null);
+        System.out.println(o1);
+
+        Method setHome = Bean1.class.getDeclaredMethod("setHome", String.class);
+        DependencyDescriptor dd3 = new DependencyDescriptor(new MethodParameter(setHome, 0), true);
+        Object o2 = beanFactory.doResolveDependency(dd3, null, null, null);
+        System.out.println(o2);
+    }
+}
+```
 
 
 
