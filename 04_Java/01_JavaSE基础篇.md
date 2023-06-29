@@ -16,6 +16,7 @@
 - ```ctrl+p```：看方法形参
 - ```ctrl+alt+l```：格式化代码
 - `ctrl+o`：打开重写界面
+- `ctrl+alt+u`：类图
 
 # day 01
 
