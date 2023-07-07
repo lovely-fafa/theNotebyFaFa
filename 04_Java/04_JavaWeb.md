@@ -2540,6 +2540,8 @@ public List<Emp> list(@Param("name")String name, @Param("gender") Short gender, 
 
 ## 6 XML 映射文件
 
+### 6.1 放在 resources 文件夹下
+
 - XML 映射文件的名称与 Mapper 接口名称一致，并且将 XML 映射文件和 Mapper 接口放置在相同包下（同包同名）
 - XML 映射文件的 namespace 属性为 Mapper 接口全限定名一致
 - XML 映射文件中 sql 语句的 id 与 Mapper 接口中的方法名一致，并保持返回类型一致
@@ -2563,9 +2565,48 @@ public List<Emp> list(@Param("name")String name, @Param("gender") Short gender, 
 </select>
 ```
 
-使用 Mybatis 的注解，主要是来完成一些简单的增删改查功能。如果需要实现复杂的 SQL 功能，建议使用 XML 来配置映射语句。
+### 6.2 放在 mapper 文件夹下
 
-官方说明：https://mybatis.net.cn/getting-started.html
+使用代码生成器就会在这个文件下生成 xml 映射文件，而 maven 编译时默认只会编译 src 文件夹下的`*.java`文件。所以如果不想移动到resources文件夹下的话，就需要进行如下配置：
+
+```xml
+<!--  在pom.xml文件中  -->
+<build>
+    <plugins>
+        ...
+    </plugins>
+    <resources>
+        <resource>
+            <directory>src/main/java</directory>
+            <includes>
+                <include>**/*.yml</include>
+                <include>**/*.properties</include>
+                <include>**/*.xml</include>
+            </includes>
+            <filtering>false</filtering>
+        </resource>
+        <resource>
+            <directory>src/main/resources</directory>
+            <includes> <include>**/*.yml</include>
+                <include>**/*.properties</include>
+                <include>**/*.xml</include>
+            </includes>
+            <filtering>false</filtering>
+        </resource>
+    </resources>
+</build>
+```
+
+```yaml
+# 在application-dev.yml添加
+mybatis-plus:
+  mapper-locations: classpath:com/atguigu/auth/mapper/xml/*.xml
+```
+
+### 6.3 总结
+
+- 使用 Mybatis 的注解，主要是来完成一些简单的增删改查功能。如果需要实现复杂的 SQL 功能，建议使用 XML 来配置映射语句。
+- 官方说明：https://mybatis.net.cn/getting-started.html
 
 ## 6 Mybatis 动态 SQL
 
