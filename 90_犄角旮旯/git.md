@@ -72,6 +72,7 @@ git config --global user.email
 
 - 鼠标右键新建文件夹或```Ctrl+N```或```gitBash```新建文件夹
 - ```gitBash```中输入指令```git init```
+- 设置不忽略大小写：`git config core.ignorecase false`
 
 ## 2.2 文件的过程
 
