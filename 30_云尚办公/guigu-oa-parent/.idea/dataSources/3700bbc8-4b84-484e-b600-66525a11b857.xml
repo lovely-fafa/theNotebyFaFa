@@ -1,0 +1,4339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataSource name="@localhost">
+  <database-model serializer="dbm" dbms="MYSQL" family-id="MYSQL" format-version="4.45">
+    <root id="1">
+      <DefaultCasing>lower/lower</DefaultCasing>
+      <DefaultEngine>InnoDB</DefaultEngine>
+      <DefaultTmpEngine>InnoDB</DefaultTmpEngine>
+      <Grants>|root||root|localhost|ALTER|G
+|root||root|localhost|ALTER ROUTINE|G
+|root||root|localhost|APPLICATION_PASSWORD_ADMIN|G
+|root||mysql.infoschema|localhost|AUDIT_ABORT_EXEMPT|G
+|root||mysql.session|localhost|AUDIT_ABORT_EXEMPT|G
+|root||mysql.sys|localhost|AUDIT_ABORT_EXEMPT|G
+|root||root|localhost|AUDIT_ABORT_EXEMPT|G
+|root||root|localhost|AUDIT_ADMIN|G
+|root||root|localhost|AUTHENTICATION_POLICY_ADMIN|G
+|root||mysql.session|localhost|BACKUP_ADMIN|G
+|root||root|localhost|BACKUP_ADMIN|G
+|root||root|localhost|BINLOG_ADMIN|G
+|root||root|localhost|BINLOG_ENCRYPTION_ADMIN|G
+|root||mysql.session|localhost|CLONE_ADMIN|G
+|root||root|localhost|CLONE_ADMIN|G
+|root||mysql.session|localhost|CONNECTION_ADMIN|G
+|root||root|localhost|CONNECTION_ADMIN|G
+|root||root|localhost|CREATE|G
+|root||root|localhost|CREATE ROLE|G
+|root||root|localhost|CREATE ROUTINE|G
+|root||root|localhost|CREATE TABLESPACE|G
+|root||root|localhost|CREATE TEMPORARY TABLES|G
+|root||root|localhost|CREATE USER|G
+|root||root|localhost|CREATE VIEW|G
+|root||root|localhost|DELETE|G
+|root||root|localhost|DROP|G
+|root||root|localhost|DROP ROLE|G
+|root||root|localhost|ENCRYPTION_KEY_ADMIN|G
+|root||root|localhost|EVENT|G
+|root||root|localhost|EXECUTE|G
+|root||root|localhost|FILE|G
+|root||root|localhost|FLUSH_OPTIMIZER_COSTS|G
+|root||root|localhost|FLUSH_STATUS|G
+|root||root|localhost|FLUSH_TABLES|G
+|root||root|localhost|FLUSH_USER_RESOURCES|G
+|root||root|localhost|GROUP_REPLICATION_ADMIN|G
+|root||root|localhost|GROUP_REPLICATION_STREAM|G
+|root||root|localhost|INDEX|G
+|root||root|localhost|INNODB_REDO_LOG_ARCHIVE|G
+|root||root|localhost|INNODB_REDO_LOG_ENABLE|G
+|root||root|localhost|INSERT|G
+|root||root|localhost|LOCK TABLES|G
+|root||root|localhost|PASSWORDLESS_USER_ADMIN|G
+|root||mysql.session|localhost|PERSIST_RO_VARIABLES_ADMIN|G
+|root||root|localhost|PERSIST_RO_VARIABLES_ADMIN|G
+|root||root|localhost|PROCESS|G
+|root||root|localhost|REFERENCES|G
+|root||root|localhost|RELOAD|G
+|root||root|localhost|REPLICATION CLIENT|G
+|root||root|localhost|REPLICATION SLAVE|G
+|root||root|localhost|REPLICATION_APPLIER|G
+|root||root|localhost|REPLICATION_SLAVE_ADMIN|G
+|root||root|localhost|RESOURCE_GROUP_ADMIN|G
+|root||root|localhost|RESOURCE_GROUP_USER|G
+|root||root|localhost|ROLE_ADMIN|G
+|root||mysql.infoschema|localhost|SELECT|G
+|root||root|localhost|SELECT|G
+|root||root|localhost|SENSITIVE_VARIABLES_OBSERVER|G
+|root||root|localhost|SERVICE_CONNECTION_ADMIN|G
+|root||mysql.session|localhost|SESSION_VARIABLES_ADMIN|G
+|root||root|localhost|SESSION_VARIABLES_ADMIN|G
+|root||root|localhost|SET_USER_ID|G
+|root||root|localhost|SHOW DATABASES|G
+|root||root|localhost|SHOW VIEW|G
+|root||root|localhost|SHOW_ROUTINE|G
+|root||mysql.session|localhost|SHUTDOWN|G
+|root||root|localhost|SHUTDOWN|G
+|root||mysql.session|localhost|SUPER|G
+|root||root|localhost|SUPER|G
+|root||mysql.infoschema|localhost|SYSTEM_USER|G
+|root||mysql.session|localhost|SYSTEM_USER|G
+|root||mysql.sys|localhost|SYSTEM_USER|G
+|root||root|localhost|SYSTEM_USER|G
+|root||mysql.session|localhost|SYSTEM_VARIABLES_ADMIN|G
+|root||root|localhost|SYSTEM_VARIABLES_ADMIN|G
+|root||root|localhost|TABLE_ENCRYPTION_ADMIN|G
+|root||root|localhost|TRIGGER|G
+|root||root|localhost|UPDATE|G
+|root||root|localhost|XA_RECOVER_ADMIN|G
+|root||root|localhost|grant option|G
+performance_schema|schema||mysql.session|localhost|SELECT|G
+sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
+      <ServerVersion>8.0.29</ServerVersion>
+    </root>
+    <collation id="2" parent="1" name="armscii8_general_ci">
+      <Charset>armscii8</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
+    </collation>
+    <collation id="3" parent="1" name="armscii8_bin">
+      <Charset>armscii8</Charset>
+    </collation>
+    <collation id="4" parent="1" name="ascii_general_ci">
+      <Charset>ascii</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
+    </collation>
+    <collation id="5" parent="1" name="ascii_bin">
+      <Charset>ascii</Charset>
+    </collation>
+    <collation id="6" parent="1" name="big5_chinese_ci">
+      <Charset>big5</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
+    </collation>
+    <collation id="7" parent="1" name="big5_bin">
+      <Charset>big5</Charset>
+    </collation>
+    <collation id="8" parent="1" name="binary">
+      <Charset>binary</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
+    </collation>
+    <collation id="9" parent="1" name="cp1250_general_ci">
+      <Charset>cp1250</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
+    </collation>
+    <collation id="10" parent="1" name="cp1250_czech_cs">
+      <Charset>cp1250</Charset>
+    </collation>
+    <collation id="11" parent="1" name="cp1250_croatian_ci">
+      <Charset>cp1250</Charset>
+    </collation>
+    <collation id="12" parent="1" name="cp1250_bin">
+      <Charset>cp1250</Charset>
+    </collation>
+    <collation id="13" parent="1" name="cp1250_polish_ci">
+      <Charset>cp1250</Charset>
+    </collation>
+    <collation id="14" parent="1" name="cp1251_bulgarian_ci">
+      <Charset>cp1251</Charset>
+    </collation>
+    <collation id="15" parent="1" name="cp1251_ukrainian_ci">
+      <Charset>cp1251</Charset>
+    </collation>
+    <collation id="16" parent="1" name="cp1251_bin">
+      <Charset>cp1251</Charset>
+    </collation>
+    <collation id="17" parent="1" name="cp1251_general_ci">
+      <Charset>cp1251</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
+    </collation>
+    <collation id="18" parent="1" name="cp1251_general_cs">
+      <Charset>cp1251</Charset>
+    </collation>
+    <collation id="19" parent="1" name="cp1256_general_ci">
+      <Charset>cp1256</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
+    </collation>
+    <collation id="20" parent="1" name="cp1256_bin">
+      <Charset>cp1256</Charset>
+    </collation>
+    <collation id="21" parent="1" name="cp1257_lithuanian_ci">
+      <Charset>cp1257</Charset>
+    </collation>
+    <collation id="22" parent="1" name="cp1257_bin">
+      <Charset>cp1257</Charset>
+    </collation>
+    <collation id="23" parent="1" name="cp1257_general_ci">
+      <Charset>cp1257</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
+    </collation>
+    <collation id="24" parent="1" name="cp850_general_ci">
+      <Charset>cp850</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
+    </collation>
+    <collation id="25" parent="1" name="cp850_bin">
+      <Charset>cp850</Charset>
+    </collation>
+    <collation id="26" parent="1" name="cp852_general_ci">
+      <Charset>cp852</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
+    </collation>
+    <collation id="27" parent="1" name="cp852_bin">
+      <Charset>cp852</Charset>
+    </collation>
+    <collation id="28" parent="1" name="cp866_general_ci">
+      <Charset>cp866</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
+    </collation>
+    <collation id="29" parent="1" name="cp866_bin">
+      <Charset>cp866</Charset>
+    </collation>
+    <collation id="30" parent="1" name="cp932_japanese_ci">
+      <Charset>cp932</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
+    </collation>
+    <collation id="31" parent="1" name="cp932_bin">
+      <Charset>cp932</Charset>
+    </collation>
+    <collation id="32" parent="1" name="dec8_swedish_ci">
+      <Charset>dec8</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
+    </collation>
+    <collation id="33" parent="1" name="dec8_bin">
+      <Charset>dec8</Charset>
+    </collation>
+    <collation id="34" parent="1" name="eucjpms_japanese_ci">
+      <Charset>eucjpms</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
+    </collation>
+    <collation id="35" parent="1" name="eucjpms_bin">
+      <Charset>eucjpms</Charset>
+    </collation>
+    <collation id="36" parent="1" name="euckr_korean_ci">
+      <Charset>euckr</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
+    </collation>
+    <collation id="37" parent="1" name="euckr_bin">
+      <Charset>euckr</Charset>
+    </collation>
+    <collation id="38" parent="1" name="gb18030_chinese_ci">
+      <Charset>gb18030</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
+    </collation>
+    <collation id="39" parent="1" name="gb18030_bin">
+      <Charset>gb18030</Charset>
+    </collation>
+    <collation id="40" parent="1" name="gb18030_unicode_520_ci">
+      <Charset>gb18030</Charset>
+    </collation>
+    <collation id="41" parent="1" name="gb2312_chinese_ci">
+      <Charset>gb2312</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
+    </collation>
+    <collation id="42" parent="1" name="gb2312_bin">
+      <Charset>gb2312</Charset>
+    </collation>
+    <collation id="43" parent="1" name="gbk_chinese_ci">
+      <Charset>gbk</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
+    </collation>
+    <collation id="44" parent="1" name="gbk_bin">
+      <Charset>gbk</Charset>
+    </collation>
+    <collation id="45" parent="1" name="geostd8_general_ci">
+      <Charset>geostd8</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
+    </collation>
+    <collation id="46" parent="1" name="geostd8_bin">
+      <Charset>geostd8</Charset>
+    </collation>
+    <collation id="47" parent="1" name="greek_general_ci">
+      <Charset>greek</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
+    </collation>
+    <collation id="48" parent="1" name="greek_bin">
+      <Charset>greek</Charset>
+    </collation>
+    <collation id="49" parent="1" name="hebrew_general_ci">
+      <Charset>hebrew</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
+    </collation>
+    <collation id="50" parent="1" name="hebrew_bin">
+      <Charset>hebrew</Charset>
+    </collation>
+    <collation id="51" parent="1" name="hp8_english_ci">
+      <Charset>hp8</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
+    </collation>
+    <collation id="52" parent="1" name="hp8_bin">
+      <Charset>hp8</Charset>
+    </collation>
+    <collation id="53" parent="1" name="keybcs2_general_ci">
+      <Charset>keybcs2</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
+    </collation>
+    <collation id="54" parent="1" name="keybcs2_bin">
+      <Charset>keybcs2</Charset>
+    </collation>
+    <collation id="55" parent="1" name="koi8r_general_ci">
+      <Charset>koi8r</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
+    </collation>
+    <collation id="56" parent="1" name="koi8r_bin">
+      <Charset>koi8r</Charset>
+    </collation>
+    <collation id="57" parent="1" name="koi8u_general_ci">
+      <Charset>koi8u</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
+    </collation>
+    <collation id="58" parent="1" name="koi8u_bin">
+      <Charset>koi8u</Charset>
+    </collation>
+    <collation id="59" parent="1" name="latin1_german1_ci">
+      <Charset>latin1</Charset>
+    </collation>
+    <collation id="60" parent="1" name="latin1_swedish_ci">
+      <Charset>latin1</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
+    </collation>
+    <collation id="61" parent="1" name="latin1_danish_ci">
+      <Charset>latin1</Charset>
+    </collation>
+    <collation id="62" parent="1" name="latin1_german2_ci">
+      <Charset>latin1</Charset>
+    </collation>
+    <collation id="63" parent="1" name="latin1_bin">
+      <Charset>latin1</Charset>
+    </collation>
+    <collation id="64" parent="1" name="latin1_general_ci">
+      <Charset>latin1</Charset>
+    </collation>
+    <collation id="65" parent="1" name="latin1_general_cs">
+      <Charset>latin1</Charset>
+    </collation>
+    <collation id="66" parent="1" name="latin1_spanish_ci">
+      <Charset>latin1</Charset>
+    </collation>
+    <collation id="67" parent="1" name="latin2_czech_cs">
+      <Charset>latin2</Charset>
+    </collation>
+    <collation id="68" parent="1" name="latin2_general_ci">
+      <Charset>latin2</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
+    </collation>
+    <collation id="69" parent="1" name="latin2_hungarian_ci">
+      <Charset>latin2</Charset>
+    </collation>
+    <collation id="70" parent="1" name="latin2_croatian_ci">
+      <Charset>latin2</Charset>
+    </collation>
+    <collation id="71" parent="1" name="latin2_bin">
+      <Charset>latin2</Charset>
+    </collation>
+    <collation id="72" parent="1" name="latin5_turkish_ci">
+      <Charset>latin5</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
+    </collation>
+    <collation id="73" parent="1" name="latin5_bin">
+      <Charset>latin5</Charset>
+    </collation>
+    <collation id="74" parent="1" name="latin7_estonian_cs">
+      <Charset>latin7</Charset>
+    </collation>
+    <collation id="75" parent="1" name="latin7_general_ci">
+      <Charset>latin7</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
+    </collation>
+    <collation id="76" parent="1" name="latin7_general_cs">
+      <Charset>latin7</Charset>
+    </collation>
+    <collation id="77" parent="1" name="latin7_bin">
+      <Charset>latin7</Charset>
+    </collation>
+    <collation id="78" parent="1" name="macce_general_ci">
+      <Charset>macce</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
+    </collation>
+    <collation id="79" parent="1" name="macce_bin">
+      <Charset>macce</Charset>
+    </collation>
+    <collation id="80" parent="1" name="macroman_general_ci">
+      <Charset>macroman</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
+    </collation>
+    <collation id="81" parent="1" name="macroman_bin">
+      <Charset>macroman</Charset>
+    </collation>
+    <collation id="82" parent="1" name="sjis_japanese_ci">
+      <Charset>sjis</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
+    </collation>
+    <collation id="83" parent="1" name="sjis_bin">
+      <Charset>sjis</Charset>
+    </collation>
+    <collation id="84" parent="1" name="swe7_swedish_ci">
+      <Charset>swe7</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
+    </collation>
+    <collation id="85" parent="1" name="swe7_bin">
+      <Charset>swe7</Charset>
+    </collation>
+    <collation id="86" parent="1" name="tis620_thai_ci">
+      <Charset>tis620</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
+    </collation>
+    <collation id="87" parent="1" name="tis620_bin">
+      <Charset>tis620</Charset>
+    </collation>
+    <collation id="88" parent="1" name="ucs2_general_ci">
+      <Charset>ucs2</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
+    </collation>
+    <collation id="89" parent="1" name="ucs2_bin">
+      <Charset>ucs2</Charset>
+    </collation>
+    <collation id="90" parent="1" name="ucs2_unicode_ci">
+      <Charset>ucs2</Charset>
+    </collation>
+    <collation id="91" parent="1" name="ucs2_icelandic_ci">
+      <Charset>ucs2</Charset>
+    </collation>
+    <collation id="92" parent="1" name="ucs2_latvian_ci">
+      <Charset>ucs2</Charset>
+    </collation>
+    <collation id="93" parent="1" name="ucs2_romanian_ci">
+      <Charset>ucs2</Charset>
+    </collation>
+    <collation id="94" parent="1" name="ucs2_slovenian_ci">
+      <Charset>ucs2</Charset>
+    </collation>
+    <collation id="95" parent="1" name="ucs2_polish_ci">
+      <Charset>ucs2</Charset>
+    </collation>
+    <collation id="96" parent="1" name="ucs2_estonian_ci">
+      <Charset>ucs2</Charset>
+    </collation>
+    <collation id="97" parent="1" name="ucs2_spanish_ci">
+      <Charset>ucs2</Charset>
+    </collation>
+    <collation id="98" parent="1" name="ucs2_swedish_ci">
+      <Charset>ucs2</Charset>
+    </collation>
+    <collation id="99" parent="1" name="ucs2_turkish_ci">
+      <Charset>ucs2</Charset>
+    </collation>
+    <collation id="100" parent="1" name="ucs2_czech_ci">
+      <Charset>ucs2</Charset>
+    </collation>
+    <collation id="101" parent="1" name="ucs2_danish_ci">
+      <Charset>ucs2</Charset>
+    </collation>
+    <collation id="102" parent="1" name="ucs2_lithuanian_ci">
+      <Charset>ucs2</Charset>
+    </collation>
+    <collation id="103" parent="1" name="ucs2_slovak_ci">
+      <Charset>ucs2</Charset>
+    </collation>
+    <collation id="104" parent="1" name="ucs2_spanish2_ci">
+      <Charset>ucs2</Charset>
+    </collation>
+    <collation id="105" parent="1" name="ucs2_roman_ci">
+      <Charset>ucs2</Charset>
+    </collation>
+    <collation id="106" parent="1" name="ucs2_persian_ci">
+      <Charset>ucs2</Charset>
+    </collation>
+    <collation id="107" parent="1" name="ucs2_esperanto_ci">
+      <Charset>ucs2</Charset>
+    </collation>
+    <collation id="108" parent="1" name="ucs2_hungarian_ci">
+      <Charset>ucs2</Charset>
+    </collation>
+    <collation id="109" parent="1" name="ucs2_sinhala_ci">
+      <Charset>ucs2</Charset>
+    </collation>
+    <collation id="110" parent="1" name="ucs2_german2_ci">
+      <Charset>ucs2</Charset>
+    </collation>
+    <collation id="111" parent="1" name="ucs2_croatian_ci">
+      <Charset>ucs2</Charset>
+    </collation>
+    <collation id="112" parent="1" name="ucs2_unicode_520_ci">
+      <Charset>ucs2</Charset>
+    </collation>
+    <collation id="113" parent="1" name="ucs2_vietnamese_ci">
+      <Charset>ucs2</Charset>
+    </collation>
+    <collation id="114" parent="1" name="ucs2_general_mysql500_ci">
+      <Charset>ucs2</Charset>
+    </collation>
+    <collation id="115" parent="1" name="ujis_japanese_ci">
+      <Charset>ujis</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
+    </collation>
+    <collation id="116" parent="1" name="ujis_bin">
+      <Charset>ujis</Charset>
+    </collation>
+    <collation id="117" parent="1" name="utf16_general_ci">
+      <Charset>utf16</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
+    </collation>
+    <collation id="118" parent="1" name="utf16_bin">
+      <Charset>utf16</Charset>
+    </collation>
+    <collation id="119" parent="1" name="utf16_unicode_ci">
+      <Charset>utf16</Charset>
+    </collation>
+    <collation id="120" parent="1" name="utf16_icelandic_ci">
+      <Charset>utf16</Charset>
+    </collation>
+    <collation id="121" parent="1" name="utf16_latvian_ci">
+      <Charset>utf16</Charset>
+    </collation>
+    <collation id="122" parent="1" name="utf16_romanian_ci">
+      <Charset>utf16</Charset>
+    </collation>
+    <collation id="123" parent="1" name="utf16_slovenian_ci">
+      <Charset>utf16</Charset>
+    </collation>
+    <collation id="124" parent="1" name="utf16_polish_ci">
+      <Charset>utf16</Charset>
+    </collation>
+    <collation id="125" parent="1" name="utf16_estonian_ci">
+      <Charset>utf16</Charset>
+    </collation>
+    <collation id="126" parent="1" name="utf16_spanish_ci">
+      <Charset>utf16</Charset>
+    </collation>
+    <collation id="127" parent="1" name="utf16_swedish_ci">
+      <Charset>utf16</Charset>
+    </collation>
+    <collation id="128" parent="1" name="utf16_turkish_ci">
+      <Charset>utf16</Charset>
+    </collation>
+    <collation id="129" parent="1" name="utf16_czech_ci">
+      <Charset>utf16</Charset>
+    </collation>
+    <collation id="130" parent="1" name="utf16_danish_ci">
+      <Charset>utf16</Charset>
+    </collation>
+    <collation id="131" parent="1" name="utf16_lithuanian_ci">
+      <Charset>utf16</Charset>
+    </collation>
+    <collation id="132" parent="1" name="utf16_slovak_ci">
+      <Charset>utf16</Charset>
+    </collation>
+    <collation id="133" parent="1" name="utf16_spanish2_ci">
+      <Charset>utf16</Charset>
+    </collation>
+    <collation id="134" parent="1" name="utf16_roman_ci">
+      <Charset>utf16</Charset>
+    </collation>
+    <collation id="135" parent="1" name="utf16_persian_ci">
+      <Charset>utf16</Charset>
+    </collation>
+    <collation id="136" parent="1" name="utf16_esperanto_ci">
+      <Charset>utf16</Charset>
+    </collation>
+    <collation id="137" parent="1" name="utf16_hungarian_ci">
+      <Charset>utf16</Charset>
+    </collation>
+    <collation id="138" parent="1" name="utf16_sinhala_ci">
+      <Charset>utf16</Charset>
+    </collation>
+    <collation id="139" parent="1" name="utf16_german2_ci">
+      <Charset>utf16</Charset>
+    </collation>
+    <collation id="140" parent="1" name="utf16_croatian_ci">
+      <Charset>utf16</Charset>
+    </collation>
+    <collation id="141" parent="1" name="utf16_unicode_520_ci">
+      <Charset>utf16</Charset>
+    </collation>
+    <collation id="142" parent="1" name="utf16_vietnamese_ci">
+      <Charset>utf16</Charset>
+    </collation>
+    <collation id="143" parent="1" name="utf16le_general_ci">
+      <Charset>utf16le</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
+    </collation>
+    <collation id="144" parent="1" name="utf16le_bin">
+      <Charset>utf16le</Charset>
+    </collation>
+    <collation id="145" parent="1" name="utf32_general_ci">
+      <Charset>utf32</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
+    </collation>
+    <collation id="146" parent="1" name="utf32_bin">
+      <Charset>utf32</Charset>
+    </collation>
+    <collation id="147" parent="1" name="utf32_unicode_ci">
+      <Charset>utf32</Charset>
+    </collation>
+    <collation id="148" parent="1" name="utf32_icelandic_ci">
+      <Charset>utf32</Charset>
+    </collation>
+    <collation id="149" parent="1" name="utf32_latvian_ci">
+      <Charset>utf32</Charset>
+    </collation>
+    <collation id="150" parent="1" name="utf32_romanian_ci">
+      <Charset>utf32</Charset>
+    </collation>
+    <collation id="151" parent="1" name="utf32_slovenian_ci">
+      <Charset>utf32</Charset>
+    </collation>
+    <collation id="152" parent="1" name="utf32_polish_ci">
+      <Charset>utf32</Charset>
+    </collation>
+    <collation id="153" parent="1" name="utf32_estonian_ci">
+      <Charset>utf32</Charset>
+    </collation>
+    <collation id="154" parent="1" name="utf32_spanish_ci">
+      <Charset>utf32</Charset>
+    </collation>
+    <collation id="155" parent="1" name="utf32_swedish_ci">
+      <Charset>utf32</Charset>
+    </collation>
+    <collation id="156" parent="1" name="utf32_turkish_ci">
+      <Charset>utf32</Charset>
+    </collation>
+    <collation id="157" parent="1" name="utf32_czech_ci">
+      <Charset>utf32</Charset>
+    </collation>
+    <collation id="158" parent="1" name="utf32_danish_ci">
+      <Charset>utf32</Charset>
+    </collation>
+    <collation id="159" parent="1" name="utf32_lithuanian_ci">
+      <Charset>utf32</Charset>
+    </collation>
+    <collation id="160" parent="1" name="utf32_slovak_ci">
+      <Charset>utf32</Charset>
+    </collation>
+    <collation id="161" parent="1" name="utf32_spanish2_ci">
+      <Charset>utf32</Charset>
+    </collation>
+    <collation id="162" parent="1" name="utf32_roman_ci">
+      <Charset>utf32</Charset>
+    </collation>
+    <collation id="163" parent="1" name="utf32_persian_ci">
+      <Charset>utf32</Charset>
+    </collation>
+    <collation id="164" parent="1" name="utf32_esperanto_ci">
+      <Charset>utf32</Charset>
+    </collation>
+    <collation id="165" parent="1" name="utf32_hungarian_ci">
+      <Charset>utf32</Charset>
+    </collation>
+    <collation id="166" parent="1" name="utf32_sinhala_ci">
+      <Charset>utf32</Charset>
+    </collation>
+    <collation id="167" parent="1" name="utf32_german2_ci">
+      <Charset>utf32</Charset>
+    </collation>
+    <collation id="168" parent="1" name="utf32_croatian_ci">
+      <Charset>utf32</Charset>
+    </collation>
+    <collation id="169" parent="1" name="utf32_unicode_520_ci">
+      <Charset>utf32</Charset>
+    </collation>
+    <collation id="170" parent="1" name="utf32_vietnamese_ci">
+      <Charset>utf32</Charset>
+    </collation>
+    <collation id="171" parent="1" name="utf8_general_ci">
+      <Charset>utf8mb3</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
+    </collation>
+    <collation id="172" parent="1" name="utf8_tolower_ci">
+      <Charset>utf8mb3</Charset>
+    </collation>
+    <collation id="173" parent="1" name="utf8_bin">
+      <Charset>utf8mb3</Charset>
+    </collation>
+    <collation id="174" parent="1" name="utf8_unicode_ci">
+      <Charset>utf8mb3</Charset>
+    </collation>
+    <collation id="175" parent="1" name="utf8_icelandic_ci">
+      <Charset>utf8mb3</Charset>
+    </collation>
+    <collation id="176" parent="1" name="utf8_latvian_ci">
+      <Charset>utf8mb3</Charset>
+    </collation>
+    <collation id="177" parent="1" name="utf8_romanian_ci">
+      <Charset>utf8mb3</Charset>
+    </collation>
+    <collation id="178" parent="1" name="utf8_slovenian_ci">
+      <Charset>utf8mb3</Charset>
+    </collation>
+    <collation id="179" parent="1" name="utf8_polish_ci">
+      <Charset>utf8mb3</Charset>
+    </collation>
+    <collation id="180" parent="1" name="utf8_estonian_ci">
+      <Charset>utf8mb3</Charset>
+    </collation>
+    <collation id="181" parent="1" name="utf8_spanish_ci">
+      <Charset>utf8mb3</Charset>
+    </collation>
+    <collation id="182" parent="1" name="utf8_swedish_ci">
+      <Charset>utf8mb3</Charset>
+    </collation>
+    <collation id="183" parent="1" name="utf8_turkish_ci">
+      <Charset>utf8mb3</Charset>
+    </collation>
+    <collation id="184" parent="1" name="utf8_czech_ci">
+      <Charset>utf8mb3</Charset>
+    </collation>
+    <collation id="185" parent="1" name="utf8_danish_ci">
+      <Charset>utf8mb3</Charset>
+    </collation>
+    <collation id="186" parent="1" name="utf8_lithuanian_ci">
+      <Charset>utf8mb3</Charset>
+    </collation>
+    <collation id="187" parent="1" name="utf8_slovak_ci">
+      <Charset>utf8mb3</Charset>
+    </collation>
+    <collation id="188" parent="1" name="utf8_spanish2_ci">
+      <Charset>utf8mb3</Charset>
+    </collation>
+    <collation id="189" parent="1" name="utf8_roman_ci">
+      <Charset>utf8mb3</Charset>
+    </collation>
+    <collation id="190" parent="1" name="utf8_persian_ci">
+      <Charset>utf8mb3</Charset>
+    </collation>
+    <collation id="191" parent="1" name="utf8_esperanto_ci">
+      <Charset>utf8mb3</Charset>
+    </collation>
+    <collation id="192" parent="1" name="utf8_hungarian_ci">
+      <Charset>utf8mb3</Charset>
+    </collation>
+    <collation id="193" parent="1" name="utf8_sinhala_ci">
+      <Charset>utf8mb3</Charset>
+    </collation>
+    <collation id="194" parent="1" name="utf8_german2_ci">
+      <Charset>utf8mb3</Charset>
+    </collation>
+    <collation id="195" parent="1" name="utf8_croatian_ci">
+      <Charset>utf8mb3</Charset>
+    </collation>
+    <collation id="196" parent="1" name="utf8_unicode_520_ci">
+      <Charset>utf8mb3</Charset>
+    </collation>
+    <collation id="197" parent="1" name="utf8_vietnamese_ci">
+      <Charset>utf8mb3</Charset>
+    </collation>
+    <collation id="198" parent="1" name="utf8_general_mysql500_ci">
+      <Charset>utf8mb3</Charset>
+    </collation>
+    <collation id="199" parent="1" name="utf8mb4_general_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="200" parent="1" name="utf8mb4_bin">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="201" parent="1" name="utf8mb4_unicode_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="202" parent="1" name="utf8mb4_icelandic_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="203" parent="1" name="utf8mb4_latvian_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="204" parent="1" name="utf8mb4_romanian_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="205" parent="1" name="utf8mb4_slovenian_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="206" parent="1" name="utf8mb4_polish_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="207" parent="1" name="utf8mb4_estonian_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="208" parent="1" name="utf8mb4_spanish_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="209" parent="1" name="utf8mb4_swedish_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="210" parent="1" name="utf8mb4_turkish_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="211" parent="1" name="utf8mb4_czech_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="212" parent="1" name="utf8mb4_danish_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="213" parent="1" name="utf8mb4_lithuanian_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="214" parent="1" name="utf8mb4_slovak_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="215" parent="1" name="utf8mb4_spanish2_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="216" parent="1" name="utf8mb4_roman_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="217" parent="1" name="utf8mb4_persian_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="218" parent="1" name="utf8mb4_esperanto_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="219" parent="1" name="utf8mb4_hungarian_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="220" parent="1" name="utf8mb4_sinhala_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="221" parent="1" name="utf8mb4_german2_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="222" parent="1" name="utf8mb4_croatian_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="223" parent="1" name="utf8mb4_unicode_520_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="224" parent="1" name="utf8mb4_vietnamese_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="225" parent="1" name="utf8mb4_0900_ai_ci">
+      <Charset>utf8mb4</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
+    </collation>
+    <collation id="226" parent="1" name="utf8mb4_de_pb_0900_ai_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="227" parent="1" name="utf8mb4_is_0900_ai_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="228" parent="1" name="utf8mb4_lv_0900_ai_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="229" parent="1" name="utf8mb4_ro_0900_ai_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="230" parent="1" name="utf8mb4_sl_0900_ai_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="231" parent="1" name="utf8mb4_pl_0900_ai_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="232" parent="1" name="utf8mb4_et_0900_ai_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="233" parent="1" name="utf8mb4_es_0900_ai_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="234" parent="1" name="utf8mb4_sv_0900_ai_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="235" parent="1" name="utf8mb4_tr_0900_ai_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="236" parent="1" name="utf8mb4_cs_0900_ai_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="237" parent="1" name="utf8mb4_da_0900_ai_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="238" parent="1" name="utf8mb4_lt_0900_ai_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="239" parent="1" name="utf8mb4_sk_0900_ai_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="240" parent="1" name="utf8mb4_es_trad_0900_ai_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="241" parent="1" name="utf8mb4_la_0900_ai_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="242" parent="1" name="utf8mb4_eo_0900_ai_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="243" parent="1" name="utf8mb4_hu_0900_ai_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="244" parent="1" name="utf8mb4_hr_0900_ai_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="245" parent="1" name="utf8mb4_vi_0900_ai_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="246" parent="1" name="utf8mb4_0900_as_cs">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="247" parent="1" name="utf8mb4_de_pb_0900_as_cs">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="248" parent="1" name="utf8mb4_is_0900_as_cs">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="249" parent="1" name="utf8mb4_lv_0900_as_cs">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="250" parent="1" name="utf8mb4_ro_0900_as_cs">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="251" parent="1" name="utf8mb4_sl_0900_as_cs">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="252" parent="1" name="utf8mb4_pl_0900_as_cs">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="253" parent="1" name="utf8mb4_et_0900_as_cs">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="254" parent="1" name="utf8mb4_es_0900_as_cs">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="255" parent="1" name="utf8mb4_sv_0900_as_cs">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="256" parent="1" name="utf8mb4_tr_0900_as_cs">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="257" parent="1" name="utf8mb4_cs_0900_as_cs">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="258" parent="1" name="utf8mb4_da_0900_as_cs">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="259" parent="1" name="utf8mb4_lt_0900_as_cs">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="260" parent="1" name="utf8mb4_sk_0900_as_cs">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="261" parent="1" name="utf8mb4_es_trad_0900_as_cs">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="262" parent="1" name="utf8mb4_la_0900_as_cs">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="263" parent="1" name="utf8mb4_eo_0900_as_cs">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="264" parent="1" name="utf8mb4_hu_0900_as_cs">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="265" parent="1" name="utf8mb4_hr_0900_as_cs">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="266" parent="1" name="utf8mb4_vi_0900_as_cs">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="267" parent="1" name="utf8mb4_ja_0900_as_cs">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="268" parent="1" name="utf8mb4_ja_0900_as_cs_ks">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="269" parent="1" name="utf8mb4_0900_as_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="270" parent="1" name="utf8mb4_ru_0900_ai_ci">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="271" parent="1" name="utf8mb4_ru_0900_as_cs">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="272" parent="1" name="utf8mb4_zh_0900_as_cs">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <collation id="273" parent="1" name="utf8mb4_0900_bin">
+      <Charset>utf8mb4</Charset>
+    </collation>
+    <schema id="274" parent="1" name="bbs">
+      <Current>1</Current>
+      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+    </schema>
+    <schema id="275" parent="1" name="db02">
+      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+    </schema>
+    <schema id="276" parent="1" name="db03">
+      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+    </schema>
+    <schema id="277" parent="1" name="db04">
+      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+    </schema>
+    <schema id="278" parent="1" name="guigu-oa">
+      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+    </schema>
+    <schema id="279" parent="1" name="information_schema">
+      <CollationName>utf8_general_ci</CollationName>
+    </schema>
+    <schema id="280" parent="1" name="meituan">
+      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+    </schema>
+    <schema id="281" parent="1" name="mp">
+      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+    </schema>
+    <schema id="282" parent="1" name="mybatis">
+      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+    </schema>
+    <schema id="283" parent="1" name="mydb1">
+      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+    </schema>
+    <schema id="284" parent="1" name="mysql">
+      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+    </schema>
+    <schema id="285" parent="1" name="onlinedocumentuploadingsystem">
+      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+    </schema>
+    <schema id="286" parent="1" name="performance_schema">
+      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+    </schema>
+    <schema id="287" parent="1" name="reggie">
+      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+    </schema>
+    <schema id="288" parent="1" name="stock">
+      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+    </schema>
+    <schema id="289" parent="1" name="sys">
+      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+    </schema>
+    <schema id="290" parent="1" name="tlias">
+      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+    </schema>
+    <user id="291" parent="1" name="mysql.infoschema">
+      <CanLogin>0</CanLogin>
+      <Host>localhost</Host>
+      <Plugin>caching_sha2_password</Plugin>
+    </user>
+    <user id="292" parent="1" name="mysql.session">
+      <CanLogin>0</CanLogin>
+      <Host>localhost</Host>
+      <Plugin>caching_sha2_password</Plugin>
+    </user>
+    <user id="293" parent="1" name="mysql.sys">
+      <CanLogin>0</CanLogin>
+      <Host>localhost</Host>
+      <Plugin>caching_sha2_password</Plugin>
+    </user>
+    <user id="294" parent="1" name="root">
+      <Host>localhost</Host>
+      <Plugin>caching_sha2_password</Plugin>
+    </user>
+    <table id="295" parent="278" name="act_evt_log">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8_bin</CollationName>
+    </table>
+    <table id="296" parent="278" name="act_ge_bytearray">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8_bin</CollationName>
+    </table>
+    <table id="297" parent="278" name="act_ge_property">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8_bin</CollationName>
+    </table>
+    <table id="298" parent="278" name="act_hi_actinst">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8_bin</CollationName>
+    </table>
+    <table id="299" parent="278" name="act_hi_attachment">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8_bin</CollationName>
+    </table>
+    <table id="300" parent="278" name="act_hi_comment">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8_bin</CollationName>
+    </table>
+    <table id="301" parent="278" name="act_hi_detail">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8_bin</CollationName>
+    </table>
+    <table id="302" parent="278" name="act_hi_identitylink">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8_bin</CollationName>
+    </table>
+    <table id="303" parent="278" name="act_hi_procinst">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8_bin</CollationName>
+    </table>
+    <table id="304" parent="278" name="act_hi_taskinst">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8_bin</CollationName>
+    </table>
+    <table id="305" parent="278" name="act_hi_varinst">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8_bin</CollationName>
+    </table>
+    <table id="306" parent="278" name="act_procdef_info">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8_bin</CollationName>
+    </table>
+    <table id="307" parent="278" name="act_re_deployment">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8_bin</CollationName>
+    </table>
+    <table id="308" parent="278" name="act_re_model">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8_bin</CollationName>
+    </table>
+    <table id="309" parent="278" name="act_re_procdef">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8_bin</CollationName>
+    </table>
+    <table id="310" parent="278" name="act_ru_deadletter_job">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8_bin</CollationName>
+    </table>
+    <table id="311" parent="278" name="act_ru_event_subscr">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8_bin</CollationName>
+    </table>
+    <table id="312" parent="278" name="act_ru_execution">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8_bin</CollationName>
+    </table>
+    <table id="313" parent="278" name="act_ru_identitylink">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8_bin</CollationName>
+    </table>
+    <table id="314" parent="278" name="act_ru_integration">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8_bin</CollationName>
+    </table>
+    <table id="315" parent="278" name="act_ru_job">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8_bin</CollationName>
+    </table>
+    <table id="316" parent="278" name="act_ru_suspended_job">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8_bin</CollationName>
+    </table>
+    <table id="317" parent="278" name="act_ru_task">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8_bin</CollationName>
+    </table>
+    <table id="318" parent="278" name="act_ru_timer_job">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8_bin</CollationName>
+    </table>
+    <table id="319" parent="278" name="act_ru_variable">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8_bin</CollationName>
+    </table>
+    <table id="320" parent="278" name="oa_process">
+      <Comment>审批类型</Comment>
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8_general_ci</CollationName>
+    </table>
+    <table id="321" parent="278" name="oa_process_record">
+      <Comment>审批记录</Comment>
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8_general_ci</CollationName>
+    </table>
+    <table id="322" parent="278" name="oa_process_template">
+      <Comment>审批模板</Comment>
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8_general_ci</CollationName>
+    </table>
+    <table id="323" parent="278" name="oa_process_type">
+      <Comment>审批类型</Comment>
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8_general_ci</CollationName>
+    </table>
+    <table id="324" parent="278" name="sys_dept">
+      <Comment>组织机构</Comment>
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+    </table>
+    <table id="325" parent="278" name="sys_login_log">
+      <Comment>系统访问记录</Comment>
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8_general_ci</CollationName>
+    </table>
+    <table id="326" parent="278" name="sys_menu">
+      <Comment>菜单表</Comment>
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+    </table>
+    <table id="327" parent="278" name="sys_oper_log">
+      <Comment>操作日志记录</Comment>
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8_general_ci</CollationName>
+    </table>
+    <table id="328" parent="278" name="sys_post">
+      <Comment>岗位信息表</Comment>
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8_general_ci</CollationName>
+    </table>
+    <table id="329" parent="278" name="sys_role">
+      <Comment>角色</Comment>
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8_general_ci</CollationName>
+    </table>
+    <table id="330" parent="278" name="sys_role_menu">
+      <Comment>角色菜单</Comment>
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8_general_ci</CollationName>
+    </table>
+    <table id="331" parent="278" name="sys_user">
+      <Comment>用户表</Comment>
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+    </table>
+    <table id="332" parent="278" name="sys_user_role">
+      <Comment>用户角色</Comment>
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8_general_ci</CollationName>
+    </table>
+    <table id="333" parent="278" name="wechat_menu">
+      <Comment>菜单</Comment>
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8_general_ci</CollationName>
+    </table>
+    <column id="334" parent="295" name="LOG_NR_">
+      <AutoIncrement>1</AutoIncrement>
+      <DasType>bigint|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="335" parent="295" name="TYPE_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>2</Position>
+    </column>
+    <column id="336" parent="295" name="PROC_DEF_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>3</Position>
+    </column>
+    <column id="337" parent="295" name="PROC_INST_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>4</Position>
+    </column>
+    <column id="338" parent="295" name="EXECUTION_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>5</Position>
+    </column>
+    <column id="339" parent="295" name="TASK_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>6</Position>
+    </column>
+    <column id="340" parent="295" name="TIME_STAMP_">
+      <DasType>timestamp(3)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>7</Position>
+    </column>
+    <column id="341" parent="295" name="USER_ID_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>8</Position>
+    </column>
+    <column id="342" parent="295" name="DATA_">
+      <DasType>longblob|0s</DasType>
+      <Position>9</Position>
+    </column>
+    <column id="343" parent="295" name="LOCK_OWNER_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>10</Position>
+    </column>
+    <column id="344" parent="295" name="LOCK_TIME_">
+      <DasType>timestamp(3)|0s</DasType>
+      <Position>11</Position>
+    </column>
+    <column id="345" parent="295" name="IS_PROCESSED_">
+      <DasType>tinyint|0s</DasType>
+      <DefaultExpression>0</DefaultExpression>
+      <Position>12</Position>
+    </column>
+    <index id="346" parent="295" name="PRIMARY">
+      <ColNames>LOG_NR_</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="347" parent="295" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="348" parent="296" name="ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="349" parent="296" name="REV_">
+      <DasType>int|0s</DasType>
+      <Position>2</Position>
+    </column>
+    <column id="350" parent="296" name="NAME_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>3</Position>
+    </column>
+    <column id="351" parent="296" name="DEPLOYMENT_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>4</Position>
+    </column>
+    <column id="352" parent="296" name="BYTES_">
+      <DasType>longblob|0s</DasType>
+      <Position>5</Position>
+    </column>
+    <column id="353" parent="296" name="GENERATED_">
+      <DasType>tinyint|0s</DasType>
+      <Position>6</Position>
+    </column>
+    <foreign-key id="354" parent="296" name="ACT_FK_BYTEARR_DEPL">
+      <ColNames>DEPLOYMENT_ID_</ColNames>
+      <RefColNames>ID_</RefColNames>
+      <RefTableName>act_re_deployment</RefTableName>
+    </foreign-key>
+    <index id="355" parent="296" name="PRIMARY">
+      <ColNames>ID_</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <index id="356" parent="296" name="ACT_FK_BYTEARR_DEPL">
+      <ColNames>DEPLOYMENT_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="357" parent="296" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="358" parent="297" name="NAME_">
+      <DasType>varchar(64)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="359" parent="297" name="VALUE_">
+      <DasType>varchar(300)|0s</DasType>
+      <Position>2</Position>
+    </column>
+    <column id="360" parent="297" name="REV_">
+      <DasType>int|0s</DasType>
+      <Position>3</Position>
+    </column>
+    <index id="361" parent="297" name="PRIMARY">
+      <ColNames>NAME_</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="362" parent="297" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="363" parent="298" name="ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="364" parent="298" name="PROC_DEF_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+    </column>
+    <column id="365" parent="298" name="PROC_INST_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>3</Position>
+    </column>
+    <column id="366" parent="298" name="EXECUTION_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>4</Position>
+    </column>
+    <column id="367" parent="298" name="ACT_ID_">
+      <DasType>varchar(255)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>5</Position>
+    </column>
+    <column id="368" parent="298" name="TASK_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>6</Position>
+    </column>
+    <column id="369" parent="298" name="CALL_PROC_INST_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>7</Position>
+    </column>
+    <column id="370" parent="298" name="ACT_NAME_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>8</Position>
+    </column>
+    <column id="371" parent="298" name="ACT_TYPE_">
+      <DasType>varchar(255)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>9</Position>
+    </column>
+    <column id="372" parent="298" name="ASSIGNEE_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>10</Position>
+    </column>
+    <column id="373" parent="298" name="START_TIME_">
+      <DasType>datetime(3)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>11</Position>
+    </column>
+    <column id="374" parent="298" name="END_TIME_">
+      <DasType>datetime(3)|0s</DasType>
+      <Position>12</Position>
+    </column>
+    <column id="375" parent="298" name="DURATION_">
+      <DasType>bigint|0s</DasType>
+      <Position>13</Position>
+    </column>
+    <column id="376" parent="298" name="DELETE_REASON_">
+      <DasType>varchar(4000)|0s</DasType>
+      <Position>14</Position>
+    </column>
+    <column id="377" parent="298" name="TENANT_ID_">
+      <DasType>varchar(255)|0s</DasType>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+      <Position>15</Position>
+    </column>
+    <index id="378" parent="298" name="PRIMARY">
+      <ColNames>ID_</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <index id="379" parent="298" name="ACT_IDX_HI_ACT_INST_PROCINST">
+      <ColNames>PROC_INST_ID_
+ACT_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="380" parent="298" name="ACT_IDX_HI_ACT_INST_EXEC">
+      <ColNames>EXECUTION_ID_
+ACT_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="381" parent="298" name="ACT_IDX_HI_ACT_INST_START">
+      <ColNames>START_TIME_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="382" parent="298" name="ACT_IDX_HI_ACT_INST_END">
+      <ColNames>END_TIME_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="383" parent="298" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="384" parent="299" name="ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="385" parent="299" name="REV_">
+      <DasType>int|0s</DasType>
+      <Position>2</Position>
+    </column>
+    <column id="386" parent="299" name="USER_ID_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>3</Position>
+    </column>
+    <column id="387" parent="299" name="NAME_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>4</Position>
+    </column>
+    <column id="388" parent="299" name="DESCRIPTION_">
+      <DasType>varchar(4000)|0s</DasType>
+      <Position>5</Position>
+    </column>
+    <column id="389" parent="299" name="TYPE_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>6</Position>
+    </column>
+    <column id="390" parent="299" name="TASK_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>7</Position>
+    </column>
+    <column id="391" parent="299" name="PROC_INST_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>8</Position>
+    </column>
+    <column id="392" parent="299" name="URL_">
+      <DasType>varchar(4000)|0s</DasType>
+      <Position>9</Position>
+    </column>
+    <column id="393" parent="299" name="CONTENT_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>10</Position>
+    </column>
+    <column id="394" parent="299" name="TIME_">
+      <DasType>datetime(3)|0s</DasType>
+      <Position>11</Position>
+    </column>
+    <index id="395" parent="299" name="PRIMARY">
+      <ColNames>ID_</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="396" parent="299" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="397" parent="300" name="ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="398" parent="300" name="TYPE_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>2</Position>
+    </column>
+    <column id="399" parent="300" name="TIME_">
+      <DasType>datetime(3)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>3</Position>
+    </column>
+    <column id="400" parent="300" name="USER_ID_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>4</Position>
+    </column>
+    <column id="401" parent="300" name="TASK_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>5</Position>
+    </column>
+    <column id="402" parent="300" name="PROC_INST_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>6</Position>
+    </column>
+    <column id="403" parent="300" name="ACTION_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>7</Position>
+    </column>
+    <column id="404" parent="300" name="MESSAGE_">
+      <DasType>varchar(4000)|0s</DasType>
+      <Position>8</Position>
+    </column>
+    <column id="405" parent="300" name="FULL_MSG_">
+      <DasType>longblob|0s</DasType>
+      <Position>9</Position>
+    </column>
+    <index id="406" parent="300" name="PRIMARY">
+      <ColNames>ID_</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="407" parent="300" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="408" parent="301" name="ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="409" parent="301" name="TYPE_">
+      <DasType>varchar(255)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+    </column>
+    <column id="410" parent="301" name="PROC_INST_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>3</Position>
+    </column>
+    <column id="411" parent="301" name="EXECUTION_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>4</Position>
+    </column>
+    <column id="412" parent="301" name="TASK_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>5</Position>
+    </column>
+    <column id="413" parent="301" name="ACT_INST_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>6</Position>
+    </column>
+    <column id="414" parent="301" name="NAME_">
+      <DasType>varchar(255)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>7</Position>
+    </column>
+    <column id="415" parent="301" name="VAR_TYPE_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>8</Position>
+    </column>
+    <column id="416" parent="301" name="REV_">
+      <DasType>int|0s</DasType>
+      <Position>9</Position>
+    </column>
+    <column id="417" parent="301" name="TIME_">
+      <DasType>datetime(3)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>10</Position>
+    </column>
+    <column id="418" parent="301" name="BYTEARRAY_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>11</Position>
+    </column>
+    <column id="419" parent="301" name="DOUBLE_">
+      <DasType>double|0s</DasType>
+      <Position>12</Position>
+    </column>
+    <column id="420" parent="301" name="LONG_">
+      <DasType>bigint|0s</DasType>
+      <Position>13</Position>
+    </column>
+    <column id="421" parent="301" name="TEXT_">
+      <DasType>varchar(4000)|0s</DasType>
+      <Position>14</Position>
+    </column>
+    <column id="422" parent="301" name="TEXT2_">
+      <DasType>varchar(4000)|0s</DasType>
+      <Position>15</Position>
+    </column>
+    <index id="423" parent="301" name="PRIMARY">
+      <ColNames>ID_</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <index id="424" parent="301" name="ACT_IDX_HI_DETAIL_PROC_INST">
+      <ColNames>PROC_INST_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="425" parent="301" name="ACT_IDX_HI_DETAIL_TASK_ID">
+      <ColNames>TASK_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="426" parent="301" name="ACT_IDX_HI_DETAIL_ACT_INST">
+      <ColNames>ACT_INST_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="427" parent="301" name="ACT_IDX_HI_DETAIL_NAME">
+      <ColNames>NAME_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="428" parent="301" name="ACT_IDX_HI_DETAIL_TIME">
+      <ColNames>TIME_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="429" parent="301" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="430" parent="302" name="ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="431" parent="302" name="GROUP_ID_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>2</Position>
+    </column>
+    <column id="432" parent="302" name="TYPE_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>3</Position>
+    </column>
+    <column id="433" parent="302" name="USER_ID_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>4</Position>
+    </column>
+    <column id="434" parent="302" name="TASK_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>5</Position>
+    </column>
+    <column id="435" parent="302" name="PROC_INST_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>6</Position>
+    </column>
+    <index id="436" parent="302" name="PRIMARY">
+      <ColNames>ID_</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <index id="437" parent="302" name="ACT_IDX_HI_IDENT_LNK_USER">
+      <ColNames>USER_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="438" parent="302" name="ACT_IDX_HI_IDENT_LNK_TASK">
+      <ColNames>TASK_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="439" parent="302" name="ACT_IDX_HI_IDENT_LNK_PROCINST">
+      <ColNames>PROC_INST_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="440" parent="302" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="441" parent="303" name="ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="442" parent="303" name="PROC_INST_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+    </column>
+    <column id="443" parent="303" name="BUSINESS_KEY_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>3</Position>
+    </column>
+    <column id="444" parent="303" name="PROC_DEF_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>4</Position>
+    </column>
+    <column id="445" parent="303" name="START_TIME_">
+      <DasType>datetime(3)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>5</Position>
+    </column>
+    <column id="446" parent="303" name="END_TIME_">
+      <DasType>datetime(3)|0s</DasType>
+      <Position>6</Position>
+    </column>
+    <column id="447" parent="303" name="DURATION_">
+      <DasType>bigint|0s</DasType>
+      <Position>7</Position>
+    </column>
+    <column id="448" parent="303" name="START_USER_ID_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>8</Position>
+    </column>
+    <column id="449" parent="303" name="START_ACT_ID_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>9</Position>
+    </column>
+    <column id="450" parent="303" name="END_ACT_ID_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>10</Position>
+    </column>
+    <column id="451" parent="303" name="SUPER_PROCESS_INSTANCE_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>11</Position>
+    </column>
+    <column id="452" parent="303" name="DELETE_REASON_">
+      <DasType>varchar(4000)|0s</DasType>
+      <Position>12</Position>
+    </column>
+    <column id="453" parent="303" name="TENANT_ID_">
+      <DasType>varchar(255)|0s</DasType>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+      <Position>13</Position>
+    </column>
+    <column id="454" parent="303" name="NAME_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>14</Position>
+    </column>
+    <index id="455" parent="303" name="PRIMARY">
+      <ColNames>ID_</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <index id="456" parent="303" name="PROC_INST_ID_">
+      <ColNames>PROC_INST_ID_</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <index id="457" parent="303" name="ACT_IDX_HI_PRO_I_BUSKEY">
+      <ColNames>BUSINESS_KEY_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="458" parent="303" name="ACT_IDX_HI_PRO_INST_END">
+      <ColNames>END_TIME_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="459" parent="303" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <key id="460" parent="303" name="PROC_INST_ID_">
+      <UnderlyingIndexName>PROC_INST_ID_</UnderlyingIndexName>
+    </key>
+    <column id="461" parent="304" name="ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="462" parent="304" name="PROC_DEF_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>2</Position>
+    </column>
+    <column id="463" parent="304" name="TASK_DEF_KEY_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>3</Position>
+    </column>
+    <column id="464" parent="304" name="PROC_INST_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>4</Position>
+    </column>
+    <column id="465" parent="304" name="EXECUTION_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>5</Position>
+    </column>
+    <column id="466" parent="304" name="NAME_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>6</Position>
+    </column>
+    <column id="467" parent="304" name="PARENT_TASK_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>7</Position>
+    </column>
+    <column id="468" parent="304" name="DESCRIPTION_">
+      <DasType>varchar(4000)|0s</DasType>
+      <Position>8</Position>
+    </column>
+    <column id="469" parent="304" name="OWNER_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>9</Position>
+    </column>
+    <column id="470" parent="304" name="ASSIGNEE_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>10</Position>
+    </column>
+    <column id="471" parent="304" name="START_TIME_">
+      <DasType>datetime(3)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>11</Position>
+    </column>
+    <column id="472" parent="304" name="CLAIM_TIME_">
+      <DasType>datetime(3)|0s</DasType>
+      <Position>12</Position>
+    </column>
+    <column id="473" parent="304" name="END_TIME_">
+      <DasType>datetime(3)|0s</DasType>
+      <Position>13</Position>
+    </column>
+    <column id="474" parent="304" name="DURATION_">
+      <DasType>bigint|0s</DasType>
+      <Position>14</Position>
+    </column>
+    <column id="475" parent="304" name="DELETE_REASON_">
+      <DasType>varchar(4000)|0s</DasType>
+      <Position>15</Position>
+    </column>
+    <column id="476" parent="304" name="PRIORITY_">
+      <DasType>int|0s</DasType>
+      <Position>16</Position>
+    </column>
+    <column id="477" parent="304" name="DUE_DATE_">
+      <DasType>datetime(3)|0s</DasType>
+      <Position>17</Position>
+    </column>
+    <column id="478" parent="304" name="FORM_KEY_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>18</Position>
+    </column>
+    <column id="479" parent="304" name="CATEGORY_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>19</Position>
+    </column>
+    <column id="480" parent="304" name="TENANT_ID_">
+      <DasType>varchar(255)|0s</DasType>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+      <Position>20</Position>
+    </column>
+    <index id="481" parent="304" name="PRIMARY">
+      <ColNames>ID_</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <index id="482" parent="304" name="ACT_IDX_HI_TASK_INST_PROCINST">
+      <ColNames>PROC_INST_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="483" parent="304" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="484" parent="305" name="ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="485" parent="305" name="PROC_INST_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>2</Position>
+    </column>
+    <column id="486" parent="305" name="EXECUTION_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>3</Position>
+    </column>
+    <column id="487" parent="305" name="TASK_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>4</Position>
+    </column>
+    <column id="488" parent="305" name="NAME_">
+      <DasType>varchar(255)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>5</Position>
+    </column>
+    <column id="489" parent="305" name="VAR_TYPE_">
+      <DasType>varchar(100)|0s</DasType>
+      <Position>6</Position>
+    </column>
+    <column id="490" parent="305" name="REV_">
+      <DasType>int|0s</DasType>
+      <Position>7</Position>
+    </column>
+    <column id="491" parent="305" name="BYTEARRAY_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>8</Position>
+    </column>
+    <column id="492" parent="305" name="DOUBLE_">
+      <DasType>double|0s</DasType>
+      <Position>9</Position>
+    </column>
+    <column id="493" parent="305" name="LONG_">
+      <DasType>bigint|0s</DasType>
+      <Position>10</Position>
+    </column>
+    <column id="494" parent="305" name="TEXT_">
+      <DasType>varchar(4000)|0s</DasType>
+      <Position>11</Position>
+    </column>
+    <column id="495" parent="305" name="TEXT2_">
+      <DasType>varchar(4000)|0s</DasType>
+      <Position>12</Position>
+    </column>
+    <column id="496" parent="305" name="CREATE_TIME_">
+      <DasType>datetime(3)|0s</DasType>
+      <Position>13</Position>
+    </column>
+    <column id="497" parent="305" name="LAST_UPDATED_TIME_">
+      <DasType>datetime(3)|0s</DasType>
+      <Position>14</Position>
+    </column>
+    <index id="498" parent="305" name="PRIMARY">
+      <ColNames>ID_</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <index id="499" parent="305" name="ACT_IDX_HI_PROCVAR_PROC_INST">
+      <ColNames>PROC_INST_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="500" parent="305" name="ACT_IDX_HI_PROCVAR_TASK_ID">
+      <ColNames>TASK_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="501" parent="305" name="ACT_IDX_HI_PROCVAR_NAME_TYPE">
+      <ColNames>NAME_
+VAR_TYPE_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="502" parent="305" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="503" parent="306" name="ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="504" parent="306" name="PROC_DEF_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+    </column>
+    <column id="505" parent="306" name="REV_">
+      <DasType>int|0s</DasType>
+      <Position>3</Position>
+    </column>
+    <column id="506" parent="306" name="INFO_JSON_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>4</Position>
+    </column>
+    <foreign-key id="507" parent="306" name="ACT_FK_INFO_PROCDEF">
+      <ColNames>PROC_DEF_ID_</ColNames>
+      <RefColNames>ID_</RefColNames>
+      <RefTableName>act_re_procdef</RefTableName>
+    </foreign-key>
+    <foreign-key id="508" parent="306" name="ACT_FK_INFO_JSON_BA">
+      <ColNames>INFO_JSON_ID_</ColNames>
+      <RefColNames>ID_</RefColNames>
+      <RefTableName>act_ge_bytearray</RefTableName>
+    </foreign-key>
+    <index id="509" parent="306" name="PRIMARY">
+      <ColNames>ID_</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <index id="510" parent="306" name="ACT_UNIQ_INFO_PROCDEF">
+      <ColNames>PROC_DEF_ID_</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <index id="511" parent="306" name="ACT_IDX_INFO_PROCDEF">
+      <ColNames>PROC_DEF_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="512" parent="306" name="ACT_FK_INFO_JSON_BA">
+      <ColNames>INFO_JSON_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="513" parent="306" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <key id="514" parent="306" name="ACT_UNIQ_INFO_PROCDEF">
+      <UnderlyingIndexName>ACT_UNIQ_INFO_PROCDEF</UnderlyingIndexName>
+    </key>
+    <column id="515" parent="307" name="ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="516" parent="307" name="NAME_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>2</Position>
+    </column>
+    <column id="517" parent="307" name="CATEGORY_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>3</Position>
+    </column>
+    <column id="518" parent="307" name="KEY_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>4</Position>
+    </column>
+    <column id="519" parent="307" name="TENANT_ID_">
+      <DasType>varchar(255)|0s</DasType>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+      <Position>5</Position>
+    </column>
+    <column id="520" parent="307" name="DEPLOY_TIME_">
+      <DasType>timestamp(3)|0s</DasType>
+      <Position>6</Position>
+    </column>
+    <column id="521" parent="307" name="ENGINE_VERSION_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>7</Position>
+    </column>
+    <column id="522" parent="307" name="VERSION_">
+      <DasType>int|0s</DasType>
+      <DefaultExpression>1</DefaultExpression>
+      <Position>8</Position>
+    </column>
+    <column id="523" parent="307" name="PROJECT_RELEASE_VERSION_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>9</Position>
+    </column>
+    <index id="524" parent="307" name="PRIMARY">
+      <ColNames>ID_</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="525" parent="307" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="526" parent="308" name="ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="527" parent="308" name="REV_">
+      <DasType>int|0s</DasType>
+      <Position>2</Position>
+    </column>
+    <column id="528" parent="308" name="NAME_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>3</Position>
+    </column>
+    <column id="529" parent="308" name="KEY_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>4</Position>
+    </column>
+    <column id="530" parent="308" name="CATEGORY_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>5</Position>
+    </column>
+    <column id="531" parent="308" name="CREATE_TIME_">
+      <DasType>timestamp(3)|0s</DasType>
+      <Position>6</Position>
+    </column>
+    <column id="532" parent="308" name="LAST_UPDATE_TIME_">
+      <DasType>timestamp(3)|0s</DasType>
+      <Position>7</Position>
+    </column>
+    <column id="533" parent="308" name="VERSION_">
+      <DasType>int|0s</DasType>
+      <Position>8</Position>
+    </column>
+    <column id="534" parent="308" name="META_INFO_">
+      <DasType>varchar(4000)|0s</DasType>
+      <Position>9</Position>
+    </column>
+    <column id="535" parent="308" name="DEPLOYMENT_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>10</Position>
+    </column>
+    <column id="536" parent="308" name="EDITOR_SOURCE_VALUE_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>11</Position>
+    </column>
+    <column id="537" parent="308" name="EDITOR_SOURCE_EXTRA_VALUE_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>12</Position>
+    </column>
+    <column id="538" parent="308" name="TENANT_ID_">
+      <DasType>varchar(255)|0s</DasType>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+      <Position>13</Position>
+    </column>
+    <foreign-key id="539" parent="308" name="ACT_FK_MODEL_DEPLOYMENT">
+      <ColNames>DEPLOYMENT_ID_</ColNames>
+      <RefColNames>ID_</RefColNames>
+      <RefTableName>act_re_deployment</RefTableName>
+    </foreign-key>
+    <foreign-key id="540" parent="308" name="ACT_FK_MODEL_SOURCE">
+      <ColNames>EDITOR_SOURCE_VALUE_ID_</ColNames>
+      <RefColNames>ID_</RefColNames>
+      <RefTableName>act_ge_bytearray</RefTableName>
+    </foreign-key>
+    <foreign-key id="541" parent="308" name="ACT_FK_MODEL_SOURCE_EXTRA">
+      <ColNames>EDITOR_SOURCE_EXTRA_VALUE_ID_</ColNames>
+      <RefColNames>ID_</RefColNames>
+      <RefTableName>act_ge_bytearray</RefTableName>
+    </foreign-key>
+    <index id="542" parent="308" name="PRIMARY">
+      <ColNames>ID_</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <index id="543" parent="308" name="ACT_FK_MODEL_DEPLOYMENT">
+      <ColNames>DEPLOYMENT_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="544" parent="308" name="ACT_FK_MODEL_SOURCE">
+      <ColNames>EDITOR_SOURCE_VALUE_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="545" parent="308" name="ACT_FK_MODEL_SOURCE_EXTRA">
+      <ColNames>EDITOR_SOURCE_EXTRA_VALUE_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="546" parent="308" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="547" parent="309" name="ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="548" parent="309" name="REV_">
+      <DasType>int|0s</DasType>
+      <Position>2</Position>
+    </column>
+    <column id="549" parent="309" name="CATEGORY_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>3</Position>
+    </column>
+    <column id="550" parent="309" name="NAME_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>4</Position>
+    </column>
+    <column id="551" parent="309" name="KEY_">
+      <DasType>varchar(255)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>5</Position>
+    </column>
+    <column id="552" parent="309" name="VERSION_">
+      <DasType>int|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>6</Position>
+    </column>
+    <column id="553" parent="309" name="DEPLOYMENT_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>7</Position>
+    </column>
+    <column id="554" parent="309" name="RESOURCE_NAME_">
+      <DasType>varchar(4000)|0s</DasType>
+      <Position>8</Position>
+    </column>
+    <column id="555" parent="309" name="DGRM_RESOURCE_NAME_">
+      <DasType>varchar(4000)|0s</DasType>
+      <Position>9</Position>
+    </column>
+    <column id="556" parent="309" name="DESCRIPTION_">
+      <DasType>varchar(4000)|0s</DasType>
+      <Position>10</Position>
+    </column>
+    <column id="557" parent="309" name="HAS_START_FORM_KEY_">
+      <DasType>tinyint|0s</DasType>
+      <Position>11</Position>
+    </column>
+    <column id="558" parent="309" name="HAS_GRAPHICAL_NOTATION_">
+      <DasType>tinyint|0s</DasType>
+      <Position>12</Position>
+    </column>
+    <column id="559" parent="309" name="SUSPENSION_STATE_">
+      <DasType>int|0s</DasType>
+      <Position>13</Position>
+    </column>
+    <column id="560" parent="309" name="TENANT_ID_">
+      <DasType>varchar(255)|0s</DasType>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+      <Position>14</Position>
+    </column>
+    <column id="561" parent="309" name="ENGINE_VERSION_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>15</Position>
+    </column>
+    <column id="562" parent="309" name="APP_VERSION_">
+      <DasType>int|0s</DasType>
+      <Position>16</Position>
+    </column>
+    <index id="563" parent="309" name="PRIMARY">
+      <ColNames>ID_</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <index id="564" parent="309" name="ACT_UNIQ_PROCDEF">
+      <ColNames>KEY_
+VERSION_
+TENANT_ID_</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="565" parent="309" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <key id="566" parent="309" name="ACT_UNIQ_PROCDEF">
+      <UnderlyingIndexName>ACT_UNIQ_PROCDEF</UnderlyingIndexName>
+    </key>
+    <column id="567" parent="310" name="ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="568" parent="310" name="REV_">
+      <DasType>int|0s</DasType>
+      <Position>2</Position>
+    </column>
+    <column id="569" parent="310" name="TYPE_">
+      <DasType>varchar(255)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>3</Position>
+    </column>
+    <column id="570" parent="310" name="EXCLUSIVE_">
+      <DasType>tinyint(1)|0s</DasType>
+      <Position>4</Position>
+    </column>
+    <column id="571" parent="310" name="EXECUTION_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>5</Position>
+    </column>
+    <column id="572" parent="310" name="PROCESS_INSTANCE_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>6</Position>
+    </column>
+    <column id="573" parent="310" name="PROC_DEF_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>7</Position>
+    </column>
+    <column id="574" parent="310" name="EXCEPTION_STACK_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>8</Position>
+    </column>
+    <column id="575" parent="310" name="EXCEPTION_MSG_">
+      <DasType>varchar(4000)|0s</DasType>
+      <Position>9</Position>
+    </column>
+    <column id="576" parent="310" name="DUEDATE_">
+      <DasType>timestamp(3)|0s</DasType>
+      <Position>10</Position>
+    </column>
+    <column id="577" parent="310" name="REPEAT_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>11</Position>
+    </column>
+    <column id="578" parent="310" name="HANDLER_TYPE_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>12</Position>
+    </column>
+    <column id="579" parent="310" name="HANDLER_CFG_">
+      <DasType>varchar(4000)|0s</DasType>
+      <Position>13</Position>
+    </column>
+    <column id="580" parent="310" name="TENANT_ID_">
+      <DasType>varchar(255)|0s</DasType>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+      <Position>14</Position>
+    </column>
+    <foreign-key id="581" parent="310" name="ACT_FK_DEADLETTER_JOB_EXECUTION">
+      <ColNames>EXECUTION_ID_</ColNames>
+      <RefColNames>ID_</RefColNames>
+      <RefTableName>act_ru_execution</RefTableName>
+    </foreign-key>
+    <foreign-key id="582" parent="310" name="ACT_FK_DEADLETTER_JOB_PROCESS_INSTANCE">
+      <ColNames>PROCESS_INSTANCE_ID_</ColNames>
+      <RefColNames>ID_</RefColNames>
+      <RefTableName>act_ru_execution</RefTableName>
+    </foreign-key>
+    <foreign-key id="583" parent="310" name="ACT_FK_DEADLETTER_JOB_PROC_DEF">
+      <ColNames>PROC_DEF_ID_</ColNames>
+      <RefColNames>ID_</RefColNames>
+      <RefTableName>act_re_procdef</RefTableName>
+    </foreign-key>
+    <foreign-key id="584" parent="310" name="ACT_FK_DEADLETTER_JOB_EXCEPTION">
+      <ColNames>EXCEPTION_STACK_ID_</ColNames>
+      <RefColNames>ID_</RefColNames>
+      <RefTableName>act_ge_bytearray</RefTableName>
+    </foreign-key>
+    <index id="585" parent="310" name="PRIMARY">
+      <ColNames>ID_</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <index id="586" parent="310" name="ACT_FK_DEADLETTER_JOB_EXECUTION">
+      <ColNames>EXECUTION_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="587" parent="310" name="ACT_FK_DEADLETTER_JOB_PROCESS_INSTANCE">
+      <ColNames>PROCESS_INSTANCE_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="588" parent="310" name="ACT_FK_DEADLETTER_JOB_PROC_DEF">
+      <ColNames>PROC_DEF_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="589" parent="310" name="ACT_FK_DEADLETTER_JOB_EXCEPTION">
+      <ColNames>EXCEPTION_STACK_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="590" parent="310" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="591" parent="311" name="ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="592" parent="311" name="REV_">
+      <DasType>int|0s</DasType>
+      <Position>2</Position>
+    </column>
+    <column id="593" parent="311" name="EVENT_TYPE_">
+      <DasType>varchar(255)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>3</Position>
+    </column>
+    <column id="594" parent="311" name="EVENT_NAME_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>4</Position>
+    </column>
+    <column id="595" parent="311" name="EXECUTION_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>5</Position>
+    </column>
+    <column id="596" parent="311" name="PROC_INST_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>6</Position>
+    </column>
+    <column id="597" parent="311" name="ACTIVITY_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>7</Position>
+    </column>
+    <column id="598" parent="311" name="CONFIGURATION_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>8</Position>
+    </column>
+    <column id="599" parent="311" name="CREATED_">
+      <DasType>timestamp(3)|0s</DasType>
+      <DefaultExpression>CURRENT_TIMESTAMP(3)</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>9</Position>
+    </column>
+    <column id="600" parent="311" name="PROC_DEF_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>10</Position>
+    </column>
+    <column id="601" parent="311" name="TENANT_ID_">
+      <DasType>varchar(255)|0s</DasType>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+      <Position>11</Position>
+    </column>
+    <foreign-key id="602" parent="311" name="ACT_FK_EVENT_EXEC">
+      <ColNames>EXECUTION_ID_</ColNames>
+      <RefColNames>ID_</RefColNames>
+      <RefTableName>act_ru_execution</RefTableName>
+    </foreign-key>
+    <index id="603" parent="311" name="PRIMARY">
+      <ColNames>ID_</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <index id="604" parent="311" name="ACT_FK_EVENT_EXEC">
+      <ColNames>EXECUTION_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="605" parent="311" name="ACT_IDX_EVENT_SUBSCR_CONFIG_">
+      <ColNames>CONFIGURATION_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="606" parent="311" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="607" parent="312" name="ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="608" parent="312" name="REV_">
+      <DasType>int|0s</DasType>
+      <Position>2</Position>
+    </column>
+    <column id="609" parent="312" name="PROC_INST_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>3</Position>
+    </column>
+    <column id="610" parent="312" name="BUSINESS_KEY_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>4</Position>
+    </column>
+    <column id="611" parent="312" name="PARENT_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>5</Position>
+    </column>
+    <column id="612" parent="312" name="PROC_DEF_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>6</Position>
+    </column>
+    <column id="613" parent="312" name="SUPER_EXEC_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>7</Position>
+    </column>
+    <column id="614" parent="312" name="ROOT_PROC_INST_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>8</Position>
+    </column>
+    <column id="615" parent="312" name="ACT_ID_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>9</Position>
+    </column>
+    <column id="616" parent="312" name="IS_ACTIVE_">
+      <DasType>tinyint|0s</DasType>
+      <Position>10</Position>
+    </column>
+    <column id="617" parent="312" name="IS_CONCURRENT_">
+      <DasType>tinyint|0s</DasType>
+      <Position>11</Position>
+    </column>
+    <column id="618" parent="312" name="IS_SCOPE_">
+      <DasType>tinyint|0s</DasType>
+      <Position>12</Position>
+    </column>
+    <column id="619" parent="312" name="IS_EVENT_SCOPE_">
+      <DasType>tinyint|0s</DasType>
+      <Position>13</Position>
+    </column>
+    <column id="620" parent="312" name="IS_MI_ROOT_">
+      <DasType>tinyint|0s</DasType>
+      <Position>14</Position>
+    </column>
+    <column id="621" parent="312" name="SUSPENSION_STATE_">
+      <DasType>int|0s</DasType>
+      <Position>15</Position>
+    </column>
+    <column id="622" parent="312" name="CACHED_ENT_STATE_">
+      <DasType>int|0s</DasType>
+      <Position>16</Position>
+    </column>
+    <column id="623" parent="312" name="TENANT_ID_">
+      <DasType>varchar(255)|0s</DasType>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+      <Position>17</Position>
+    </column>
+    <column id="624" parent="312" name="NAME_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>18</Position>
+    </column>
+    <column id="625" parent="312" name="START_TIME_">
+      <DasType>datetime(3)|0s</DasType>
+      <Position>19</Position>
+    </column>
+    <column id="626" parent="312" name="START_USER_ID_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>20</Position>
+    </column>
+    <column id="627" parent="312" name="LOCK_TIME_">
+      <DasType>timestamp(3)|0s</DasType>
+      <Position>21</Position>
+    </column>
+    <column id="628" parent="312" name="IS_COUNT_ENABLED_">
+      <DasType>tinyint|0s</DasType>
+      <Position>22</Position>
+    </column>
+    <column id="629" parent="312" name="EVT_SUBSCR_COUNT_">
+      <DasType>int|0s</DasType>
+      <Position>23</Position>
+    </column>
+    <column id="630" parent="312" name="TASK_COUNT_">
+      <DasType>int|0s</DasType>
+      <Position>24</Position>
+    </column>
+    <column id="631" parent="312" name="JOB_COUNT_">
+      <DasType>int|0s</DasType>
+      <Position>25</Position>
+    </column>
+    <column id="632" parent="312" name="TIMER_JOB_COUNT_">
+      <DasType>int|0s</DasType>
+      <Position>26</Position>
+    </column>
+    <column id="633" parent="312" name="SUSP_JOB_COUNT_">
+      <DasType>int|0s</DasType>
+      <Position>27</Position>
+    </column>
+    <column id="634" parent="312" name="DEADLETTER_JOB_COUNT_">
+      <DasType>int|0s</DasType>
+      <Position>28</Position>
+    </column>
+    <column id="635" parent="312" name="VAR_COUNT_">
+      <DasType>int|0s</DasType>
+      <Position>29</Position>
+    </column>
+    <column id="636" parent="312" name="ID_LINK_COUNT_">
+      <DasType>int|0s</DasType>
+      <Position>30</Position>
+    </column>
+    <column id="637" parent="312" name="APP_VERSION_">
+      <DasType>int|0s</DasType>
+      <Position>31</Position>
+    </column>
+    <foreign-key id="638" parent="312" name="ACT_FK_EXE_PROCINST">
+      <ColNames>PROC_INST_ID_</ColNames>
+      <OnDelete>cascade</OnDelete>
+      <OnUpdate>cascade</OnUpdate>
+      <RefColNames>ID_</RefColNames>
+      <RefTableName>act_ru_execution</RefTableName>
+    </foreign-key>
+    <foreign-key id="639" parent="312" name="ACT_FK_EXE_PARENT">
+      <ColNames>PARENT_ID_</ColNames>
+      <OnDelete>cascade</OnDelete>
+      <RefColNames>ID_</RefColNames>
+      <RefTableName>act_ru_execution</RefTableName>
+    </foreign-key>
+    <foreign-key id="640" parent="312" name="ACT_FK_EXE_PROCDEF">
+      <ColNames>PROC_DEF_ID_</ColNames>
+      <RefColNames>ID_</RefColNames>
+      <RefTableName>act_re_procdef</RefTableName>
+    </foreign-key>
+    <foreign-key id="641" parent="312" name="ACT_FK_EXE_SUPER">
+      <ColNames>SUPER_EXEC_</ColNames>
+      <OnDelete>cascade</OnDelete>
+      <RefColNames>ID_</RefColNames>
+      <RefTableName>act_ru_execution</RefTableName>
+    </foreign-key>
+    <index id="642" parent="312" name="PRIMARY">
+      <ColNames>ID_</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <index id="643" parent="312" name="ACT_FK_EXE_PROCINST">
+      <ColNames>PROC_INST_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="644" parent="312" name="ACT_IDX_EXEC_BUSKEY">
+      <ColNames>BUSINESS_KEY_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="645" parent="312" name="ACT_FK_EXE_PARENT">
+      <ColNames>PARENT_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="646" parent="312" name="ACT_FK_EXE_PROCDEF">
+      <ColNames>PROC_DEF_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="647" parent="312" name="ACT_FK_EXE_SUPER">
+      <ColNames>SUPER_EXEC_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="648" parent="312" name="ACT_IDC_EXEC_ROOT">
+      <ColNames>ROOT_PROC_INST_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="649" parent="312" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="650" parent="313" name="ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="651" parent="313" name="REV_">
+      <DasType>int|0s</DasType>
+      <Position>2</Position>
+    </column>
+    <column id="652" parent="313" name="GROUP_ID_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>3</Position>
+    </column>
+    <column id="653" parent="313" name="TYPE_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>4</Position>
+    </column>
+    <column id="654" parent="313" name="USER_ID_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>5</Position>
+    </column>
+    <column id="655" parent="313" name="TASK_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>6</Position>
+    </column>
+    <column id="656" parent="313" name="PROC_INST_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>7</Position>
+    </column>
+    <column id="657" parent="313" name="PROC_DEF_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>8</Position>
+    </column>
+    <foreign-key id="658" parent="313" name="ACT_FK_TSKASS_TASK">
+      <ColNames>TASK_ID_</ColNames>
+      <RefColNames>ID_</RefColNames>
+      <RefTableName>act_ru_task</RefTableName>
+    </foreign-key>
+    <foreign-key id="659" parent="313" name="ACT_FK_IDL_PROCINST">
+      <ColNames>PROC_INST_ID_</ColNames>
+      <RefColNames>ID_</RefColNames>
+      <RefTableName>act_ru_execution</RefTableName>
+    </foreign-key>
+    <foreign-key id="660" parent="313" name="ACT_FK_ATHRZ_PROCEDEF">
+      <ColNames>PROC_DEF_ID_</ColNames>
+      <RefColNames>ID_</RefColNames>
+      <RefTableName>act_re_procdef</RefTableName>
+    </foreign-key>
+    <index id="661" parent="313" name="PRIMARY">
+      <ColNames>ID_</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <index id="662" parent="313" name="ACT_IDX_IDENT_LNK_GROUP">
+      <ColNames>GROUP_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="663" parent="313" name="ACT_IDX_IDENT_LNK_USER">
+      <ColNames>USER_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="664" parent="313" name="ACT_FK_TSKASS_TASK">
+      <ColNames>TASK_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="665" parent="313" name="ACT_FK_IDL_PROCINST">
+      <ColNames>PROC_INST_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="666" parent="313" name="ACT_IDX_ATHRZ_PROCEDEF">
+      <ColNames>PROC_DEF_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="667" parent="313" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="668" parent="314" name="ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="669" parent="314" name="EXECUTION_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>2</Position>
+    </column>
+    <column id="670" parent="314" name="PROCESS_INSTANCE_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>3</Position>
+    </column>
+    <column id="671" parent="314" name="PROC_DEF_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>4</Position>
+    </column>
+    <column id="672" parent="314" name="FLOW_NODE_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>5</Position>
+    </column>
+    <column id="673" parent="314" name="CREATED_DATE_">
+      <DasType>timestamp(3)|0s</DasType>
+      <Position>6</Position>
+    </column>
+    <foreign-key id="674" parent="314" name="ACT_FK_INT_EXECUTION">
+      <ColNames>EXECUTION_ID_</ColNames>
+      <OnDelete>cascade</OnDelete>
+      <RefColNames>ID_</RefColNames>
+      <RefTableName>act_ru_execution</RefTableName>
+    </foreign-key>
+    <foreign-key id="675" parent="314" name="ACT_FK_INT_PROC_INST">
+      <ColNames>PROCESS_INSTANCE_ID_</ColNames>
+      <RefColNames>ID_</RefColNames>
+      <RefTableName>act_ru_execution</RefTableName>
+    </foreign-key>
+    <foreign-key id="676" parent="314" name="ACT_FK_INT_PROC_DEF">
+      <ColNames>PROC_DEF_ID_</ColNames>
+      <RefColNames>ID_</RefColNames>
+      <RefTableName>act_re_procdef</RefTableName>
+    </foreign-key>
+    <index id="677" parent="314" name="PRIMARY">
+      <ColNames>ID_</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <index id="678" parent="314" name="ACT_FK_INT_EXECUTION">
+      <ColNames>EXECUTION_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="679" parent="314" name="ACT_FK_INT_PROC_INST">
+      <ColNames>PROCESS_INSTANCE_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="680" parent="314" name="ACT_FK_INT_PROC_DEF">
+      <ColNames>PROC_DEF_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="681" parent="314" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="682" parent="315" name="ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="683" parent="315" name="REV_">
+      <DasType>int|0s</DasType>
+      <Position>2</Position>
+    </column>
+    <column id="684" parent="315" name="TYPE_">
+      <DasType>varchar(255)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>3</Position>
+    </column>
+    <column id="685" parent="315" name="LOCK_EXP_TIME_">
+      <DasType>timestamp(3)|0s</DasType>
+      <Position>4</Position>
+    </column>
+    <column id="686" parent="315" name="LOCK_OWNER_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>5</Position>
+    </column>
+    <column id="687" parent="315" name="EXCLUSIVE_">
+      <DasType>tinyint(1)|0s</DasType>
+      <Position>6</Position>
+    </column>
+    <column id="688" parent="315" name="EXECUTION_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>7</Position>
+    </column>
+    <column id="689" parent="315" name="PROCESS_INSTANCE_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>8</Position>
+    </column>
+    <column id="690" parent="315" name="PROC_DEF_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>9</Position>
+    </column>
+    <column id="691" parent="315" name="RETRIES_">
+      <DasType>int|0s</DasType>
+      <Position>10</Position>
+    </column>
+    <column id="692" parent="315" name="EXCEPTION_STACK_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>11</Position>
+    </column>
+    <column id="693" parent="315" name="EXCEPTION_MSG_">
+      <DasType>varchar(4000)|0s</DasType>
+      <Position>12</Position>
+    </column>
+    <column id="694" parent="315" name="DUEDATE_">
+      <DasType>timestamp(3)|0s</DasType>
+      <Position>13</Position>
+    </column>
+    <column id="695" parent="315" name="REPEAT_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>14</Position>
+    </column>
+    <column id="696" parent="315" name="HANDLER_TYPE_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>15</Position>
+    </column>
+    <column id="697" parent="315" name="HANDLER_CFG_">
+      <DasType>varchar(4000)|0s</DasType>
+      <Position>16</Position>
+    </column>
+    <column id="698" parent="315" name="TENANT_ID_">
+      <DasType>varchar(255)|0s</DasType>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+      <Position>17</Position>
+    </column>
+    <foreign-key id="699" parent="315" name="ACT_FK_JOB_EXECUTION">
+      <ColNames>EXECUTION_ID_</ColNames>
+      <RefColNames>ID_</RefColNames>
+      <RefTableName>act_ru_execution</RefTableName>
+    </foreign-key>
+    <foreign-key id="700" parent="315" name="ACT_FK_JOB_PROCESS_INSTANCE">
+      <ColNames>PROCESS_INSTANCE_ID_</ColNames>
+      <RefColNames>ID_</RefColNames>
+      <RefTableName>act_ru_execution</RefTableName>
+    </foreign-key>
+    <foreign-key id="701" parent="315" name="ACT_FK_JOB_PROC_DEF">
+      <ColNames>PROC_DEF_ID_</ColNames>
+      <RefColNames>ID_</RefColNames>
+      <RefTableName>act_re_procdef</RefTableName>
+    </foreign-key>
+    <foreign-key id="702" parent="315" name="ACT_FK_JOB_EXCEPTION">
+      <ColNames>EXCEPTION_STACK_ID_</ColNames>
+      <RefColNames>ID_</RefColNames>
+      <RefTableName>act_ge_bytearray</RefTableName>
+    </foreign-key>
+    <index id="703" parent="315" name="PRIMARY">
+      <ColNames>ID_</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <index id="704" parent="315" name="ACT_FK_JOB_EXECUTION">
+      <ColNames>EXECUTION_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="705" parent="315" name="ACT_FK_JOB_PROCESS_INSTANCE">
+      <ColNames>PROCESS_INSTANCE_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="706" parent="315" name="ACT_FK_JOB_PROC_DEF">
+      <ColNames>PROC_DEF_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="707" parent="315" name="ACT_FK_JOB_EXCEPTION">
+      <ColNames>EXCEPTION_STACK_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="708" parent="315" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="709" parent="316" name="ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="710" parent="316" name="REV_">
+      <DasType>int|0s</DasType>
+      <Position>2</Position>
+    </column>
+    <column id="711" parent="316" name="TYPE_">
+      <DasType>varchar(255)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>3</Position>
+    </column>
+    <column id="712" parent="316" name="EXCLUSIVE_">
+      <DasType>tinyint(1)|0s</DasType>
+      <Position>4</Position>
+    </column>
+    <column id="713" parent="316" name="EXECUTION_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>5</Position>
+    </column>
+    <column id="714" parent="316" name="PROCESS_INSTANCE_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>6</Position>
+    </column>
+    <column id="715" parent="316" name="PROC_DEF_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>7</Position>
+    </column>
+    <column id="716" parent="316" name="RETRIES_">
+      <DasType>int|0s</DasType>
+      <Position>8</Position>
+    </column>
+    <column id="717" parent="316" name="EXCEPTION_STACK_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>9</Position>
+    </column>
+    <column id="718" parent="316" name="EXCEPTION_MSG_">
+      <DasType>varchar(4000)|0s</DasType>
+      <Position>10</Position>
+    </column>
+    <column id="719" parent="316" name="DUEDATE_">
+      <DasType>timestamp(3)|0s</DasType>
+      <Position>11</Position>
+    </column>
+    <column id="720" parent="316" name="REPEAT_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>12</Position>
+    </column>
+    <column id="721" parent="316" name="HANDLER_TYPE_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>13</Position>
+    </column>
+    <column id="722" parent="316" name="HANDLER_CFG_">
+      <DasType>varchar(4000)|0s</DasType>
+      <Position>14</Position>
+    </column>
+    <column id="723" parent="316" name="TENANT_ID_">
+      <DasType>varchar(255)|0s</DasType>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+      <Position>15</Position>
+    </column>
+    <foreign-key id="724" parent="316" name="ACT_FK_SUSPENDED_JOB_EXECUTION">
+      <ColNames>EXECUTION_ID_</ColNames>
+      <RefColNames>ID_</RefColNames>
+      <RefTableName>act_ru_execution</RefTableName>
+    </foreign-key>
+    <foreign-key id="725" parent="316" name="ACT_FK_SUSPENDED_JOB_PROCESS_INSTANCE">
+      <ColNames>PROCESS_INSTANCE_ID_</ColNames>
+      <RefColNames>ID_</RefColNames>
+      <RefTableName>act_ru_execution</RefTableName>
+    </foreign-key>
+    <foreign-key id="726" parent="316" name="ACT_FK_SUSPENDED_JOB_PROC_DEF">
+      <ColNames>PROC_DEF_ID_</ColNames>
+      <RefColNames>ID_</RefColNames>
+      <RefTableName>act_re_procdef</RefTableName>
+    </foreign-key>
+    <foreign-key id="727" parent="316" name="ACT_FK_SUSPENDED_JOB_EXCEPTION">
+      <ColNames>EXCEPTION_STACK_ID_</ColNames>
+      <RefColNames>ID_</RefColNames>
+      <RefTableName>act_ge_bytearray</RefTableName>
+    </foreign-key>
+    <index id="728" parent="316" name="PRIMARY">
+      <ColNames>ID_</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <index id="729" parent="316" name="ACT_FK_SUSPENDED_JOB_EXECUTION">
+      <ColNames>EXECUTION_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="730" parent="316" name="ACT_FK_SUSPENDED_JOB_PROCESS_INSTANCE">
+      <ColNames>PROCESS_INSTANCE_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="731" parent="316" name="ACT_FK_SUSPENDED_JOB_PROC_DEF">
+      <ColNames>PROC_DEF_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="732" parent="316" name="ACT_FK_SUSPENDED_JOB_EXCEPTION">
+      <ColNames>EXCEPTION_STACK_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="733" parent="316" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="734" parent="317" name="ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="735" parent="317" name="REV_">
+      <DasType>int|0s</DasType>
+      <Position>2</Position>
+    </column>
+    <column id="736" parent="317" name="EXECUTION_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>3</Position>
+    </column>
+    <column id="737" parent="317" name="PROC_INST_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>4</Position>
+    </column>
+    <column id="738" parent="317" name="PROC_DEF_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>5</Position>
+    </column>
+    <column id="739" parent="317" name="NAME_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>6</Position>
+    </column>
+    <column id="740" parent="317" name="BUSINESS_KEY_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>7</Position>
+    </column>
+    <column id="741" parent="317" name="PARENT_TASK_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>8</Position>
+    </column>
+    <column id="742" parent="317" name="DESCRIPTION_">
+      <DasType>varchar(4000)|0s</DasType>
+      <Position>9</Position>
+    </column>
+    <column id="743" parent="317" name="TASK_DEF_KEY_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>10</Position>
+    </column>
+    <column id="744" parent="317" name="OWNER_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>11</Position>
+    </column>
+    <column id="745" parent="317" name="ASSIGNEE_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>12</Position>
+    </column>
+    <column id="746" parent="317" name="DELEGATION_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>13</Position>
+    </column>
+    <column id="747" parent="317" name="PRIORITY_">
+      <DasType>int|0s</DasType>
+      <Position>14</Position>
+    </column>
+    <column id="748" parent="317" name="CREATE_TIME_">
+      <DasType>timestamp(3)|0s</DasType>
+      <Position>15</Position>
+    </column>
+    <column id="749" parent="317" name="DUE_DATE_">
+      <DasType>datetime(3)|0s</DasType>
+      <Position>16</Position>
+    </column>
+    <column id="750" parent="317" name="CATEGORY_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>17</Position>
+    </column>
+    <column id="751" parent="317" name="SUSPENSION_STATE_">
+      <DasType>int|0s</DasType>
+      <Position>18</Position>
+    </column>
+    <column id="752" parent="317" name="TENANT_ID_">
+      <DasType>varchar(255)|0s</DasType>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+      <Position>19</Position>
+    </column>
+    <column id="753" parent="317" name="FORM_KEY_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>20</Position>
+    </column>
+    <column id="754" parent="317" name="CLAIM_TIME_">
+      <DasType>datetime(3)|0s</DasType>
+      <Position>21</Position>
+    </column>
+    <column id="755" parent="317" name="APP_VERSION_">
+      <DasType>int|0s</DasType>
+      <Position>22</Position>
+    </column>
+    <foreign-key id="756" parent="317" name="ACT_FK_TASK_EXE">
+      <ColNames>EXECUTION_ID_</ColNames>
+      <RefColNames>ID_</RefColNames>
+      <RefTableName>act_ru_execution</RefTableName>
+    </foreign-key>
+    <foreign-key id="757" parent="317" name="ACT_FK_TASK_PROCINST">
+      <ColNames>PROC_INST_ID_</ColNames>
+      <RefColNames>ID_</RefColNames>
+      <RefTableName>act_ru_execution</RefTableName>
+    </foreign-key>
+    <foreign-key id="758" parent="317" name="ACT_FK_TASK_PROCDEF">
+      <ColNames>PROC_DEF_ID_</ColNames>
+      <RefColNames>ID_</RefColNames>
+      <RefTableName>act_re_procdef</RefTableName>
+    </foreign-key>
+    <index id="759" parent="317" name="PRIMARY">
+      <ColNames>ID_</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <index id="760" parent="317" name="ACT_FK_TASK_EXE">
+      <ColNames>EXECUTION_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="761" parent="317" name="ACT_FK_TASK_PROCINST">
+      <ColNames>PROC_INST_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="762" parent="317" name="ACT_FK_TASK_PROCDEF">
+      <ColNames>PROC_DEF_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="763" parent="317" name="ACT_IDX_TASK_CREATE">
+      <ColNames>CREATE_TIME_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="764" parent="317" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="765" parent="318" name="ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="766" parent="318" name="REV_">
+      <DasType>int|0s</DasType>
+      <Position>2</Position>
+    </column>
+    <column id="767" parent="318" name="TYPE_">
+      <DasType>varchar(255)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>3</Position>
+    </column>
+    <column id="768" parent="318" name="LOCK_EXP_TIME_">
+      <DasType>timestamp(3)|0s</DasType>
+      <Position>4</Position>
+    </column>
+    <column id="769" parent="318" name="LOCK_OWNER_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>5</Position>
+    </column>
+    <column id="770" parent="318" name="EXCLUSIVE_">
+      <DasType>tinyint(1)|0s</DasType>
+      <Position>6</Position>
+    </column>
+    <column id="771" parent="318" name="EXECUTION_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>7</Position>
+    </column>
+    <column id="772" parent="318" name="PROCESS_INSTANCE_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>8</Position>
+    </column>
+    <column id="773" parent="318" name="PROC_DEF_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>9</Position>
+    </column>
+    <column id="774" parent="318" name="RETRIES_">
+      <DasType>int|0s</DasType>
+      <Position>10</Position>
+    </column>
+    <column id="775" parent="318" name="EXCEPTION_STACK_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>11</Position>
+    </column>
+    <column id="776" parent="318" name="EXCEPTION_MSG_">
+      <DasType>varchar(4000)|0s</DasType>
+      <Position>12</Position>
+    </column>
+    <column id="777" parent="318" name="DUEDATE_">
+      <DasType>timestamp(3)|0s</DasType>
+      <Position>13</Position>
+    </column>
+    <column id="778" parent="318" name="REPEAT_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>14</Position>
+    </column>
+    <column id="779" parent="318" name="HANDLER_TYPE_">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>15</Position>
+    </column>
+    <column id="780" parent="318" name="HANDLER_CFG_">
+      <DasType>varchar(4000)|0s</DasType>
+      <Position>16</Position>
+    </column>
+    <column id="781" parent="318" name="TENANT_ID_">
+      <DasType>varchar(255)|0s</DasType>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+      <Position>17</Position>
+    </column>
+    <foreign-key id="782" parent="318" name="ACT_FK_TIMER_JOB_EXECUTION">
+      <ColNames>EXECUTION_ID_</ColNames>
+      <RefColNames>ID_</RefColNames>
+      <RefTableName>act_ru_execution</RefTableName>
+    </foreign-key>
+    <foreign-key id="783" parent="318" name="ACT_FK_TIMER_JOB_PROCESS_INSTANCE">
+      <ColNames>PROCESS_INSTANCE_ID_</ColNames>
+      <RefColNames>ID_</RefColNames>
+      <RefTableName>act_ru_execution</RefTableName>
+    </foreign-key>
+    <foreign-key id="784" parent="318" name="ACT_FK_TIMER_JOB_PROC_DEF">
+      <ColNames>PROC_DEF_ID_</ColNames>
+      <RefColNames>ID_</RefColNames>
+      <RefTableName>act_re_procdef</RefTableName>
+    </foreign-key>
+    <foreign-key id="785" parent="318" name="ACT_FK_TIMER_JOB_EXCEPTION">
+      <ColNames>EXCEPTION_STACK_ID_</ColNames>
+      <RefColNames>ID_</RefColNames>
+      <RefTableName>act_ge_bytearray</RefTableName>
+    </foreign-key>
+    <index id="786" parent="318" name="PRIMARY">
+      <ColNames>ID_</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <index id="787" parent="318" name="ACT_FK_TIMER_JOB_EXECUTION">
+      <ColNames>EXECUTION_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="788" parent="318" name="ACT_FK_TIMER_JOB_PROCESS_INSTANCE">
+      <ColNames>PROCESS_INSTANCE_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="789" parent="318" name="ACT_FK_TIMER_JOB_PROC_DEF">
+      <ColNames>PROC_DEF_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="790" parent="318" name="ACT_FK_TIMER_JOB_EXCEPTION">
+      <ColNames>EXCEPTION_STACK_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="791" parent="318" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="792" parent="319" name="ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="793" parent="319" name="REV_">
+      <DasType>int|0s</DasType>
+      <Position>2</Position>
+    </column>
+    <column id="794" parent="319" name="TYPE_">
+      <DasType>varchar(255)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>3</Position>
+    </column>
+    <column id="795" parent="319" name="NAME_">
+      <DasType>varchar(255)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>4</Position>
+    </column>
+    <column id="796" parent="319" name="EXECUTION_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>5</Position>
+    </column>
+    <column id="797" parent="319" name="PROC_INST_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>6</Position>
+    </column>
+    <column id="798" parent="319" name="TASK_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>7</Position>
+    </column>
+    <column id="799" parent="319" name="BYTEARRAY_ID_">
+      <DasType>varchar(64)|0s</DasType>
+      <Position>8</Position>
+    </column>
+    <column id="800" parent="319" name="DOUBLE_">
+      <DasType>double|0s</DasType>
+      <Position>9</Position>
+    </column>
+    <column id="801" parent="319" name="LONG_">
+      <DasType>bigint|0s</DasType>
+      <Position>10</Position>
+    </column>
+    <column id="802" parent="319" name="TEXT_">
+      <DasType>varchar(4000)|0s</DasType>
+      <Position>11</Position>
+    </column>
+    <column id="803" parent="319" name="TEXT2_">
+      <DasType>varchar(4000)|0s</DasType>
+      <Position>12</Position>
+    </column>
+    <foreign-key id="804" parent="319" name="ACT_FK_VAR_EXE">
+      <ColNames>EXECUTION_ID_</ColNames>
+      <RefColNames>ID_</RefColNames>
+      <RefTableName>act_ru_execution</RefTableName>
+    </foreign-key>
+    <foreign-key id="805" parent="319" name="ACT_FK_VAR_PROCINST">
+      <ColNames>PROC_INST_ID_</ColNames>
+      <RefColNames>ID_</RefColNames>
+      <RefTableName>act_ru_execution</RefTableName>
+    </foreign-key>
+    <foreign-key id="806" parent="319" name="ACT_FK_VAR_BYTEARRAY">
+      <ColNames>BYTEARRAY_ID_</ColNames>
+      <RefColNames>ID_</RefColNames>
+      <RefTableName>act_ge_bytearray</RefTableName>
+    </foreign-key>
+    <index id="807" parent="319" name="PRIMARY">
+      <ColNames>ID_</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <index id="808" parent="319" name="ACT_FK_VAR_EXE">
+      <ColNames>EXECUTION_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="809" parent="319" name="ACT_FK_VAR_PROCINST">
+      <ColNames>PROC_INST_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="810" parent="319" name="ACT_IDX_VARIABLE_TASK_ID">
+      <ColNames>TASK_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="811" parent="319" name="ACT_FK_VAR_BYTEARRAY">
+      <ColNames>BYTEARRAY_ID_</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="812" parent="319" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="813" parent="320" name="id">
+      <AutoIncrement>2</AutoIncrement>
+      <Comment>id</Comment>
+      <DasType>bigint|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="814" parent="320" name="process_code">
+      <Comment>审批code</Comment>
+      <DasType>varchar(50)|0s</DasType>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+    </column>
+    <column id="815" parent="320" name="user_id">
+      <Comment>用户id</Comment>
+      <DasType>bigint|0s</DasType>
+      <DefaultExpression>0</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>3</Position>
+    </column>
+    <column id="816" parent="320" name="process_template_id">
+      <Comment>审批模板id</Comment>
+      <DasType>bigint|0s</DasType>
+      <Position>4</Position>
+    </column>
+    <column id="817" parent="320" name="process_type_id">
+      <Comment>审批类型id</Comment>
+      <DasType>bigint|0s</DasType>
+      <Position>5</Position>
+    </column>
+    <column id="818" parent="320" name="title">
+      <Comment>标题</Comment>
+      <DasType>varchar(255)|0s</DasType>
+      <Position>6</Position>
+    </column>
+    <column id="819" parent="320" name="description">
+      <Comment>描述</Comment>
+      <DasType>varchar(255)|0s</DasType>
+      <Position>7</Position>
+    </column>
+    <column id="820" parent="320" name="form_values">
+      <Comment>表单值</Comment>
+      <DasType>text|0s</DasType>
+      <Position>8</Position>
+    </column>
+    <column id="821" parent="320" name="process_instance_id">
+      <Comment>流程实例id</Comment>
+      <DasType>varchar(255)|0s</DasType>
+      <Position>9</Position>
+    </column>
+    <column id="822" parent="320" name="current_auditor">
+      <Comment>当前审批人</Comment>
+      <DasType>varchar(255)|0s</DasType>
+      <Position>10</Position>
+    </column>
+    <column id="823" parent="320" name="status">
+      <Comment>状态（0：默认 1：审批中 2：审批通过 -1：驳回）</Comment>
+      <DasType>tinyint|0s</DasType>
+      <Position>11</Position>
+    </column>
+    <column id="824" parent="320" name="create_time">
+      <Comment>创建时间</Comment>
+      <DasType>timestamp|0s</DasType>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>12</Position>
+    </column>
+    <column id="825" parent="320" name="update_time">
+      <Comment>更新时间</Comment>
+      <DasType>timestamp|0s</DasType>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+      <NotNull>1</NotNull>
+      <OnUpdate>CURRENT_TIMESTAMP</OnUpdate>
+      <Position>13</Position>
+    </column>
+    <column id="826" parent="320" name="is_deleted">
+      <Comment>删除标记（0:不可用 1:可用）</Comment>
+      <DasType>tinyint|0s</DasType>
+      <DefaultExpression>0</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>14</Position>
+    </column>
+    <index id="827" parent="320" name="PRIMARY">
+      <ColNames>id</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="828" parent="320" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="829" parent="321" name="id">
+      <AutoIncrement>2</AutoIncrement>
+      <Comment>id</Comment>
+      <DasType>bigint|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="830" parent="321" name="process_id">
+      <Comment>审批流程id</Comment>
+      <DasType>bigint|0s</DasType>
+      <DefaultExpression>0</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+    </column>
+    <column id="831" parent="321" name="description">
+      <Comment>审批描述</Comment>
+      <DasType>varchar(255)|0s</DasType>
+      <Position>3</Position>
+    </column>
+    <column id="832" parent="321" name="status">
+      <Comment>状态</Comment>
+      <DasType>tinyint|0s</DasType>
+      <DefaultExpression>0</DefaultExpression>
+      <Position>4</Position>
+    </column>
+    <column id="833" parent="321" name="operate_user_id">
+      <Comment>操作用户id</Comment>
+      <DasType>bigint|0s</DasType>
+      <DefaultExpression>0</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>5</Position>
+    </column>
+    <column id="834" parent="321" name="operate_user">
+      <Comment>操作用户</Comment>
+      <DasType>varchar(20)|0s</DasType>
+      <Position>6</Position>
+    </column>
+    <column id="835" parent="321" name="create_time">
+      <Comment>创建时间</Comment>
+      <DasType>timestamp|0s</DasType>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>7</Position>
+    </column>
+    <column id="836" parent="321" name="update_time">
+      <Comment>更新时间</Comment>
+      <DasType>timestamp|0s</DasType>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+      <NotNull>1</NotNull>
+      <OnUpdate>CURRENT_TIMESTAMP</OnUpdate>
+      <Position>8</Position>
+    </column>
+    <column id="837" parent="321" name="is_deleted">
+      <Comment>删除标记（0:不可用 1:可用）</Comment>
+      <DasType>tinyint|0s</DasType>
+      <DefaultExpression>0</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>9</Position>
+    </column>
+    <index id="838" parent="321" name="PRIMARY">
+      <ColNames>id</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="839" parent="321" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="840" parent="322" name="id">
+      <AutoIncrement>4</AutoIncrement>
+      <Comment>角色id</Comment>
+      <DasType>bigint|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="841" parent="322" name="name">
+      <Comment>模板名称</Comment>
+      <DasType>varchar(20)|0s</DasType>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+    </column>
+    <column id="842" parent="322" name="icon_url">
+      <Comment>图标路径</Comment>
+      <DasType>varchar(100)|0s</DasType>
+      <Position>3</Position>
+    </column>
+    <column id="843" parent="322" name="process_type_id">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>4</Position>
+    </column>
+    <column id="844" parent="322" name="form_props">
+      <Comment>表单属性</Comment>
+      <DasType>text|0s</DasType>
+      <Position>5</Position>
+    </column>
+    <column id="845" parent="322" name="form_options">
+      <Comment>表单选项</Comment>
+      <DasType>text|0s</DasType>
+      <Position>6</Position>
+    </column>
+    <column id="846" parent="322" name="process_definition_key">
+      <Comment>流程定义key</Comment>
+      <DasType>varchar(20)|0s</DasType>
+      <Position>7</Position>
+    </column>
+    <column id="847" parent="322" name="process_definition_path">
+      <Comment>流程定义上传路径</Comment>
+      <DasType>varchar(255)|0s</DasType>
+      <Position>8</Position>
+    </column>
+    <column id="848" parent="322" name="process_model_id">
+      <Comment>流程定义模型id</Comment>
+      <DasType>varchar(255)|0s</DasType>
+      <Position>9</Position>
+    </column>
+    <column id="849" parent="322" name="description">
+      <Comment>描述</Comment>
+      <DasType>varchar(255)|0s</DasType>
+      <Position>10</Position>
+    </column>
+    <column id="850" parent="322" name="status">
+      <DasType>tinyint|0s</DasType>
+      <DefaultExpression>0</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>11</Position>
+    </column>
+    <column id="851" parent="322" name="create_time">
+      <Comment>创建时间</Comment>
+      <DasType>timestamp|0s</DasType>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>12</Position>
+    </column>
+    <column id="852" parent="322" name="update_time">
+      <Comment>更新时间</Comment>
+      <DasType>timestamp|0s</DasType>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+      <NotNull>1</NotNull>
+      <OnUpdate>CURRENT_TIMESTAMP</OnUpdate>
+      <Position>13</Position>
+    </column>
+    <column id="853" parent="322" name="is_deleted">
+      <Comment>删除标记（0:不可用 1:可用）</Comment>
+      <DasType>tinyint|0s</DasType>
+      <DefaultExpression>0</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>14</Position>
+    </column>
+    <index id="854" parent="322" name="PRIMARY">
+      <ColNames>id</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="855" parent="322" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="856" parent="323" name="id">
+      <AutoIncrement>4</AutoIncrement>
+      <Comment>id</Comment>
+      <DasType>bigint|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="857" parent="323" name="name">
+      <Comment>类型名称</Comment>
+      <DasType>varchar(20)|0s</DasType>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+    </column>
+    <column id="858" parent="323" name="description">
+      <Comment>描述</Comment>
+      <DasType>varchar(255)|0s</DasType>
+      <Position>3</Position>
+    </column>
+    <column id="859" parent="323" name="create_time">
+      <Comment>创建时间</Comment>
+      <DasType>timestamp|0s</DasType>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>4</Position>
+    </column>
+    <column id="860" parent="323" name="update_time">
+      <Comment>更新时间</Comment>
+      <DasType>timestamp|0s</DasType>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+      <NotNull>1</NotNull>
+      <OnUpdate>CURRENT_TIMESTAMP</OnUpdate>
+      <Position>5</Position>
+    </column>
+    <column id="861" parent="323" name="is_deleted">
+      <Comment>删除标记（0:不可用 1:可用）</Comment>
+      <DasType>tinyint|0s</DasType>
+      <DefaultExpression>0</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>6</Position>
+    </column>
+    <index id="862" parent="323" name="PRIMARY">
+      <ColNames>id</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="863" parent="323" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="864" parent="324" name="id">
+      <AutoIncrement>2019</AutoIncrement>
+      <DasType>bigint|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="865" parent="324" name="name">
+      <Comment>部门名称</Comment>
+      <DasType>varchar(50)|0s</DasType>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+    </column>
+    <column id="866" parent="324" name="parent_id">
+      <Comment>上级部门id</Comment>
+      <DasType>bigint|0s</DasType>
+      <DefaultExpression>0</DefaultExpression>
+      <Position>3</Position>
+    </column>
+    <column id="867" parent="324" name="tree_path">
+      <Comment>树结构</Comment>
+      <DasType>varchar(255)|0s</DasType>
+      <DefaultExpression>&apos;,&apos;</DefaultExpression>
+      <Position>4</Position>
+    </column>
+    <column id="868" parent="324" name="sort_value">
+      <Comment>排序</Comment>
+      <DasType>int|0s</DasType>
+      <DefaultExpression>1</DefaultExpression>
+      <Position>5</Position>
+    </column>
+    <column id="869" parent="324" name="leader">
+      <Comment>负责人</Comment>
+      <DasType>varchar(20)|0s</DasType>
+      <Position>6</Position>
+    </column>
+    <column id="870" parent="324" name="phone">
+      <Comment>电话</Comment>
+      <DasType>varchar(11)|0s</DasType>
+      <Position>7</Position>
+    </column>
+    <column id="871" parent="324" name="status">
+      <Comment>状态（1正常 0停用）</Comment>
+      <DasType>tinyint(1)|0s</DasType>
+      <DefaultExpression>1</DefaultExpression>
+      <Position>8</Position>
+    </column>
+    <column id="872" parent="324" name="create_time">
+      <DasType>timestamp|0s</DasType>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+      <NotNull>1</NotNull>
+      <OnUpdate>CURRENT_TIMESTAMP</OnUpdate>
+      <Position>9</Position>
+    </column>
+    <column id="873" parent="324" name="update_time">
+      <DasType>timestamp|0s</DasType>
+      <OnUpdate>CURRENT_TIMESTAMP</OnUpdate>
+      <Position>10</Position>
+    </column>
+    <column id="874" parent="324" name="is_deleted">
+      <Comment>删除标记（0:不可用 1:可用）</Comment>
+      <DasType>tinyint|0s</DasType>
+      <DefaultExpression>0</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>11</Position>
+    </column>
+    <index id="875" parent="324" name="PRIMARY">
+      <ColNames>id</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="876" parent="324" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="877" parent="325" name="id">
+      <AutoIncrement>57</AutoIncrement>
+      <Comment>访问ID</Comment>
+      <DasType>bigint|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="878" parent="325" name="username">
+      <Comment>用户账号</Comment>
+      <DasType>varchar(50)|0s</DasType>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+      <Position>2</Position>
+    </column>
+    <column id="879" parent="325" name="ipaddr">
+      <Comment>登录IP地址</Comment>
+      <DasType>varchar(128)|0s</DasType>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+      <Position>3</Position>
+    </column>
+    <column id="880" parent="325" name="status">
+      <Comment>登录状态（0成功 1失败）</Comment>
+      <DasType>tinyint(1)|0s</DasType>
+      <DefaultExpression>0</DefaultExpression>
+      <Position>4</Position>
+    </column>
+    <column id="881" parent="325" name="msg">
+      <Comment>提示信息</Comment>
+      <DasType>varchar(255)|0s</DasType>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+      <Position>5</Position>
+    </column>
+    <column id="882" parent="325" name="access_time">
+      <Comment>访问时间</Comment>
+      <DasType>datetime|0s</DasType>
+      <Position>6</Position>
+    </column>
+    <column id="883" parent="325" name="create_time">
+      <DasType>timestamp|0s</DasType>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+      <NotNull>1</NotNull>
+      <OnUpdate>CURRENT_TIMESTAMP</OnUpdate>
+      <Position>7</Position>
+    </column>
+    <column id="884" parent="325" name="update_time">
+      <DasType>timestamp|0s</DasType>
+      <OnUpdate>CURRENT_TIMESTAMP</OnUpdate>
+      <Position>8</Position>
+    </column>
+    <column id="885" parent="325" name="is_deleted">
+      <Comment>删除标记（0:不可用 1:可用）</Comment>
+      <DasType>tinyint|0s</DasType>
+      <DefaultExpression>0</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>9</Position>
+    </column>
+    <index id="886" parent="325" name="PRIMARY">
+      <ColNames>id</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="887" parent="325" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="888" parent="326" name="id">
+      <AutoIncrement>61</AutoIncrement>
+      <Comment>编号</Comment>
+      <DasType>bigint|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="889" parent="326" name="parent_id">
+      <Comment>所属上级</Comment>
+      <DasType>bigint|0s</DasType>
+      <DefaultExpression>0</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+    </column>
+    <column id="890" parent="326" name="name">
+      <Comment>名称</Comment>
+      <DasType>varchar(20)|0s</DasType>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>3</Position>
+    </column>
+    <column id="891" parent="326" name="type">
+      <Comment>类型(0:目录,1:菜单,2:按钮)</Comment>
+      <DasType>tinyint|0s</DasType>
+      <DefaultExpression>0</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>4</Position>
+    </column>
+    <column id="892" parent="326" name="path">
+      <Comment>路由地址</Comment>
+      <DasType>varchar(100)|0s</DasType>
+      <Position>5</Position>
+    </column>
+    <column id="893" parent="326" name="component">
+      <Comment>组件路径</Comment>
+      <DasType>varchar(100)|0s</DasType>
+      <Position>6</Position>
+    </column>
+    <column id="894" parent="326" name="perms">
+      <Comment>权限标识</Comment>
+      <DasType>varchar(100)|0s</DasType>
+      <Position>7</Position>
+    </column>
+    <column id="895" parent="326" name="icon">
+      <Comment>图标</Comment>
+      <DasType>varchar(100)|0s</DasType>
+      <Position>8</Position>
+    </column>
+    <column id="896" parent="326" name="sort_value">
+      <Comment>排序</Comment>
+      <DasType>int|0s</DasType>
+      <Position>9</Position>
+    </column>
+    <column id="897" parent="326" name="status">
+      <Comment>状态(0:禁止,1:正常)</Comment>
+      <DasType>tinyint|0s</DasType>
+      <Position>10</Position>
+    </column>
+    <column id="898" parent="326" name="create_time">
+      <Comment>创建时间</Comment>
+      <DasType>timestamp|0s</DasType>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>11</Position>
+    </column>
+    <column id="899" parent="326" name="update_time">
+      <Comment>更新时间</Comment>
+      <DasType>timestamp|0s</DasType>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+      <NotNull>1</NotNull>
+      <OnUpdate>CURRENT_TIMESTAMP</OnUpdate>
+      <Position>12</Position>
+    </column>
+    <column id="900" parent="326" name="is_deleted">
+      <Comment>删除标记（0:不可用 1:可用）</Comment>
+      <DasType>tinyint|0s</DasType>
+      <DefaultExpression>0</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>13</Position>
+    </column>
+    <index id="901" parent="326" name="PRIMARY">
+      <ColNames>id</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <index id="902" parent="326" name="idx_parent_id">
+      <ColNames>parent_id</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="903" parent="326" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="904" parent="327" name="id">
+      <AutoIncrement>98</AutoIncrement>
+      <Comment>日志主键</Comment>
+      <DasType>bigint|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="905" parent="327" name="title">
+      <Comment>模块标题</Comment>
+      <DasType>varchar(50)|0s</DasType>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+      <Position>2</Position>
+    </column>
+    <column id="906" parent="327" name="business_type">
+      <Comment>业务类型（0其它 1新增 2修改 3删除）</Comment>
+      <DasType>varchar(20)|0s</DasType>
+      <DefaultExpression>&apos;0&apos;</DefaultExpression>
+      <Position>3</Position>
+    </column>
+    <column id="907" parent="327" name="method">
+      <Comment>方法名称</Comment>
+      <DasType>varchar(100)|0s</DasType>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+      <Position>4</Position>
+    </column>
+    <column id="908" parent="327" name="request_method">
+      <Comment>请求方式</Comment>
+      <DasType>varchar(10)|0s</DasType>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+      <Position>5</Position>
+    </column>
+    <column id="909" parent="327" name="operator_type">
+      <Comment>操作类别（0其它 1后台用户 2手机端用户）</Comment>
+      <DasType>varchar(20)|0s</DasType>
+      <DefaultExpression>&apos;0&apos;</DefaultExpression>
+      <Position>6</Position>
+    </column>
+    <column id="910" parent="327" name="oper_name">
+      <Comment>操作人员</Comment>
+      <DasType>varchar(50)|0s</DasType>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+      <Position>7</Position>
+    </column>
+    <column id="911" parent="327" name="dept_name">
+      <Comment>部门名称</Comment>
+      <DasType>varchar(50)|0s</DasType>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+      <Position>8</Position>
+    </column>
+    <column id="912" parent="327" name="oper_url">
+      <Comment>请求URL</Comment>
+      <DasType>varchar(255)|0s</DasType>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+      <Position>9</Position>
+    </column>
+    <column id="913" parent="327" name="oper_ip">
+      <Comment>主机地址</Comment>
+      <DasType>varchar(128)|0s</DasType>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+      <Position>10</Position>
+    </column>
+    <column id="914" parent="327" name="oper_param">
+      <Comment>请求参数</Comment>
+      <DasType>varchar(2000)|0s</DasType>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+      <Position>11</Position>
+    </column>
+    <column id="915" parent="327" name="json_result">
+      <Comment>返回参数</Comment>
+      <DasType>varchar(2000)|0s</DasType>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+      <Position>12</Position>
+    </column>
+    <column id="916" parent="327" name="status">
+      <Comment>操作状态（0正常 1异常）</Comment>
+      <DasType>int|0s</DasType>
+      <DefaultExpression>0</DefaultExpression>
+      <Position>13</Position>
+    </column>
+    <column id="917" parent="327" name="error_msg">
+      <Comment>错误消息</Comment>
+      <DasType>varchar(2000)|0s</DasType>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+      <Position>14</Position>
+    </column>
+    <column id="918" parent="327" name="oper_time">
+      <Comment>操作时间</Comment>
+      <DasType>datetime|0s</DasType>
+      <Position>15</Position>
+    </column>
+    <column id="919" parent="327" name="create_time">
+      <DasType>timestamp|0s</DasType>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+      <NotNull>1</NotNull>
+      <OnUpdate>CURRENT_TIMESTAMP</OnUpdate>
+      <Position>16</Position>
+    </column>
+    <column id="920" parent="327" name="update_time">
+      <DasType>timestamp|0s</DasType>
+      <OnUpdate>CURRENT_TIMESTAMP</OnUpdate>
+      <Position>17</Position>
+    </column>
+    <column id="921" parent="327" name="is_deleted">
+      <Comment>删除标记（0:不可用 1:可用）</Comment>
+      <DasType>tinyint|0s</DasType>
+      <DefaultExpression>0</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>18</Position>
+    </column>
+    <index id="922" parent="327" name="PRIMARY">
+      <ColNames>id</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="923" parent="327" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="924" parent="328" name="id">
+      <AutoIncrement>11</AutoIncrement>
+      <Comment>岗位ID</Comment>
+      <DasType>bigint|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="925" parent="328" name="post_code">
+      <Comment>岗位编码</Comment>
+      <DasType>varchar(64)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+    </column>
+    <column id="926" parent="328" name="name">
+      <Comment>岗位名称</Comment>
+      <DasType>varchar(50)|0s</DasType>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>3</Position>
+    </column>
+    <column id="927" parent="328" name="description">
+      <Comment>描述</Comment>
+      <DasType>varchar(255)|0s</DasType>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>4</Position>
+    </column>
+    <column id="928" parent="328" name="status">
+      <Comment>状态（1正常 0停用）</Comment>
+      <DasType>tinyint(1)|0s</DasType>
+      <DefaultExpression>1</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>5</Position>
+    </column>
+    <column id="929" parent="328" name="create_time">
+      <DasType>timestamp|0s</DasType>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+      <NotNull>1</NotNull>
+      <OnUpdate>CURRENT_TIMESTAMP</OnUpdate>
+      <Position>6</Position>
+    </column>
+    <column id="930" parent="328" name="update_time">
+      <DasType>timestamp|0s</DasType>
+      <OnUpdate>CURRENT_TIMESTAMP</OnUpdate>
+      <Position>7</Position>
+    </column>
+    <column id="931" parent="328" name="is_deleted">
+      <Comment>删除标记（0:不可用 1:可用）</Comment>
+      <DasType>tinyint|0s</DasType>
+      <DefaultExpression>0</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>8</Position>
+    </column>
+    <index id="932" parent="328" name="PRIMARY">
+      <ColNames>id</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="933" parent="328" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="934" parent="329" name="id">
+      <AutoIncrement>21</AutoIncrement>
+      <Comment>角色id</Comment>
+      <DasType>bigint|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="935" parent="329" name="role_name">
+      <Comment>角色名称</Comment>
+      <DasType>varchar(20)|0s</DasType>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+    </column>
+    <column id="936" parent="329" name="role_code">
+      <Comment>角色编码</Comment>
+      <DasType>varchar(20)|0s</DasType>
+      <Position>3</Position>
+    </column>
+    <column id="937" parent="329" name="description">
+      <Comment>描述</Comment>
+      <DasType>varchar(255)|0s</DasType>
+      <Position>4</Position>
+    </column>
+    <column id="938" parent="329" name="create_time">
+      <Comment>创建时间</Comment>
+      <DasType>timestamp|0s</DasType>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>5</Position>
+    </column>
+    <column id="939" parent="329" name="update_time">
+      <Comment>更新时间</Comment>
+      <DasType>timestamp|0s</DasType>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+      <NotNull>1</NotNull>
+      <OnUpdate>CURRENT_TIMESTAMP</OnUpdate>
+      <Position>6</Position>
+    </column>
+    <column id="940" parent="329" name="is_deleted">
+      <Comment>删除标记（0:不可用 1:可用）</Comment>
+      <DasType>tinyint|0s</DasType>
+      <DefaultExpression>0</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>7</Position>
+    </column>
+    <index id="941" parent="329" name="PRIMARY">
+      <ColNames>id</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="942" parent="329" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="943" parent="330" name="id">
+      <AutoIncrement>128</AutoIncrement>
+      <DasType>bigint|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="944" parent="330" name="role_id">
+      <DasType>bigint|0s</DasType>
+      <DefaultExpression>0</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+    </column>
+    <column id="945" parent="330" name="menu_id">
+      <DasType>bigint|0s</DasType>
+      <DefaultExpression>0</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>3</Position>
+    </column>
+    <column id="946" parent="330" name="create_time">
+      <Comment>创建时间</Comment>
+      <DasType>timestamp|0s</DasType>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>4</Position>
+    </column>
+    <column id="947" parent="330" name="update_time">
+      <Comment>更新时间</Comment>
+      <DasType>timestamp|0s</DasType>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+      <NotNull>1</NotNull>
+      <OnUpdate>CURRENT_TIMESTAMP</OnUpdate>
+      <Position>5</Position>
+    </column>
+    <column id="948" parent="330" name="is_deleted">
+      <Comment>删除标记（0:不可用 1:可用）</Comment>
+      <DasType>tinyint|0s</DasType>
+      <DefaultExpression>0</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>6</Position>
+    </column>
+    <index id="949" parent="330" name="PRIMARY">
+      <ColNames>id</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <index id="950" parent="330" name="idx_role_id">
+      <ColNames>role_id</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="951" parent="330" name="idx_menu_id">
+      <ColNames>menu_id</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="952" parent="330" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="953" parent="331" name="id">
+      <AutoIncrement>14</AutoIncrement>
+      <Comment>会员id</Comment>
+      <DasType>bigint|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="954" parent="331" name="username">
+      <Comment>用户名</Comment>
+      <DasType>varchar(20)|0s</DasType>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+    </column>
+    <column id="955" parent="331" name="password">
+      <Comment>密码</Comment>
+      <DasType>varchar(32)|0s</DasType>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>3</Position>
+    </column>
+    <column id="956" parent="331" name="name">
+      <Comment>姓名</Comment>
+      <DasType>varchar(50)|0s</DasType>
+      <Position>4</Position>
+    </column>
+    <column id="957" parent="331" name="phone">
+      <Comment>手机</Comment>
+      <DasType>varchar(11)|0s</DasType>
+      <Position>5</Position>
+    </column>
+    <column id="958" parent="331" name="head_url">
+      <Comment>头像地址</Comment>
+      <DasType>varchar(200)|0s</DasType>
+      <Position>6</Position>
+    </column>
+    <column id="959" parent="331" name="dept_id">
+      <Comment>部门id</Comment>
+      <DasType>bigint|0s</DasType>
+      <Position>7</Position>
+    </column>
+    <column id="960" parent="331" name="post_id">
+      <Comment>岗位id</Comment>
+      <DasType>bigint|0s</DasType>
+      <Position>8</Position>
+    </column>
+    <column id="961" parent="331" name="open_id">
+      <Comment>微信openId</Comment>
+      <DasType>varchar(255)|0s</DasType>
+      <Position>9</Position>
+    </column>
+    <column id="962" parent="331" name="description">
+      <Comment>描述</Comment>
+      <DasType>varchar(255)|0s</DasType>
+      <Position>10</Position>
+    </column>
+    <column id="963" parent="331" name="status">
+      <Comment>状态（1：正常 0：停用）</Comment>
+      <DasType>tinyint|0s</DasType>
+      <Position>11</Position>
+    </column>
+    <column id="964" parent="331" name="create_time">
+      <Comment>创建时间</Comment>
+      <DasType>timestamp|0s</DasType>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>12</Position>
+    </column>
+    <column id="965" parent="331" name="update_time">
+      <Comment>更新时间</Comment>
+      <DasType>timestamp|0s</DasType>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+      <NotNull>1</NotNull>
+      <OnUpdate>CURRENT_TIMESTAMP</OnUpdate>
+      <Position>13</Position>
+    </column>
+    <column id="966" parent="331" name="is_deleted">
+      <Comment>删除标记（0:不可用 1:可用）</Comment>
+      <DasType>tinyint|0s</DasType>
+      <DefaultExpression>0</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>14</Position>
+    </column>
+    <index id="967" parent="331" name="PRIMARY">
+      <ColNames>id</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <index id="968" parent="331" name="idx_username">
+      <ColNames>username</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="969" parent="331" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <key id="970" parent="331" name="idx_username">
+      <UnderlyingIndexName>idx_username</UnderlyingIndexName>
+    </key>
+    <column id="971" parent="332" name="id">
+      <AutoIncrement>28</AutoIncrement>
+      <Comment>主键id</Comment>
+      <DasType>bigint|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="972" parent="332" name="role_id">
+      <Comment>角色id</Comment>
+      <DasType>bigint|0s</DasType>
+      <DefaultExpression>0</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+    </column>
+    <column id="973" parent="332" name="user_id">
+      <Comment>用户id</Comment>
+      <DasType>bigint|0s</DasType>
+      <DefaultExpression>0</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>3</Position>
+    </column>
+    <column id="974" parent="332" name="create_time">
+      <Comment>创建时间</Comment>
+      <DasType>timestamp|0s</DasType>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>4</Position>
+    </column>
+    <column id="975" parent="332" name="update_time">
+      <Comment>更新时间</Comment>
+      <DasType>timestamp|0s</DasType>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+      <NotNull>1</NotNull>
+      <OnUpdate>CURRENT_TIMESTAMP</OnUpdate>
+      <Position>5</Position>
+    </column>
+    <column id="976" parent="332" name="is_deleted">
+      <Comment>删除标记（0:不可用 1:可用）</Comment>
+      <DasType>tinyint|0s</DasType>
+      <DefaultExpression>0</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>6</Position>
+    </column>
+    <index id="977" parent="332" name="PRIMARY">
+      <ColNames>id</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <index id="978" parent="332" name="idx_role_id">
+      <ColNames>role_id</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="979" parent="332" name="idx_admin_id">
+      <ColNames>user_id</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="980" parent="332" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="981" parent="333" name="id">
+      <AutoIncrement>10</AutoIncrement>
+      <Comment>编号</Comment>
+      <DasType>bigint|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="982" parent="333" name="parent_id">
+      <Comment>上级id</Comment>
+      <DasType>bigint|0s</DasType>
+      <Position>2</Position>
+    </column>
+    <column id="983" parent="333" name="name">
+      <Comment>菜单名称</Comment>
+      <DasType>varchar(50)|0s</DasType>
+      <Position>3</Position>
+    </column>
+    <column id="984" parent="333" name="type">
+      <Comment>类型</Comment>
+      <DasType>varchar(10)|0s</DasType>
+      <Position>4</Position>
+    </column>
+    <column id="985" parent="333" name="url">
+      <Comment>网页 链接，用户点击菜单可打开链接</Comment>
+      <DasType>varchar(100)|0s</DasType>
+      <Position>5</Position>
+    </column>
+    <column id="986" parent="333" name="meun_key">
+      <Comment>菜单KEY值，用于消息接口推送</Comment>
+      <DasType>varchar(20)|0s</DasType>
+      <Position>6</Position>
+    </column>
+    <column id="987" parent="333" name="sort">
+      <Comment>排序</Comment>
+      <DasType>tinyint|0s</DasType>
+      <Position>7</Position>
+    </column>
+    <column id="988" parent="333" name="create_time">
+      <Comment>创建时间</Comment>
+      <DasType>timestamp|0s</DasType>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>8</Position>
+    </column>
+    <column id="989" parent="333" name="update_time">
+      <DasType>timestamp|0s</DasType>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+      <NotNull>1</NotNull>
+      <OnUpdate>CURRENT_TIMESTAMP</OnUpdate>
+      <Position>9</Position>
+    </column>
+    <column id="990" parent="333" name="is_deleted">
+      <DasType>tinyint|0s</DasType>
+      <DefaultExpression>0</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>10</Position>
+    </column>
+    <index id="991" parent="333" name="PRIMARY">
+      <ColNames>id</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="992" parent="333" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+  </database-model>
+</dataSource>

@@ -1,0 +1,66 @@
+server:
+    port: 8080
+
+mybatis-plus:
+    configuration:
+        log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    mapper-locations: classpath:com/atguigu/*/mapper/xml/*.xml
+
+spring:
+    datasource:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/guigu-oa?serverTimezone=GMT%2B8&useSSL=False&characterEncoding=utf-8&allowPublicKeyRetrieval=true
+        username: root
+        password: 555555s
+
+    redis:
+        database: 0
+        host: localhost
+        timeout: 180000
+        password:
+        jedis:
+            pool:
+                max-active: 20
+                max-wait: -1
+                min-idle: 5
+                max-idle: 0
+
+    activiti:
+        # false:默认，数据库表不变，但是如果版本不对或者缺失表会抛出异常（生产使用）
+        # true:表不存在，自动创建（开发使用）
+        # create_drop: 启动时创建，关闭时删除表（测试使用）
+        # drop_create: 启动时删除表,在创建表 （不需要手动关闭引擎）
+        database-schema-update: true
+
+        # 监测历史表是否存在，activities7默认不开启历史表
+        db-history-used: true
+
+        # none：不保存任何历史数据，流程中这是最高效的
+        # activity：只保存流程实例和流程行为
+        # audit：除了activity，还保存全部的流程任务以及其属性，audit为history默认值
+        # full：除了audit、还保存其他全部流程相关的细节数据，包括一些流程参数
+        history-level: full
+
+        # 校验流程文件，默认校验resources下的process 文件夹的流程文件
+        check-process-definitions: true
+
+        # 添加这个配置就不会一直调用了
+        #在流程引擎启动就激活AsyncExecutor,异步 true  false 关闭  （切记关闭）
+        async-executor-activate: false
+    main:
+        allow-bean-definition-overriding: true
+    mvc:
+        pathmatch:
+            matching-strategy: ANT_PATH_MATCHER # knife4j 的增强配置，不需要增强可以不配
+    jackson:
+        date-format: yyyy-MM-dd HH:mm:ss
+        time-zone: GMT+8
+
+wechat:
+    appID: wxfc36d2b39b7ff31c
+    appsecret: 5493a436f6bb43fcbe01fd2fe5a2a17e
+    userInfoUrl: http://42.193.21.176:7000/admin/wechat/userInfo
+
+
+

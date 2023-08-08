@@ -2732,10 +2732,6 @@ mybatis-plus:
 </select>
 ```
 
-
-
-
-
 ![image-20230405204605452](assets/image-20230405204605452.png)
 
 # day 10-11 小项目捏

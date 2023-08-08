@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="bd62ad07-63f6-4a96-a67e-435705c8da4e" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JUnit5 Test Class" />
+        <option value="HTML File" />
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="HttpClientSelectedEnvironments">
+    <file url="jar://$APPLICATION_HOME_DIR$/plugins/restClient/lib/restClient.jar!/com/intellij/ws/rest/client/requests/collection/get-requests.http" environment="test" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="localRepository" value="D:\install\apache-maven-3.8.1\maven-repo" />
+        <option name="mavenHome" value="D:/install/apache-maven-3.8.1" />
+        <option name="useMavenConfig" value="true" />
+        <option name="userSettingsFile" value="D:\install\apache-maven-3.8.1\conf\settings.xml" />
+      </MavenGeneralSettings>
+    </option>
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="jdkForImporter" value="1.8" />
+        <option name="workspaceImportEnabled" value="true" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="MavenRunner">
+    <option name="jreName" value="1.8" />
+  </component>
+  <component name="ProjectId" id="2RpH297sBV435U8PWR8AyzDUEF9" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "04c21b5e-21b7-47d3-af77-384c0848018a": "{\"id\":\"04c21b5e-21b7-47d3-af77-384c0848018a\",\"name\":\"阿发\",\"port\":\"6379\",\"url\":\"localhost\"}",
+    "DefaultHtmlFileTemplate": "HTML File",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
+    "dbCount:04c21b5e-21b7-47d3-af77-384c0848018a": "16",
+    "jdk.selected.JAVA_MODULE": "1.8",
+    "last_opened_file_path": "E:/程序员/发发的项目/guigu-oa-parent/common/service-util/src/main/java/com/atguigu/model/wechat",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15429688",
+    "project.structure.side.proportion": "0.39075145",
+    "settings.editor.selected.configurable": "File.Encoding",
+    "spring.configuration.checksum": "0b1f39cc690fe066aa92420f76f645ce",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql"
+    ],
+    "connectionIds": [
+      "04c21b5e-21b7-47d3-af77-384c0848018a"
+    ]
+  }
+}]]></component>
+  <component name="ReactorSettings">
+    <option name="notificationShown" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="com.atguigu.wechat.service.Impl" />
+      <recent name="com.atguigu.auth.activiti" />
+      <recent name="com.atguigu.auth.service" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\程序员\发发的项目\guigu-oa-parent\common\service-util\src\main\java\com\atguigu\model\wechat" />
+      <recent name="E:\程序员\发发的项目\guigu-oa-parent\service-oa\src\main\java\com\atguigu\wechat\config" />
+      <recent name="E:\程序员\发发的项目\guigu-oa-parent\common\service-util\src\main\java\com\atguigu\model\process" />
+      <recent name="E:\程序员\发发的项目\guigu-oa-parent\common\service-util\src\main\java\com\atguigu\model\system" />
+      <recent name="E:\程序员\发发的项目\guigu-oa-parent\common\service-util\src\main\java\com\atguitu\common\config\redis" />
+    </key>
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\程序员\发发的项目\guigu-oa-parent\service-oa\target\classes" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.atguigu" />
+    </key>
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="com.atguigu.auth.controller" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Spring Boot.ServiceAuthApplication">
+    <configuration name="JwtHelper" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.atguigu.common.jwt.JwtHelper" />
+      <module name="common-util" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.atguigu.common.jwt.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="OaProcessTemplateController" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.atguigu.process.controller.OaProcessTemplateController" />
+      <module name="service-oa" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.atguigu.process.controller.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="generated-requests | #3" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/generated-requests.http" index="3" requestIdentifier="#3" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="TestSysMenuServiceImpl" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="service-oa" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.atguigu.auth.service.Impl.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.atguigu.auth.service.Impl" />
+      <option name="MAIN_CLASS_NAME" value="com.atguigu.auth.service.Impl.TestSysMenuServiceImpl" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TestSysMenuServiceImpl.test" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="service-oa" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.atguigu.auth.service.Impl.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.atguigu.auth.service.Impl" />
+      <option name="MAIN_CLASS_NAME" value="com.atguigu.auth.service.Impl.TestSysMenuServiceImpl" />
+      <option name="METHOD_NAME" value="test" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ServiceAuthApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="service-oa" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.atguigu.ServiceAuthApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.TestSysMenuServiceImpl.test" />
+        <item itemvalue="JUnit.TestSysMenuServiceImpl" />
+        <item itemvalue="Application.JwtHelper" />
+        <item itemvalue="HTTP Request.generated-requests | #3" />
+        <item itemvalue="Application.OaProcessTemplateController" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="bd62ad07-63f6-4a96-a67e-435705c8da4e" name="Changes" comment="" />
+      <created>1687939901793</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1687939901793</updated>
+      <workItem from="1687939905350" duration="28724000" />
+      <workItem from="1688024200484" duration="9114000" />
+      <workItem from="1688052969136" duration="1692000" />
+      <workItem from="1688111465965" duration="8423000" />
+      <workItem from="1688130215423" duration="2087000" />
+      <workItem from="1688225966499" duration="4091000" />
+      <workItem from="1688296974727" duration="8906000" />
+      <workItem from="1688345163097" duration="1992000" />
+      <workItem from="1688358601912" duration="8844000" />
+      <workItem from="1688369122497" duration="56757000" />
+      <workItem from="1688973153678" duration="16239000" />
+      <workItem from="1689052163497" duration="2279000" />
+      <workItem from="1689054458600" duration="7680000" />
+      <workItem from="1689079648273" duration="14549000" />
+      <workItem from="1689175084402" duration="744000" />
+      <workItem from="1689232059366" duration="2959000" />
+      <workItem from="1689336365302" duration="7074000" />
+      <workItem from="1689409879084" duration="612000" />
+      <workItem from="1689468534709" duration="12547000" />
+      <workItem from="1689497338708" duration="4014000" />
+      <workItem from="1689731734764" duration="301000" />
+      <workItem from="1689775127060" duration="44000" />
+      <workItem from="1689776932621" duration="6634000" />
+      <workItem from="1690091609522" duration="37080000" />
+      <workItem from="1690286348025" duration="23853000" />
+      <workItem from="1690715956606" duration="21000" />
+      <workItem from="1690878558155" duration="3239000" />
+      <workItem from="1690888952679" duration="16884000" />
+      <workItem from="1691217660916" duration="14808000" />
+      <workItem from="1691390760200" duration="9625000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/service-oa/src/main/java/com/atguigu/auth/service/Impl/SysUserServiceImpl.java</url>
+          <line>27</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+    <watches-manager>
+      <configuration name="SpringBootApplicationConfigurationType">
+        <watch expression="menus.get(3).createTime" language="JAVA" />
+      </configuration>
+    </watches-manager>
+  </component>
+  <component name="regexState">
+    <option name="map">
+      <map>
+        <entry key="flags" value="0" />
+        <entry key="mode" value="0" />
+        <entry key="regex" value="process.(.*?).zip" />
+        <entry key="text" value="process/jiabantest.zip" />
+      </map>
+    </option>
+  </component>
+</project>

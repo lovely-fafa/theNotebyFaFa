@@ -1,0 +1,39 @@
+GET http://localhost:8080/admin/wechat/menu/findMenuInfo
+header: {"token":"eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_6tWKi5NUrJScgwN8dANDXYNUtJRSq0oULIyNDcyMgdiE3MdpdLi1CLPFKAYhJmXmJsK1JKYkpuZp1QLACoi6ElCAAAA.CR6tuYJp5XF2u2xq_RqTXQj5_vKtAYizh54jr-9ej5BolO9CvQR6oqNwksa8rcciJMLmpZAwojSep0gC0oGrlw"}
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-08-05T200012.200.json
+
+###
+
+GET http://localhost:8080/admin/wechat/menu/findMenuInfo
+header: token:eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_6tWKi5NUrJScgwN8dANDXYNUtJRSq0oULIyNDcyMgdiE3MdpdLi1CLPFKAYhJmXmJsK1JKYkpuZp1QLACoi6ElCAAAA.CR6tuYJp5XF2u2xq_RqTXQj5_vKtAYizh54jr-9ej5BolO9CvQR6oqNwksa8rcciJMLmpZAwojSep0gC0oGrlw
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-08-05T195937.200.json
+
+###
+
+GET http://localhost:8080/admin/wechat/menu/findMenuInfo
+header: token=eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_6tWKi5NUrJScgwN8dANDXYNUtJRSq0oULIyNDcyMgdiE3MdpdLi1CLPFKAYhJmXmJsK1JKYkpuZp1QLACoi6ElCAAAA.CR6tuYJp5XF2u2xq_RqTXQj5_vKtAYizh54jr-9ej5BolO9CvQR6oqNwksa8rcciJMLmpZAwojSep0gC0oGrlw
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-08-05T195923.200.json
+
+###
+
+GET http://localhost:8080/admin/wechat/menu/findMenuInfo
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-08-05T195742.200.json
+
+###
+
