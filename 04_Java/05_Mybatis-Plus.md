@@ -1705,7 +1705,7 @@ spring.datasource.url=jdbc:p6spy:mysql://localhost:3306/mp
 modulelist=com.baomidou.mybatisplus.extension.p6spy.MybatisPlusLogFactory,com.p6spy.engine.outage.P6OutageFactory
 
 # 3.2.1 以下使用
-modulelist=com.p6spy.engine.logging.P6LogFactory,com.p6spy.engine.outage.P6OutageFactory
+# modulelist=com.p6spy.engine.logging.P6LogFactory,com.p6spy.engine.outage.P6OutageFactory
 
 # 自定义日志打印
 logMessageFormat=com.baomidou.mybatisplus.extension.p6spy.P6SpyLogger

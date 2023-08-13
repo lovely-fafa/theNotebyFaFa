@@ -304,7 +304,7 @@ public class ScannerTest1 {
 整数相除，结果只能得到整数想要得到带有小数的结果，需要小数参与运算。举个例子：
 
 ```java
-int res = 5 / 2;  // 2.0
+int res = 5 / 2;  // 2
 // 解决办法
 int res = (5 * 1.0) / 2;  // 2.5
 ```
@@ -362,8 +362,10 @@ System.out.println("5+5=" + (5 + 5));  // 5+5=10
       // b = 11
       ```
 
-    - 在后：将变量原本的值提取出来进行运算后，然后再自增
+    - 在后：将变量原本的值提取出来进行运算后，然后再自增（相当于是用一个临时变量`temp`存储了一下）（[图片来源](https://zhuanlan.zhihu.com/p/47057737)）
 
+      ![img](assets/v2-185754b0c3c9d052b8b1a339ee5539b7_r.jpg)
+      
       ```java
       int a = 10;
       int b = a++;
@@ -380,6 +382,24 @@ System.out.println("5+5=" + (5 + 5));  // 5+5=10
       
       b = (4) + (4) + ((4 + 1) * 10) = 58
   ```
+  
+- [学锤子](https://zhuanlan.zhihu.com/p/47057737)
+
+  ![img](assets/v2-f0a0f3bb5a748a91842afb379c625cfb_r.jpg)
+
+  ```java
+  public class Test {
+      public static void main(String[] args) {
+          int j=0;
+          for (int i = 0; i < 100; i++){
+              j = j++;
+          }
+          System.out.println(j);
+      }
+  }
+  ```
+
+  答案是：` j=0`。原来这是因为Java编译器使用了中间缓存变量的机制。Java的编译器在遇到`i++`和`i--`的时候会重新为变量运算分配一块内存空间，以存放原始的值，而在完成了赋值运算之后，将这块内存释放掉。
 
 ## 六、类型转换
 
@@ -536,6 +556,8 @@ a = a ^ b;  // a = 10 ^ 20 ^ 10 = 20
 
 ### 5 三元运算符
 
+#### 5.1 基础语法
+
 - 使用场景
   - 根据条件，从二者选其一
 - 格式
@@ -564,6 +586,32 @@ public class OperatorTest1 {
         System.out.println("最大值为" + max);
     }
 }
+```
+
+#### 5.2 面试题：[三元运算符，自动类型提升](https://blog.csdn.net/qq_28042463/article/details/105039051)
+
+```java
+//两个操作数不可以转换，返回对应的对象类型
+Object o = true ? 1 : "a";
+System.out.println(o.toString() + " and " + o.getClass());  // 1 and class java.lang.Integer
+
+//两个操作数直接是数字，返回范围大的
+o = true ? 1 : 2.0;
+System.out.println(o.toString() + " and " + o.getClass());  // 1.0 and class java.lang.Double
+
+//两个操作数都是明确类型的表达式，如果是不可以转换，返回对应的对象类型，可以转换返回范围大的
+o = true ? new Integer(1) : new String("1");
+System.out.println(o.toString() + " and " + o.getClass());  // 1 and class java.lang.Integer
+
+o = true ? new Integer(1) : new Double(2);
+System.out.println(o.toString() + " and " + o.getClass());  // 1.0 and class java.lang.Double
+
+//两个操作数一个是数字一个是明确类型的表达式，如果是不可以转换，返回对应的对象类型，可以转换返回范围大的
+o = true ? 1 : new String("1");
+System.out.println(o.toString() + " and " + o.getClass());  // 1 and class java.lang.Integer
+
+o = true ? 1 : new Double(2);
+System.out.println(o.toString() + " and " + o.getClass());  // 1.0 and class java.lang.Double
 ```
 
 ### 6 运算符优先级
@@ -739,8 +787,8 @@ public static void mySwitch(int age) {
 
 - ```case```后面的值不能重复
 - ```case```后面的值，只能是字面量，不能是变量
-- ```switch()```中科院接受的数据类型
-  - 基本数据类型：byte、short、char、int
+- ```switch()```中可以接受的数据类型
+  - 基本数据类型：byte、short、int、char
   - 引用数据类型：jdk5开始可以是枚举，jdk7开始可以是String字符串
 
 #### 2.3 switch穿透
@@ -816,7 +864,7 @@ public static void mySwitch4() {
 #### 1.1 基本格式
 
 ``` java
-x for (初始化语句; 条件判断语句; 条件控制语句) {
+for (初始化语句; 条件判断语句; 条件控制语句) {
     循环体语句;
 }
 
@@ -1226,7 +1274,7 @@ public static void arrayTest() {
 
  #### 7.2 空指针异常
 
-```NullPointException```：当引用数据类型的变量，被赋值为```null``之后，就代表跟堆内存的连接被切断了。这时候还想去访问堆内存的数据，就会出现空指针异常。
+```NullPointException```：当引用数据类型的变量，被赋值为`null`之后，就代表跟堆内存的连接被切断了。这时候还想去访问堆内存的数据，就会出现空指针异常。
 
 ## 二、二维数组
 
@@ -1659,7 +1707,7 @@ public class ThisDemo {
 
 > 感觉和```py```的```__init__```差不多诶
 
-初始化一个新建对象 构建、创造对象的时候，所调用的方法。
+初始化一个新建对象，构建、创造对象的时候，所调用的方法。
 
 ### 5.2 格式
 
@@ -1680,9 +1728,9 @@ public class Student {
 实例化
 
 ```java
-public class Student {
-    public Student() {
-        System.out.println("我是 Student 类的构造方法...");
+public class TestStudent {
+    public static void main(String[] args) {
+        Student();
     }
 }
 ```
@@ -1782,8 +1830,6 @@ public class StudentTest {
   | ```(default)``` |    √     |    √     |              |                |
   | ```protected``` |    √     |    √     |      √       |                |
   |  ```public```   |    √     |    √     |      √       |       √        |
-
-  
 
   - private
 
@@ -1938,7 +1984,7 @@ API (Application Programming Interface) : 应用程序编程接口
 
 - String字符串虽然不可更改，但是可以被共享。
 
-  - 字符串常量池：当我们使用双引号创建字符串对象时，会检查常量池中是否存在改数据
+  - 字符串常量池：当我们使用**双引号**创建字符串对象时，会检查常量池中是否存在改数据
 
     ```jdk7```版本之前，```StringTable```在方法区中
 
@@ -1979,7 +2025,7 @@ public class StringDemo1 {
 
 ### 2.3 面试题
 
-> ![image-20230119003749101](assets/image-20230119003749101.png)
+![image-20230119003749101](assets/image-20230119003749101.png)
 
 1. 考察字符串常量池
 
@@ -2177,7 +2223,7 @@ System.out.println(sb);  // fafatrue123
 ### 1.1 ArrayList 程度可变原理
 
 1. 当创建```ArrayList```集合容器的时候，底层会存在一个长度为10个大小的空数组
-2. 扩容原数组 1.5倍大小的新数组
+2. 扩容原数组1.5倍大小的新数组
 3. 将原数组数据，拷贝到新数组中
 4. 将新元素添加到新数组
 
@@ -2224,16 +2270,16 @@ System.out.println(list1);  // [1.1, 2.3]
 
 ### 1.4 常用成员方法
 
-|                   方法名                   |                  说明                  |
-| :----------------------------------------: | :------------------------------------: |
-|       ```public boolean add(E e)```        |     将指定的元素添加到此集合的末尾     |
-|             ```addAll(list)```             |              添加多个元素              |
-| ```public void add(int index,E element)``` |   在此集合中的指定位置插入指定的元素   |
-|       ```public E get(int index)```        |          返回指定索引处的元素          |
-|          ```public int size()```           |         返回集合中的元素的个数         |
-|      ```public E remove(int index)```      | 删除指定索引处的元素，返回被删除的元素 |
-|   ```public boolean remove(Object o)```    |    删除指定的元素，返回删除是否成功    |
-|  ```public E set(int index,E element)```   | 修改指定索引处的元素，返回被修改的元素 |
+|                   方法名                    |                  说明                  |
+| :-----------------------------------------: | :------------------------------------: |
+|        ```public boolean add(E e)```        |     将指定的元素添加到此集合的末尾     |
+|             ```addAll(list)```              |              添加多个元素              |
+| ```public void add(int index, E element)``` |   在此集合中的指定位置插入指定的元素   |
+|        ```public E get(int index)```        |          返回指定索引处的元素          |
+|           ```public int size()```           |         返回集合中的元素的个数         |
+|      ```public E remove(int index)```       | 删除指定索引处的元素，返回被删除的元素 |
+|    ```public boolean remove(Object o)```    |    删除指定的元素，返回删除是否成功    |
+|  ```public E set(int index, E element)```   | 修改指定索引处的元素，返回被修改的元素 |
 
 ```java
 private static void readMethod() {

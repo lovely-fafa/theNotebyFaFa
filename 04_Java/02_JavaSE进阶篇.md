@@ -106,7 +106,12 @@ public class Test {
 ### 1.4 注意事项
 
 - ```static```方法中，只能访问静态成员（直接访问）
-- ```static```中不允许使用```this```关键字
+
+- `static`中不允许使用`this`关键字
+
+  `static`叫静态方法，也叫类方法，它先于任何的对象出现。在程序最开始启动（JVM初始化）的时候，就会为static方法分配一块内存空间，成为静态区，属于这个类。
+
+  而非`static`方法，必须在类实例化的时候，才会给分配内存空间，在实例化对象的时候JVM在堆区分配一个具体的对象，this指针指向这个对象。也就是说，this指针是指向堆区中的类的对象，而static域不属于this指向的范围所在，所以不能调用。
 
 ### 1.5 重新认识main方法
 
@@ -255,13 +260,13 @@ class A {
     }
 }
 
-class B extends A{
+class B extends A {
     public void methodB() {
         System.out.println("B...");
     }
 }
 
-class C extends B{
+class C extends B {
     public void methodC() {
         System.out.println("C...");
     }
@@ -313,7 +318,7 @@ class Zi extends Fu {
 
 ![image-20230124194132391](assets/image-20230124194132391.png)
 
-### 2.9 this和supper
+### 2.9 this 和 supper
 
 - 概念
 
@@ -322,10 +327,10 @@ class Zi extends Fu {
 
 - 调用格式
 
-  |    关键字    |         访问成员变量         |        访问成员方法        |             访问构造方法             |
-  | :----------: | :--------------------------: | :------------------------: | :----------------------------------: |
-  |  ```this```  |  ```this.本类的成员变量;```  | ```this.本类的成员方法;``` | ```this(); this(...);```本类构造方法 |
-  | ```supper``` | ```supper.父类的成员变量;``` | ```this.父类的成员方法;``` | ```this(); this(...);```父类构造方法 |
+  |    关键字    |         访问成员变量         |         访问成员方法         |               访问构造方法               |
+  | :----------: | :--------------------------: | :--------------------------: | :--------------------------------------: |
+  |  ```this```  |  ```this.本类的成员变量;```  |  ```this.本类的成员方法;```  |   ```this(); this(...);```本类构造方法   |
+  | ```supper``` | ```supper.父类的成员变量;``` | ```supper.父类的成员方法;``` | ```supper(); supper(...);```父类构造方法 |
 
 - ```supper```的省略
 
@@ -375,7 +380,7 @@ class Zi extends Fu {
 
 - 注意：```this()```和```super()```都在争夺构造方法第一行的位置，所以二者不能共存
 
-## 3 final关键字
+## 3 final 关键字
 
 ### 3.1 使用
 
@@ -494,7 +499,7 @@ class Dog extends Animal {
 ### 2.2 注意事项
 
 - 抽象类不能实例化
-  - 因为如果抽象类允许创建刘象， 就可以调用内部没有方法体的，抽象方法了
+  - 因为如果抽象类允许创建对象， 就可以调用内部没有方法体的，抽象方法了
 - 抽象类有构造方法
   - 交给子类，通过```super()```进行访问
 - 抽象类可以编写普通方法
@@ -827,7 +832,7 @@ class Zi extends Fu {
 关键字：```instanceof```
 使用格式：
 ```对象名 instanceof 类型```
-判断一个对象是否是一个类的实例。通俗的理解: 判断关键字左边的对象，是否是右边的类型，返回```boolean```类型结果
+判断一个对象是否是一个类的实例。通俗的理解：判断关键字左边的对象，是否是右边的类型，返回```boolean```类型结果
 
 # day 03 面向对象高级
 
@@ -1541,7 +1546,7 @@ public class ToStringDemo {
                 return getClass().getName() + "@" + Integer.toHexString(hashCode());
             }
 
-        getCLass().getName(): 类名称，全类名(包名 + 类名)
+        getClass().getName(): 类名称，全类名(包名 + 类名)
         Integer.toHexString(hashCode()): 转十六进制
         hashCode(): 返回对象的内存地址 + 哈希算法，算出来的整数（哈希值）
 
@@ -1957,14 +1962,12 @@ public class InterView {
 
 > 数组操作工具类，专门用于操作数组元素
 
-
-
-| 方法名                                               | 说明                                 |
-| ---------------------------------------------------- | ------------------------------------ |
-| ```public static String toString(类型] a)```         | 将数组元素拼接为带有格式的字符串     |
-| ```public static boolean equals(类型门a,类型b)```    | 比较两个数组内容是否相同             |
-| ```public static int binarySearch(int/ a int key)``` | 查找元素在数组中的索引（二分查找法） |
-| ```public static void sort(类型a)```                 | 对数组进行默认升序排序               |
+| 方法名                                                 | 说明                                 |
+| ------------------------------------------------------ | ------------------------------------ |
+| ```public static String toString(类型[] a)```          | 将数组元素拼接为带有格式的字符串     |
+| ```public static boolean equals(类型[] a, 类型 b)```   | 比较两个数组内容是否相同             |
+| ```public static int binarySearch(int[] a, int key)``` | 查找元素在数组中的索引（二分查找法） |
+| ```public static void sort(类型[] a)```                | 对数组进行默认升序排序               |
 
 ```java
 public static void main(String[] args) {
