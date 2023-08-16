@@ -4,7 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bd62ad07-63f6-4a96-a67e-435705c8da4e" name="Changes" comment="" />
+    <list default="true" id="bd62ad07-63f6-4a96-a67e-435705c8da4e" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../GUIGU-OA/guigu-oa-web/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../GUIGU-OA/guigu-oa-web/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-oa/src/main/java/com/atguigu/wechat/service/Impl/MessageServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/service-oa/src/main/java/com/atguigu/wechat/service/Impl/MessageServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-oa/target/classes/com/atguigu/auth/service/Impl/SysMenuServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/service-oa/target/classes/com/atguigu/auth/service/Impl/SysMenuServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-oa/target/classes/com/atguigu/process/service/impl/OaProcessServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/service-oa/target/classes/com/atguigu/process/service/impl/OaProcessServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-oa/target/classes/com/atguigu/wechat/controller/WechatController.class" beforeDir="false" afterPath="$PROJECT_DIR$/service-oa/target/classes/com/atguigu/wechat/controller/WechatController.class" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -18,6 +25,22 @@
         <option value="Interface" />
         <option value="Class" />
       </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="99fefd4c-a86b-4a75-bfc0-9f510160e6f6" />
+        <option name="url" value="git@github.com:lovely-fafa/theNotebyFaFa.git" />
+      </UrlAndAccount>
     </option>
   </component>
   <component name="HttpClientSelectedEnvironments">
@@ -60,12 +83,13 @@
     "RequestMappingsPanelWidth1": "75",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "TODO_SCOPE": "All Places",
     "WebServerToolWindowFactoryState": "false",
     "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
     "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
     "dbCount:04c21b5e-21b7-47d3-af77-384c0848018a": "16",
     "jdk.selected.JAVA_MODULE": "1.8",
-    "last_opened_file_path": "E:/程序员/发发的项目/guigu-oa-parent/common/service-util/src/main/java/com/atguigu/model/wechat",
+    "last_opened_file_path": "E:/程序员/发发的项目/theNotebyFaFa/30_云尚办公/guigu-oa-parent",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -73,8 +97,8 @@
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15429688",
     "project.structure.side.proportion": "0.39075145",
-    "settings.editor.selected.configurable": "File.Encoding",
-    "spring.configuration.checksum": "0b1f39cc690fe066aa92420f76f645ce",
+    "settings.editor.selected.configurable": "reference.projectsettings.compiler.javacompiler",
+    "spring.configuration.checksum": "15d3fa596b3bca1bf6385e3f99486e66",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
@@ -231,6 +255,7 @@
       <workItem from="1690888952679" duration="16884000" />
       <workItem from="1691217660916" duration="14808000" />
       <workItem from="1691390760200" duration="9625000" />
+      <workItem from="1692099235642" duration="7380000" />
     </task>
     <servers />
   </component>
