@@ -2085,12 +2085,10 @@ String emailRegex = "\\w+@[\\w&&[^_]]+(\\.[a-z]{2,3})+";
 System.out.println("13619088888@163.com".matches(emailRegex));
 ```
 
-| 方法名                                                     | 说明                                                       |
-| ---------------------------------------------------------- | ---------------------------------------------------------- |
-| ```public String replaceAll(String regex,String newStr)``` | 按照正则表达式匹配的内容进行替换                           |
-| ```public String split(String regex)```                    | 按照正则表达式匹配的内容进行分割字符串，返回一个字符串数组 |
-
-
+| 方法名                                                      | 说明                                                       |
+| ----------------------------------------------------------- | ---------------------------------------------------------- |
+| ```public String replaceAll(String regex, String newStr)``` | 按照正则表达式匹配的内容进行替换                           |
+| ```public String split(String regex)```                     | 按照正则表达式匹配的内容进行分割字符串，返回一个字符串数组 |
 
 ```java
 public class PatternTest {
@@ -2130,14 +2128,14 @@ public class PatternTest {
 
 ### 2.1 成员方法
 
-| 方法名称                            | 说明                             |
-| ----------------------------------- | -------------------------------- |
-| public boolean add(E e)             | 把给定的对象添加到当前集合中     |
-| public void clear()                 | 清空集合中所有的元素             |
-| public boolean remove(E e)          | 把给定的对象在当前集合中删除     |
-| public boolean contains(Object obj) | 判断当前集合中是否包含给定的对象 |
-| public boolean isEmpty()            | 判断当前集合是否为空             |
-| public int size()                   | 返回集合中元素的个数/集合的长度  |
+| 方法名称                              | 说明                             |
+| ------------------------------------- | -------------------------------- |
+| `public boolean add(E e)`             | 把给定的对象添加到当前集合中     |
+| `public void clear()`                 | 清空集合中所有的元素             |
+| `public boolean remove(E e)`          | 把给定的对象在当前集合中删除     |
+| `public boolean contains(Object obj)` | 判断当前集合中是否包含给定的对象 |
+| `public boolean isEmpty()`            | 判断当前集合是否为空             |
+| `public int size()`                   | 返回集合中元素的个数/集合的长度  |
 
 ```java
 public class A01_CollectionDemo1 {
@@ -2155,7 +2153,7 @@ public class A01_CollectionDemo1 {
 
         // 2. 清空
         coll.clear();
-        System.out.println();
+        System.out.println(coll);
 
         // 3. 删除
         // 细节1: 因为 Collection 里面定义的是共性的方法 set 没有索引 所以这个地方不能通过索引进行删除 只能通过元素的对象进行删除
@@ -2384,8 +2382,8 @@ public class A02_ListDemo2 {
 
 ### 3.3 List 集合的遍历方式
 
-- 选代器
-- 列表选代器
+- 迭代器
+- 列表迭代器
 - 增强```for```
 - ```Lambda```表达式 / 匿名内部类
 - 普通```for```循环
