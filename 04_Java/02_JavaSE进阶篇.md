@@ -1,3 +1,5 @@
+
+
 # day 01 面向对象高级编程
 
 ## 1 static 关键字
@@ -2689,7 +2691,7 @@ public class GenericsDemo1 {
 - 格式
 
   ```java
-  修饰符<类型> 返回值类型 方法名(类型 变量名) {
+  修饰符 <类型> 返回值类型 方法名(类型 变量名) {
       
   }
   ```
@@ -2714,7 +2716,7 @@ public class GenericsDemo1 {
       *  参数一：集合
       *  参数二：要添加的元素
       * */
-      public static<E> void addAll(ArrayList<E> list, E e1, E e2,E e3,E e4){
+      public static <E> void addAll(ArrayList<E> list, E e1, E e2, E e3, E e4){
           list.add(e1);
           list.add(e2);
           list.add(e3);
@@ -2749,7 +2751,7 @@ public class GenericsDemo1 {
 - 格式
 
   ```java
-  修饰符 interface 接口名<类型>{
+  修饰符 interface 接口名<类型> {
       
   }
   ```
@@ -2757,7 +2759,7 @@ public class GenericsDemo1 {
 - 举例
 
   ```java
-  public interface Liste<E> {
+  public interface List<E> {
       
   }
   ```
@@ -2827,7 +2829,7 @@ public class GenericsDemo1 {
 
 - 应用场景
 
-  - 如果我们在定义类、方法、接口的时候，如果类型不确定，就可以定义泛型类、泛型方法、泛型接
+  - 如果我们在定义类、方法、接口的时候，如果类型不确定，就可以定义泛型类、泛型方法、泛型接口
   - 如果类型不确定，但是能知道以后只能传递某个继承体系中的，就可以泛型的通配符
 
 - 关键点：可以限定类型的范围。
@@ -2850,7 +2852,7 @@ public class GenericsDemo1 {
 
    指定泛型的具体类型后，传递数据时，可以传入该类型和他的子类类型
 
-   如果不写泛型，类型默认是```object```
+   如果不写泛型，类型默认是`object`
 
 4. 哪里定义泛型?
 
@@ -2910,8 +2912,6 @@ public class GenericsDemo1 {
   - 小的存左边
   - 大的存右边
   - 一样的不存
-
-
 
 ![image-20230206230349393](assets/image-20230206230349393.png)
 
@@ -3009,7 +3009,7 @@ public class GenericsDemo1 {
 
 ### 3.0 Set 集合的实现类
 
-- ````HashSet```：无序、不重复、无索引
+- `HashSet`：无序、不重复、无索引
 - ```LinkedHashSet```：**有序**、不重复、无索引
 - ```TreeSet```：**可排序**、不重复、无索引
 
@@ -3119,7 +3119,7 @@ System.out.println("acD".hashCode());  // 96354
 
    ```JDK8```及以后：新元素直接挂在老元素下面
 
-- 加载因子：数组中的元素个数 > 数组长度 * 0.75 = 12,时，数组会扩容到原来的两倍
+- 加载因子：数组中的元素个数 > 数组长度 * 0.75 = 12时，数组会扩容到原来的两倍
 - ```JDK8```及以后，当链表长度大于8，而且数组长度大于等于64，会自动转为红黑树
 - 如果集合中存储的是自定义对象，必须要重写```hashCode```和```equals```方法
 
@@ -3237,12 +3237,12 @@ public class A06_TreeSetDemo2 {
 }
 ```
 
-自定义对象，为了能够排序，必须要教程```Comparable```接口，重写```compareTo```方法
+自定义对象，为了能够排序，必须要实现`Comparable`接口，重写```compareTo```方法
 
 ```java
 import java.util.Objects;
 
-public class Student implements Comparable<Student>{
+public class Student implements Comparable<Student> {
     private String name;
     private int age;
 
@@ -3306,16 +3306,16 @@ public class A07_TreeSetDemo3 {
 ### 6.4 小案例
 
 ```java
-        /*
-            需求:创建5个学生对象
-            属性:(姓名,年龄，语文成绩,数学成绩,英语成绩),
-            按照总分从高到低输出到控制台
-            如果总分一样，按照语文成绩排如果语文一样，
-            按照数学成绩排如果数学成绩一样，按照英语成绩排
-            如果英文成绩一样，按照年龄排
-            如果年龄一样，按照姓名的字母顺序排
-            如果都一样，认为是同一个学生，不存。
-         */
+/*
+	需求:创建5个学生对象
+	属性:(姓名,年龄，语文成绩,数学成绩,英语成绩),
+	按照总分从高到低输出到控制台
+	如果总分一样，按照语文成绩排如果语文一样，
+	按照数学成绩排如果数学成绩一样，按照英语成绩排
+	如果英文成绩一样，按照年龄排
+	如果年龄一样，按照姓名的字母顺序排
+	如果都一样，认为是同一个学生，不存。
+ */
 @Override
 public int compareTo(Student o) {
     // 比较总分

@@ -313,7 +313,7 @@ public class Student1 implements Comparable<Student1>{
         // o: 红黑树的元素
 
         //返回值:
-        //负数: 表示当前要添加的元是小的，存左边
+        // 负数: 表示当前要添加的元是小的，存左边
         // 正数:表示当前要添加的元素是人的，存右边
         // 0: 表示当前要添加的元素已经存在，舍弃
         int i = this.getAge() - o.getAge();
@@ -387,7 +387,7 @@ public class A10_TreeMapDemo3 {
 
   此时```putIfAbsent```本身不重要。
 
-  传递一个思想:代码中的逻辑都有两面性，如果我们只知道了其中的A面，而且代码中还发现了有变量可以控制两面性的发生。
+  传递一个思想：代码中的逻辑都有两面性，如果我们只知道了其中的A面，而且代码中还发现了有变量可以控制两面性的发生。
 
   那么该逻辑一定会有B面。
 
@@ -402,8 +402,9 @@ public class A10_TreeMapDemo3 {
     一般至少有三面，因为```int```可以取多个值。
 
 - 三种双列集合，以后如何选择?
+  
   ```HashMap``` ```LinkedHashMap``` ```TreeMap```
-
+  
   - 默认：```HashMap```（效率最高）
   - 如果要保证存取有序：```LinkedHashMap```
   - 如果要进行排序：```TreeMap```
@@ -457,7 +458,7 @@ public class A11_ArgsDemo1 {
 ## 2 Collections
 
 > - java.util.Collections：是集合工具类
-> - 作用```Collections```不是集合，而是集合的工具类
+> - 注意```Collections```不是集合，而是集合的工具类
 
 ### 2.1 Collections 常用 API
 
@@ -471,7 +472,7 @@ public class A11_ArgsDemo1 {
 | ```public static <T> void copy(List<T> dest, List<T> src)``` |        拷贝集合中的元素         |
 |    ```public static <T> int fill (List<T> list, T obj)```    |     使用指定的元素填充集合      |
 |   ```public static <T> void max/min(Collection<T> coll)```   | 根据默认的自然排序获取最大/小值 |
-| ```public static <T> void swap(List<?> list,int i,int j)```  |    交换集合中指定位置的元素     |
+| ```public static <T> void swap(List<?> list, int i, int j)``` |    交换集合中指定位置的元素     |
 
 ```java
 import java.util.ArrayList;
@@ -692,10 +693,10 @@ while (it.hasNext()) {
 ```java
 public static void main(String[] args) {
     /*
-            细节1：键不能重复
-            细节2：最多传 20 个参数 也就是说只能有 10 对键值对
-            细节3：如果非要大于 20 个 可以把键值对看成一个整体
-         */
+		细节1：键不能重复
+		细节2：最多传 20 个参数 也就是说只能有 10 对键值对
+		细节3：如果非要大于 20 个 可以把键值对看成一个整体
+	 */
 
     Map<String, String> map = Map.of("张三", "南京", "李四", "北京", "王五", "天津");
 
@@ -800,7 +801,7 @@ Map<String, String> map3 = Map.copyOf(hm);
 
 注意
 
-1. 中间方法，返回新的```Stream```流，原来的```Stream```流**只能使用一次**，建议使用链式编程注意
+1. 中间方法，返回新的```Stream```流，原来的```Stream```流**只能使用一次**，建议使用链式编程
 2. 修改```Stream```流中的数据，不会影响原来集合或者数组中的数据
 
 ### 2.3 获取 Stream 流
@@ -974,7 +975,7 @@ public class StreamDemo9 {
         long count = list.stream().count();
         System.out.println(count);
 
-        // 3. 搜集
+        // 3. 收集
         // 3.1 空参构造 但是是 object 类型的
         Object[] arr1 = list.stream().toArray();
         System.out.println(arr1);
