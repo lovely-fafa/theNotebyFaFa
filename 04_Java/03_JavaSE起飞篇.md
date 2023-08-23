@@ -1305,7 +1305,7 @@ List<Student> newList = list.stream().map(Student::new).collect(Collectors.toLis
   - 方法引用的规则
     1. 需要有函数式接口
     2. 被引用的方法必须已经存在
-    3. 被引用方法的形参，需要跟抽象方怯的第二个形参到最后一个形参保持一致，返回值需要保持一致。
+    3. 被引用方法的形参，需要跟抽象方法的第二个形参到最后一个形参保持一致，返回值需要保持一致。
     4. 被引用方法的功能需要满足当前的需求
   - 抽象方法形参的详解
     - 第一个参数：表示被引用方法的调用者，决定了可以引用哪些类中的方法。在Stream流当中，第一个参数一般都表示流里面的每一个数据。假设流里面的数据是字符串，那么使用这种方式进行方法引用，只能引用```String```这个类中的方法。
@@ -1328,7 +1328,7 @@ List<Student> newList = list.stream().map(Student::new).collect(Collectors.toLis
 
 - 引用数组的构造方法
 
-  - 格式：```数据类型l]::new```
+  - 格式：```数据类型[]::new```
   - 范例：```int[]::new```
 
   ```java
@@ -1381,7 +1381,7 @@ List<Student> newList = list.stream().map(Student::new).collect(Collectors.toLis
   }
   ```
 
-# day 04 异常 File
+# day 04 异常和File
 
 ## 1 异常
 
@@ -1389,14 +1389,14 @@ List<Student> newList = list.stream().map(Student::new).collect(Collectors.toLis
 
 ### 1.1 Error
 
-代表的系统级别错误(属于严重问题系统一旦出现问题，sun公司会把这些错误封装成Error对象。Error是给sun公司自己用的，不是给我们程序员用的。因此我们开发人员不用管它。
+代表的系统级别错误，属于严重问题，系统一旦出现问题，sun公司会把这些错误封装成Error对象。Error是给sun公司自己用的，不是给我们程序员用的。因此我们开发人员不用管它。
 
 ### 1.2 Exception
 
 > 异常，代表程序可能出现的问题。我们通常会用Exception以及他的子类来封装程序出现的问题。
 
 - 运行时异常: ```RuntimeException```及其子类，编译阶段不会出现异常提醒，运行时出现的异常（如：数组索引越界异常）
-- 编译时异常: 编译阶段就会出现异常提醒的。（如：日期解析异常）
+- 编译时异常：编译阶段就会出现异常提醒的。（如：日期解析异常）
 
 ```java
 public class Exception {
@@ -1665,7 +1665,7 @@ System.out.println(f4);
 | ```public String getAbsolutePath()``` |            返回文件的绝对路径            |
 |     ```public String getPath()```     |         返回定义文件时使用的路径         |
 |     ```public String getName()```     |          返回文件的名称，带后缀          |
-|   ```public long lastModified()```    |  返回文件的最后修改时间 （时间毫秒值）   |
+|   ```public long lastModified()```    |   返回文件的最后修改时间（时间毫秒值）   |
 
 ```java
 // 1. 文件夹路径判断
@@ -1697,7 +1697,7 @@ System.out.println(f2.getPath());
 
 // 4. 获取文件名字
 // 细节一：调用者是文件：返回文件名+后缀名
-//       调用者是文件夹：返回文件夹名字
+//        调用者是文件夹：返回文件夹名字
 System.out.println(f2.getName());
 
 // 5. 文件最后的修改时间（时间毫秒值）
@@ -1776,7 +1776,7 @@ for (File file : files) {
 | :--------------------------------------------------: | :--------------------------------------: |
 |        ```public static File[] listRoots()```        |           列出可用的文件系统根           |
 |             ```public String[] list()```             |         获取当前该路径下所有内容         |
-|   ```public String[] ist(FilenameFilter filter)```   | 利用文件名过滤器获取当前该路径下所有内容 |
+|  ```public String[] list(FilenameFilter filter)```   | 利用文件名过滤器获取当前该路径下所有内容 |
 |           ```public File[] listFiles()```            |         获取当前该路径下所有内容         |
 |   ```public File[] listFiles(FileFilter filter)```   | 利用文件名过滤器获取当前该路径下所有内容 |
 | ```public File[] listFiles(FilenameFilter filter)``` | 利用文件名过滤器获取当前该路径下所有内容 |
@@ -2041,7 +2041,7 @@ fls.close();
 FileInputStream fls = new FileInputStream("D:\\大学牲\\大二上_2021_2022\\会展概论\\小组作业\\PPT\\会展概论.pdf");
 FileOutputStream fos = new FileOutputStream("day05-code\\src\\res.pdf");
 
-// 核心思想：边读不写
+// 核心思想：边读边写
 int b;
 while ((b = fls.read()) != -1) {
     fos.write(b);
