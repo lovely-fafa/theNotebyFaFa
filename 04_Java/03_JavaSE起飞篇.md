@@ -2109,7 +2109,7 @@ try {
     
 } catch (IOException e) {
     
-} finnally {
+} finally {
     
 }
 ```
@@ -2212,7 +2212,7 @@ public static void main(String[] args) throws FileNotFoundException {
 ### 5.1 ASCII 字符集
 
 - 存储英文，一个字节（8位）就可以了
-- ASCII编码规则：查表，讲二进制数，前面补0，补齐8位
+- ASCII编码规则：查表，二进制数，前面补0，补齐8位
 - ASCII解码规则：直接转成十进制，查表
 
 ### 5.2 不知道叫什么
@@ -2221,7 +2221,7 @@ public static void main(String[] args) throws FileNotFoundException {
 
 - BIG5 字符集（大五码）：台湾地区繁体中文标准字符集，共收录13053个中文字，1984年实施
 
-- GBK 字符集：2000年3月17日发布，收录21003个汉字3。包含国家标准 GB13000-1 中的全部中日韩汉字，和 BIG5 编码中的所有汉字。
+- GBK 字符集：2000年3月17日发布，收录21003个汉字。包含国家标准 GB13000-1 中的全部中日韩汉字，和 BIG5 编码中的所有汉字。
 
   windows 系统默认使用的就是 GBK。系统显示：ANSI
 
@@ -2303,10 +2303,10 @@ String str1 = "ai你哟";
 byte[] bytes1 = str1.getBytes();  // idea 默认是 utf-8
 System.out.println(Arrays.toString(bytes1));
 
-byte[] bytes2 = str1.getBytes("GBK");  // idea 默认是 utf-8
+byte[] bytes2 = str1.getBytes("GBK");
 System.out.println(Arrays.toString(bytes2));
 
-// 2. 编码
+// 2. 解码
 String str2 = new String(bytes1);
 System.out.println(str2);
 
@@ -2327,10 +2327,10 @@ System.out.println(str3);
 
 ### 7.1 创建字符流对象
 
-|                 构造方法                 |                         说明                         |
-| :--------------------------------------: | :--------------------------------------------------: |
-|    ```public FileReader(File file)```    |                         说明                         |
-| ```public FileReader(string pathname)``` | 创建字符输入流关联本地文件创建字符输入流关联本地文件 |
+|                 构造方法                 |            说明            |
+| :--------------------------------------: | :------------------------: |
+|    ```public FileReader(File file)```    | 创建字符输入流关联本地文件 |
+| ```public FileReader(string pathname)``` | 创建字符输入流关联本地文件 |
 
 ### 7.2 读取数据
 
@@ -2394,13 +2394,13 @@ fr.close();
 
 ### 8.2 成员方法
 
-|                   成员方法                    |          说明          |
-| :-------------------------------------------: | :--------------------: |
-|            ```void write(int c)```            |      写出一个字符      |
-|         ```void write(String str)```          |     写出一个字符串     |
-| ```void write(String str,int off, int len)``` | 写出一个字符串的一部分 |
-|         ```void write(char[] cbuf)```         |    写出一个字符数组    |
-| ```void write(char[] cbuf,int off,int len)``` |  写出字符数组的一部分  |
+|                    成员方法                     |          说明          |
+| :---------------------------------------------: | :--------------------: |
+|             ```void write(int c)```             |      写出一个字符      |
+|          ```void write(String str)```           |     写出一个字符串     |
+| ```void write(String str, int off, int len)```  | 写出一个字符串的一部分 |
+|          ```void write(char[] cbuf)```          |    写出一个字符数组    |
+| ```void write(char[] cbuf, int off, int len)``` |  写出字符数组的一部分  |
 
 ### 8.3 小细节
 
