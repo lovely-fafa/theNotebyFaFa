@@ -1613,7 +1613,7 @@ public class EqualsDemo {
         Student stu2 = new Student("张三", 23);
 
         System.out.println(stu1 == stu2); // false
-        System.out.println(stu1.equals(stu2));  // false / true
+        System.out.println(stu1.equals(stu2));  // false
     }
 }
 ```
@@ -2916,6 +2916,8 @@ public class GenericsDemo1 {
 ![image-20230206230349393](assets/image-20230206230349393.png)
 
 ### 2.3 二叉树遍历方式
+
+https://zhuanlan.zhihu.com/p/404837352
 
 - 前序遍历
 
