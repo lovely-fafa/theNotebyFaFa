@@ -3558,6 +3558,28 @@ public class MyRun implements Runnable {
 }
 ```
 
+```java
+package com.itheima.a02threadcase2;
+
+public class ThreadDemo {
+    public static void main(String[] args) {
+        MyRun mr = new MyRun();
+
+        // 创建线程对象
+        Thread t1 = new Thread(mr);
+        Thread t2 = new Thread(mr);
+
+        // 取名字
+        t1.setName("线程 1");
+        t2.setName("线程 2");
+
+        // 开启线程
+        t1.start();
+        t2.start();
+    }
+}
+```
+
 ### 3.3 利用 Callable 接口和 Future 接口方式实现
 
 - 特点
@@ -3585,16 +3607,20 @@ public class MyCallable implements Callable<Integer> {
 ```
 
 ```java
-// 创建 MyCallable 的对象(表示多线程要执行的任务)
-MyCallable mc = new MyCallable();
-// 创建 FutureTask 的对象(作用管理多线程运行的结果)
-FutureTask<Integer> ft = new FutureTask<>(mc);
-// 创建线程的对象
-Thread t = new Thread(ft);
-// 启动线程
-t.start();
-Integer result = ft.get();
-System.out.println(result);
+public class ThreadDemo {
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
+        // 创建 MyCallable 的对象(表示多线程要执行的任务)
+        MyCallable mc = new MyCallable();
+        // 创建 FutureTask 的对象(作用管理多线程运行的结果)
+        FutureTask<Integer> ft = new FutureTask<>(mc);
+        // 创建线程的对象
+        Thread t = new Thread(ft);
+        // 启动线程
+        t.start();
+        Integer result = ft.get();
+        System.out.println(result);
+    }
+}
 ```
 
 ### 3.3 多线程三种实现方式对比
@@ -3833,12 +3859,35 @@ public class MyRunnable implements Runnable{
 }
 ```
 
+```java
+public class ThreadDemo {
+    public static void main(String[] args) {
+        /*
+            某电影院目前正在上映国产大片，共有 100 张票，而它有 3 个窗口卖票，请设计一个程序模拟该电影院卖票
+         */
+        MyRunnable mr = new MyRunnable();
+
+        Thread t1 = new Thread(mr);
+        Thread t2 = new Thread(mr);
+        Thread t3 = new Thread(mr);
+
+        t1.setName("窗口 1");
+        t2.setName("窗口 2");
+        t3.setName("窗口 3");
+
+        t1.start();
+        t2.start();
+        t3.start();
+    }
+}
+```
+
 ### 5.3 Lock 锁
 
 虽然我们可以理解同步代码块和同步方法的锁对象问题。但是我们并没有直接看到在哪里加上了锁，在哪里释放了锁。为了更清晰的表达如何加锁和释放锁，JDK5以后提供了一个新的锁对象`Lock`。`Lock`实现提供比使用`synchronized`方法和语句，可以获得更广泛的锁定操作。Lock中提供了获得锁和释放锁的方法。
 
-- `void lock()`:获得锁
-- `void unlock()`:释放锁
+- `void lock()`：获得锁
+- `void unlock()`：释放锁
 
 `Lock`是接口，不能直接实例化。这里采用它的实现类`ReentrantLock`来实例化。`ReentrantLock`的构造方法是`ReentrantLock()`，创建一个`ReentrantLock`的实例。
 
@@ -3886,14 +3935,35 @@ public class MyThread extends Thread{
 
 > 生产者消费者模式是一个十分经典的多线程协作的模式。
 
+- 生产者：生产数据（厨师）
+- 消费者：消费数据（吃货）
+- 媒介：控制生产者与消费者（桌子）
+
 |      方法名称      |               说明               |
 | :----------------: | :------------------------------: |
 |   `void wait()`    | 当前线程等待，直到被其他线程唤醒 |
 |  `void notify()`   |         随机唤醒单个线程         |
 | `void notifyAll()` |           唤醒所有线程           |
 
-### 7.1 第一种
+### 7.1 第一种：基本写法
 
+![image-20231005235545867](assets/image-20231005235545867.png)
+
+- 桌子
+
+  ```java
+  public class Desk {
+      // 表示座子上是否有面条
+      public static int foodFlag = 0;
+  
+      // 总个数
+      public static int count = 10;
+  
+      // 锁对象
+      public static Object lock = new Object();
+  }
+  ```
+  
 - 生产者
 
   ```java
@@ -3964,21 +4034,6 @@ public class MyThread extends Thread{
   }
   ```
 
-- 桌子
-
-  ```java
-  public class Desk {
-      // 表示座子上是否有面条
-      public static int foodFlag = 0;
-  
-      // 总个数
-      public static int count = 10;
-  
-      // 锁对象
-      public static Object lock = new Object();
-  }
-  ```
-
 - 测试类
 
   ```java
@@ -3998,14 +4053,19 @@ public class MyThread extends Thread{
 
 ### 7.2 第二种：阻塞队列
 
-- 继承结构
-  - `Iterable`
-  - `Collection`
-  - `Queue`
-  - `BlockingQueue`
-- 接口
-  - `ArrayBlockingQueue`：底层是数组，有界
-  - `LinkedBlockingQueue`：底层是链表，无界。但不是真正的无界，最大为```int`的最大值。
+![image-20231006001248910](assets/image-20231006001248910.png)
+
+- 阻塞队列的继承结构
+
+  - 接口
+    - `Iterable`
+    - `Collection`
+    - `Queue`
+    - `BlockingQueue`
+
+  - 实现类
+    - `ArrayBlockingQueue`：底层是数组，有界
+    - `LinkedBlockingQueue`：底层是链表，无界。但不是真正的无界，最大为`int`的最大值。
 
 - 生产者
 
