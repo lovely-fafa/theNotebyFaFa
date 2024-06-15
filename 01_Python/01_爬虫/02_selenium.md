@@ -52,7 +52,7 @@ def down(count: Union[int, None] = None):
 
 - 通过窗口的句柄进入的窗口
 
-  `driver.switch_to_window(handles[n])`
+  `driver.switch_to_window(handles[n])`或`driver.switch_to.window(handles[n])`
 
 ## 2.3 窗口最大化
 
